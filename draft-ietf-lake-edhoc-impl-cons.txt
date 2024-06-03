@@ -87,17 +87,16 @@ Table of Contents
 
 1.  Introduction
 
-   Ephemeral Diffie-Hellman Over COSE (EDHOC) [I-D.ietf-lake-edhoc] is a
-   lightweight authenticated key exchange protocol, especially intended
-   for use in constrained scenarios.
+   Ephemeral Diffie-Hellman Over COSE (EDHOC) [RFC9528] is a lightweight
+   authenticated key exchange protocol, especially intended for use in
+   constrained scenarios.
 
    During the development of EDHOC, a number of side topics were raised
    and discussed, as emerging from reviews of the protocol latest design
    and from implementation activities.  These topics were identified as
    strongly pertaining to the implementation of EDHOC rather than to the
-   protocol in itself.  Hence, they are not discussed in
-   [I-D.ietf-lake-edhoc], which rightly focuses on specifying the actual
-   protocol.
+   protocol in itself.  Hence, they are not discussed in [RFC9528],
+   which rightly focuses on specifying the actual protocol.
 
    At the same time, implementors of an application using the EDHOC
    protocol or of an "EDHOC library" enabling its use cannot simply
@@ -134,7 +133,7 @@ Table of Contents
    capitals, as shown here.
 
    The reader is expected to be familiar with terms and concepts related
-   to the EDHOC protocol and defined in [I-D.ietf-lake-edhoc].
+   to the EDHOC protocol and defined in [RFC9528].
 
 2.  Handling of Invalid EDHOC Sessions and Application Keys
 
@@ -147,8 +146,8 @@ Table of Contents
    *  The application keys for that application at that peer, including
       the knowledge of whether they have been derived from an EDHOC
       session, i.e., by means of the EDHOC_Exporter interface after the
-      successful completion of an execution of EDHOC (see Section 4.1 of
-      [I-D.ietf-lake-edhoc]).
+      successful completion of an execution of EDHOC (see Section 4.2 of
+      [RFC9528]).
 
    Building on the above, the following expands on three relevant cases
    concerning the handling of EDHOC sessions and application keys, in
@@ -158,7 +157,7 @@ Table of Contents
    also considers the specific case where "applications keys" stands for
    the keying material and parameters that compose an OSCORE Security
    Context [RFC8613] and that are derived from an EDHOC session (see
-   Appendix A.1 of [I-D.ietf-lake-edhoc]).
+   Appendix A.1 of [RFC9528]).
 
    Nevertheless, the same considerations are applicable in case EDHOC is
    used to derive other application keys, e.g., to key different
@@ -228,7 +227,7 @@ Table of Contents
           the application at P has received from the other peer at least
           one message protected with any set of application keys derived
           from S.  That is, P has persisted S (see Section 5.4.2 of
-          [I-D.ietf-lake-edhoc]).
+          [RFC9528]).
 
        *  The peer P supports a key update protocol, as an alternative
           to performing a new execution of EDHOC with the other peer.
@@ -253,7 +252,7 @@ Table of Contents
           from which the eldest SET's ancestor set of application keys
           was generated before any key update occurred (e.g., by means
           of the EDHOC_KeyUpdate interface defined in Appendix H of
-          [I-D.ietf-lake-edhoc] or other key update methods).
+          [RFC9528] or other key update methods).
 
        *  It runs a new execution of the EDHOC protocol with the other
           peer.  Upon successfully completing the EDHOC execution, the
@@ -319,10 +318,10 @@ Table of Contents
    Consistent with the used EDHOC and OSCORE profile of ACE, the two
    peers run EDHOC in order to specifically derive an OSCORE Security
    Context as their shared set of application keys (see Appendix A.1 of
-   [I-D.ietf-lake-edhoc]).  In particular, the peer acting as ACE Client
-   acts as EDHOC Initiator, while the peer acting as ACE RS acts as
-   EDHOC Responder (see Section 2 of [I-D.ietf-lake-edhoc]).  The
-   successfully completed EDHOC session is bound to the Access Token.
+   [RFC9528]).  In particular, the peer acting as ACE Client acts as
+   EDHOC Initiator, while the peer acting as ACE RS acts as EDHOC
+   Responder (see Section 2 of [RFC9528]).  The successfully completed
+   EDHOC session is bound to the Access Token.
 
    After that, the peer acting as ACE Client can access the protected
    resources hosted at the other peer, according to the access rights
@@ -353,7 +352,7 @@ Table of Contents
           the application at P has received from the other peer at least
           one message protected with any set of application keys derived
           from S.  That is, P has persisted S (see Section 5.4.2 of
-          [I-D.ietf-lake-edhoc]).
+          [RFC9528]).
 
    2.  If the peer P supports the key update protocol KUDOS
        [I-D.ietf-core-oscore-key-update], then P runs KUDOS with the
@@ -466,7 +465,7 @@ Table of Contents
    EDHOC execution with P.  This relies on EDHOC message_2 or message_3,
    whose respective ID_CRED_R and ID_CRED_I can specify CRED by value,
    or instead a URI or other external reference where CRED can be
-   retrieved from (see Section 3.5.3 of [I-D.ietf-lake-edhoc]).
+   retrieved from (see Section 3.5.3 of [RFC9528]).
 
    Also during the EDHOC execution, an External Authorization Data (EAD)
    field might include an EAD item that specifies CRED by value or
@@ -488,10 +487,10 @@ Table of Contents
    store CRED otherwise.
 
    An exception applies for the two unauthenticated operations described
-   in Appendix D.5 of [I-D.ietf-lake-edhoc], where a trust relationship
-   with an unknown or not-yet-trusted endpoint is established later.
-   That is, CRED is verified out-of-band at a later stage, or an EDHOC
-   session key is bound to an identity out-of-band at a later stage.
+   in Appendix D.5 of [RFC9528], where a trust relationship with an
+   unknown or not-yet-trusted endpoint is established later.  That is,
+   CRED is verified out-of-band at a later stage, or an EDHOC session
+   key is bound to an identity out-of-band at a later stage.
 
    If P stores CRED, then P will consider CRED as valid and trusted
    until it possibly becomes invalid, e.g., because it expires or
@@ -549,8 +548,8 @@ Table of Contents
    Irrespective of the adopted trust policy, P actually uses CRED only
    if it is determined to be fine to use in the context of the ongoing
    EDHOC session, also depending on the specific identity of the other
-   peer (see Sections 3.5 and D.2 of [I-D.ietf-lake-edhoc]).  If this is
-   not the case, P aborts the EDHOC session with the other peer.
+   peer (see Sections 3.5 and D.2 of [RFC9528]).  If this is not the
+   case, P aborts the EDHOC session with the other peer.
 
 4.  Side Processing of Incoming EDHOC Messages
 
@@ -558,11 +557,11 @@ Table of Contents
    receiving EDHOC messages, in order to fetch/validate authentication
    credentials and to process External Authorization Data (EAD) items.
 
-   As per Section 9.1 of [I-D.ietf-lake-edhoc], the EDHOC protocol
-   provides a transport mechanism for conveying EAD items, but
-   specifications defining those items have to set the ground for
-   "agreeing on the surrounding context and the meaning of the
-   information passed to and from the application".
+   As per Section 9.1 of [RFC9528], the EDHOC protocol provides a
+   transport mechanism for conveying EAD items, but specifications
+   defining those items have to set the ground for "agreeing on the
+   surrounding context and the meaning of the information passed to and
+   from the application".
 
    The approach described in this section aims to help implementors
    navigate the surrounding context mentioned above, irrespective of the
@@ -630,19 +629,18 @@ Table of Contents
          invoking the SPO, in order to provide the SPO only with
          actually relevant EAD items.  This requires the application to
          additionally provide EDHOC with the ead_labels of the EAD items
-         that the peer P recognizes (see Section 3.8 of
-         [I-D.ietf-lake-edhoc]).
+         that the peer P recognizes (see Section 3.8 of [RFC9528]).
 
          With such information available, EDHOC can early abort the
          current session in case M includes any EAD item which is both
          critical and not recognized by the peer P.
 
          If no such EAD items are found, EDHOC can remove any padding
-         EAD item (see Section 3.8.1 of [I-D.ietf-lake-edhoc]), as well
-         as any EAD item which is neither critical nor recognized (since
-         the SPO is going to ignore it anyway).  As a result, EDHOC is
-         able to provide the SPO only with EAD items that will be
-         recognized and that require actual processing.
+         EAD item (see Section 3.8.1 of [RFC9528]), as well as any EAD
+         item which is neither critical nor recognized (since the SPO is
+         going to ignore it anyway).  As a result, EDHOC is able to
+         provide the SPO only with EAD items that will be recognized and
+         that require actual processing.
 
       -  Note that, after having processed the EAD items, the SPO might
          actually need to store them throughout the whole EDHOC
@@ -791,8 +789,7 @@ Table of Contents
 
    9.   The SPO checks if CRED is fine to use in the context of the
         ongoing EDHOC session, also depending on the specific identity
-        of the other peer (see Sections 3.5 and D.2 of
-        [I-D.ietf-lake-edhoc]).
+        of the other peer (see Sections 3.5 and D.2 of [RFC9528]).
 
         If this is the case, the SPO moves to step 10.  Otherwise, the
         SPO moves to step 11.
@@ -1042,13 +1039,6 @@ Table of Contents
 
 7.1.  Normative References
 
-   [I-D.ietf-lake-edhoc]
-              Selander, G., Mattsson, J. P., and F. Palombini,
-              "Ephemeral Diffie-Hellman Over COSE (EDHOC)", Work in
-              Progress, Internet-Draft, draft-ietf-lake-edhoc-23, 22
-              January 2024, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-lake-edhoc-23>.
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
@@ -1062,6 +1052,11 @@ Table of Contents
               "Object Security for Constrained RESTful Environments
               (OSCORE)", RFC 8613, DOI 10.17487/RFC8613, July 2019,
               <https://www.rfc-editor.org/rfc/rfc8613>.
+
+   [RFC9528]  Selander, G., Preuß Mattsson, J., and F. Palombini,
+              "Ephemeral Diffie-Hellman Over COSE (EDHOC)", RFC 9528,
+              DOI 10.17487/RFC9528, March 2024,
+              <https://www.rfc-editor.org/rfc/rfc9528>.
 
 7.2.  Informative References
 
