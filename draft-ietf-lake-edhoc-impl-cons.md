@@ -32,7 +32,7 @@ normative:
   RFC2119:
   RFC8174:
   RFC8613:
-  I-D.ietf-lake-edhoc:
+  RFC9528:
 
 informative:
   RFC2986:
@@ -57,9 +57,9 @@ This document provides considerations for guiding the implementation of the auth
 
 # Introduction # {#intro}
 
-Ephemeral Diffie-Hellman Over COSE (EDHOC) {{I-D.ietf-lake-edhoc}} is a lightweight authenticated key exchange protocol, especially intended for use in constrained scenarios.
+Ephemeral Diffie-Hellman Over COSE (EDHOC) {{RFC9528}} is a lightweight authenticated key exchange protocol, especially intended for use in constrained scenarios.
 
-During the development of EDHOC, a number of side topics were raised and discussed, as emerging from reviews of the protocol latest design and from implementation activities. These topics were identified as strongly pertaining to the implementation of EDHOC rather than to the protocol in itself. Hence, they are not discussed in {{I-D.ietf-lake-edhoc}}, which rightly focuses on specifying the actual protocol.
+During the development of EDHOC, a number of side topics were raised and discussed, as emerging from reviews of the protocol latest design and from implementation activities. These topics were identified as strongly pertaining to the implementation of EDHOC rather than to the protocol in itself. Hence, they are not discussed in {{RFC9528}}, which rightly focuses on specifying the actual protocol.
 
 At the same time, implementors of an application using the EDHOC protocol or of an "EDHOC library" enabling its use cannot simply ignore such topics, and will have to take them into account throughout their implementation work.
 
@@ -75,7 +75,7 @@ In order to prevent multiple, independent re-discoveries and assessments of thos
 
 {::boilerplate bcp14}
 
-The reader is expected to be familiar with terms and concepts related to the EDHOC protocol and defined in {{I-D.ietf-lake-edhoc}}.
+The reader is expected to be familiar with terms and concepts related to the EDHOC protocol and defined in {{RFC9528}}.
 
 # Handling of Invalid EDHOC Sessions and Application Keys # {#sec-session-handling}
 
@@ -83,11 +83,11 @@ This section considers the most common situation where, given a certain peer, on
 
 * The EDHOC sessions at that peer; and
 
-* The application keys for that application at that peer, including the knowledge of whether they have been derived from an EDHOC session, i.e., by means of the EDHOC_Exporter interface after the successful completion of an execution of EDHOC (see {{Section 4.1 of I-D.ietf-lake-edhoc}}).
+* The application keys for that application at that peer, including the knowledge of whether they have been derived from an EDHOC session, i.e., by means of the EDHOC_Exporter interface after the successful completion of an execution of EDHOC (see {{Section 4.2 of RFC9528}}).
 
 Building on the above, the following expands on three relevant cases concerning the handling of EDHOC sessions and application keys, in the event that any of those becomes invalid.
 
-As a case in point to provide more concrete guidance, the following also considers the specific case where "applications keys" stands for the keying material and parameters that compose an OSCORE Security Context {{RFC8613}} and that are derived from an EDHOC session (see {{Section A.1 of I-D.ietf-lake-edhoc}}).
+As a case in point to provide more concrete guidance, the following also considers the specific case where "applications keys" stands for the keying material and parameters that compose an OSCORE Security Context {{RFC8613}} and that are derived from an EDHOC session (see {{Section A.1 of RFC9528}}).
 
 Nevertheless, the same considerations are applicable in case EDHOC is used to derive other application keys, e.g., to key different security protocols than OSCORE or to provide the application with secure values bound to an EDHOC session.
 
@@ -126,7 +126,7 @@ When this happens, the application at the peer P proceeds as follows.
 
 1. If the following conditions both hold, then the application moves to step 2. Otherwise, it moves to step 3.
 
-   * Let us define S as the EDHOC session from which the peer P has derived SET or the eldest SET's ancestor set of application keys. Then, since the completion of S with the other peer, the application at P has received from the other peer at least one message protected with any set of application keys derived from S. That is, P has persisted S (see {{Section 5.4.2 of I-D.ietf-lake-edhoc}}).
+   * Let us define S as the EDHOC session from which the peer P has derived SET or the eldest SET's ancestor set of application keys. Then, since the completion of S with the other peer, the application at P has received from the other peer at least one message protected with any set of application keys derived from S. That is, P has persisted S (see {{Section 5.4.2 of RFC9528}}).
 
    * The peer P supports a key update protocol, as an alternative to performing a new execution of EDHOC with the other peer. When SET is specifically an OSCORE Security Context, this means that the peer P supports the key update protocol KUDOS defined in {{I-D.ietf-core-oscore-key-update}}.
 
@@ -138,7 +138,7 @@ When this happens, the application at the peer P proceeds as follows.
 
    * It deletes SET.
 
-   * It deletes the EDHOC session from which SET was generated, or from which the eldest SET's ancestor set of application keys was generated before any key update occurred (e.g., by means of the EDHOC_KeyUpdate interface defined in {{Section H of I-D.ietf-lake-edhoc}} or other key update methods).
+   * It deletes the EDHOC session from which SET was generated, or from which the eldest SET's ancestor set of application keys was generated before any key update occurred (e.g., by means of the EDHOC_KeyUpdate interface defined in {{Section H of RFC9528}} or other key update methods).
 
    * It runs a new execution of the EDHOC protocol with the other peer. Upon successfully completing the EDHOC execution, the two peers derive and install a new set of application keys from this latest EDHOC session.
 
@@ -192,7 +192,7 @@ The following considers two peers that use the ACE framework for authentication 
 
 When doing so, one of the two peers acts as ACE Resource Server (RS) hosting protected resources. The other peer acts as ACE Client, requests from an ACE Authorization Server (AS) an Access Token that specifies access rights for accessing protected resources at the RS, and uploads the Access Token to the RS as part of the ACE workflow.
 
-Consistent with the used EDHOC and OSCORE profile of ACE, the two peers run EDHOC in order to specifically derive an OSCORE Security Context as their shared set of application keys (see {{Section A.1 of I-D.ietf-lake-edhoc}}). In particular, the peer acting as ACE Client acts as EDHOC Initiator, while the peer acting as ACE RS acts as EDHOC Responder (see {{Section 2 of I-D.ietf-lake-edhoc}}). The successfully completed EDHOC session is bound to the Access Token.
+Consistent with the used EDHOC and OSCORE profile of ACE, the two peers run EDHOC in order to specifically derive an OSCORE Security Context as their shared set of application keys (see {{Section A.1 of RFC9528}}). In particular, the peer acting as ACE Client acts as EDHOC Initiator, while the peer acting as ACE RS acts as EDHOC Responder (see {{Section 2 of RFC9528}}). The successfully completed EDHOC session is bound to the Access Token.
 
 After that, the peer acting as ACE Client can access the protected resources hosted at the other peer, according to the access rights specified in the Access Token. The communications between the two peers are protected by means of the established OSCORE Security Context, which is also bound to the used Access Token.
 
@@ -204,7 +204,7 @@ When this happens, the application at the peer P proceeds as follows.
 
    * The Access Token is still valid. That is, it has not expired yet and the peer P is not aware that it has been revoked.
 
-   * Let us define S as the EDHOC session from which the peer P has derived CTX or the eldest CTX's ancestor OSCORE Security Context. Then, since the completion of S with the other peer, the application at P has received from the other peer at least one message protected with any set of application keys derived from S. That is, P has persisted S (see {{Section 5.4.2 of I-D.ietf-lake-edhoc}}).
+   * Let us define S as the EDHOC session from which the peer P has derived CTX or the eldest CTX's ancestor OSCORE Security Context. Then, since the completion of S with the other peer, the application at P has received from the other peer at least one message protected with any set of application keys derived from S. That is, P has persisted S (see {{Section 5.4.2 of RFC9528}}).
 
 2. If the peer P supports the key update protocol KUDOS {{I-D.ietf-core-oscore-key-update}}, then P runs KUDOS with the other peer, in order to update CTX. If the execution of KUDOS terminates successfully, the updated OSCORE Security Context is installed and no further actions are taken.
 
@@ -292,7 +292,7 @@ A peer P relies on authentication credentials of other peers, in order to authen
 
 There are different ways for P to acquire an authentication credential CRED of another peer. For example, CRED can be supplied to P out-of-band by a trusted provider.
 
-Alternatively, CRED can be specified by the other peer during the EDHOC execution with P. This relies on EDHOC message_2 or message_3, whose respective ID_CRED_R and ID_CRED_I can specify CRED by value, or instead a URI or other external reference where CRED can be retrieved from (see {{Section 3.5.3 of I-D.ietf-lake-edhoc}}).
+Alternatively, CRED can be specified by the other peer during the EDHOC execution with P. This relies on EDHOC message_2 or message_3, whose respective ID_CRED_R and ID_CRED_I can specify CRED by value, or instead a URI or other external reference where CRED can be retrieved from (see {{Section 3.5.3 of RFC9528}}).
 
 Also during the EDHOC execution, an External Authorization Data (EAD) field might include an EAD item that specifies CRED by value or reference. This is the case, e.g., for the EAD item defined in {{I-D.ietf-ace-edhoc-oscore-profile}}, which is used in the EAD_3 field of EDHOC message_3 and transports (a reference to) an Access Token that in turn specifies CRED_I by value or by reference.
 
@@ -300,7 +300,7 @@ When obtaining a new credential CRED, the peer P has to validate it before stori
 
 Upon retrieving a new CRED through the processing of a received EDHOC message and following the successful validation of CRED, the peer P stores CRED only if it assesses CRED to be also trusted, and must not store CRED otherwise.
 
-An exception applies for the two unauthenticated operations described in {{Section D.5 of I-D.ietf-lake-edhoc}}, where a trust relationship with an unknown or not-yet-trusted endpoint is established later. That is, CRED is verified out-of-band at a later stage, or an EDHOC session key is bound to an identity out-of-band at a later stage.
+An exception applies for the two unauthenticated operations described in {{Section D.5 of RFC9528}}, where a trust relationship with an unknown or not-yet-trusted endpoint is established later. That is, CRED is verified out-of-band at a later stage, or an EDHOC session key is bound to an identity out-of-band at a later stage.
 
 If P stores CRED, then P will consider CRED as valid and trusted until it possibly becomes invalid, e.g., because it expires or because P gains knowledge that it has been revoked.
 
@@ -328,13 +328,13 @@ When processing a received EDHOC message M that specifies an authentication cred
 
    3. P attempts to validate CRED. If the validation process is not successful, P aborts the EDHOC session with the other peer. Otherwise, P trusts and stores CRED, and can continue the EDHOC execution.
 
-Irrespective of the adopted trust policy, P actually uses CRED only if it is determined to be fine to use in the context of the ongoing EDHOC session, also depending on the specific identity of the other peer (see {{Sections 3.5 and D.2 of I-D.ietf-lake-edhoc}}). If this is not the case, P aborts the EDHOC session with the other peer.
+Irrespective of the adopted trust policy, P actually uses CRED only if it is determined to be fine to use in the context of the ongoing EDHOC session, also depending on the specific identity of the other peer (see {{Sections 3.5 and D.2 of RFC9528}}). If this is not the case, P aborts the EDHOC session with the other peer.
 
 # Side Processing of Incoming EDHOC Messages # {#sec-message-side-processing}
 
 This section describes an approach that EDHOC peers can use upon receiving EDHOC messages, in order to fetch/validate authentication credentials and to process External Authorization Data (EAD) items.
 
-As per {{Section 9.1 of I-D.ietf-lake-edhoc}}, the EDHOC protocol provides a transport mechanism for conveying EAD items, but specifications defining those items have to set the ground for "agreeing on the surrounding context and the meaning of the information passed to and from the application".
+As per {{Section 9.1 of RFC9528}}, the EDHOC protocol provides a transport mechanism for conveying EAD items, but specifications defining those items have to set the ground for "agreeing on the surrounding context and the meaning of the information passed to and from the application".
 
 The approach described in this section aims to help implementors navigate the surrounding context mentioned above, irrespective of the specific EAD items conveyed in the EDHOC messages. In particular, the described approach takes into account the following points.
 
@@ -364,11 +364,11 @@ At the right point in time during the processing of an incoming EDHOC message M 
 
 * The EAD items included in M.
 
-   - Note that EDHOC might do some preliminary work on M before invoking the SPO, in order to provide the SPO only with actually relevant EAD items. This requires the application to additionally provide EDHOC with the ead_labels of the EAD items that the peer P recognizes (see {{Section 3.8 of I-D.ietf-lake-edhoc}}).
+   - Note that EDHOC might do some preliminary work on M before invoking the SPO, in order to provide the SPO only with actually relevant EAD items. This requires the application to additionally provide EDHOC with the ead_labels of the EAD items that the peer P recognizes (see {{Section 3.8 of RFC9528}}).
 
       With such information available, EDHOC can early abort the current session in case M includes any EAD item which is both critical and not recognized by the peer P.
 
-      If no such EAD items are found, EDHOC can remove any padding EAD item (see {{Section 3.8.1 of I-D.ietf-lake-edhoc}}), as well as any EAD item which is neither critical nor recognized (since the SPO is going to ignore it anyway). As a result, EDHOC is able to provide the SPO only with EAD items that will be recognized and that require actual processing.
+      If no such EAD items are found, EDHOC can remove any padding EAD item (see {{Section 3.8.1 of RFC9528}}), as well as any EAD item which is neither critical nor recognized (since the SPO is going to ignore it anyway). As a result, EDHOC is able to provide the SPO only with EAD items that will be recognized and that require actual processing.
 
    - Note that, after having processed the EAD items, the SPO might actually need to store them throughout the whole EDHOC execution, e.g., in order to refer to them also when processing later EDHOC messages in the current EDHOC session.
 
@@ -452,7 +452,7 @@ PHASE_1 - During PHASE_1, the SPO at the recipient peer P determines CRED, i.e.,
 
 8. The SPO stores CRED as a valid and trusted authentication credential associated with the other peer, together with corresponding authentication credential identifiers (see {{sec-trust-models}}). Then, the SPO moves to step 9.
 
-9. The SPO checks if CRED is fine to use in the context of the ongoing EDHOC session, also depending on the specific identity of the other peer (see {{Sections 3.5 and D.2 of I-D.ietf-lake-edhoc}}).
+9. The SPO checks if CRED is fine to use in the context of the ongoing EDHOC session, also depending on the specific identity of the other peer (see {{Sections 3.5 and D.2 of RFC9528}}).
 
    If this is the case, the SPO moves to step 10. Otherwise, the SPO moves to step 11.
 
