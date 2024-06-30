@@ -13,11 +13,6 @@ wg: LAKE Working Group
 kw: Internet-Draft
 
 coding: utf-8
-pi:    # can use array (if all yes) or hash here
-
-  toc: yes
-  sortrefs:   # defaults to yes
-  symrefs: yes
 
 author:
  -  name: Marco Tiloca
@@ -29,8 +24,6 @@ author:
     email: marco.tiloca@ri.se
 
 normative:
-  RFC2119:
-  RFC8174:
   RFC8613:
   RFC9528:
 
@@ -73,7 +66,7 @@ In order to prevent multiple, independent re-discoveries and assessments of thos
 
 ## Terminology ## {#terminology}
 
-{::boilerplate bcp14}
+{::boilerplate bcp14-tagged}
 
 The reader is expected to be familiar with terms and concepts related to the EDHOC protocol and defined in {{RFC9528}}.
 
@@ -100,11 +93,9 @@ Then, the applications runs a new execution of the EDHOC protocol with the other
 The flowchart in {{fig-flowchart-session-invalid}} shows the handling of an EDHOC session that has become invalid.
 
 ~~~~~~~~~~~ aasvg
-
 Invalid     Delete the EDHOC session      Rerun     Derive and
 EDHOC   --> and the application keys  --> EDHOC --> install new
 session     derived from it                         application keys
-
 ~~~~~~~~~~~
 {: #fig-flowchart-session-invalid title="Handling of an EDHOC Session that has Become Invalid" artwork-align="center"}
 
@@ -145,7 +136,6 @@ When this happens, the application at the peer P proceeds as follows.
 The flowchart in {{fig-flowchart-keys-invalid}} shows the handling of a set of application keys that has become invalid.
 
 ~~~~~~~~~~~ aasvg
-
 Invalid application keys
 
   |
@@ -182,7 +172,6 @@ succeeded? ---------------------------+
 
 Install the updated
 application keys
-
 ~~~~~~~~~~~
 {: #fig-flowchart-keys-invalid title="Handling of a set of Application Keys that has Become Invalid" artwork-align="center"}
 
@@ -229,7 +218,6 @@ When this happens, the application at the peer P proceeds as follows.
 The flowchart in {{fig-flowchart-keys-token-invalid}} shows the handling of an Access Token or of a set of application keys that have become invalid.
 
 ~~~~~~~~~~~ aasvg
-
 Invalid token specifying CRED_I,
 or invalid application keys
 
@@ -282,7 +270,6 @@ succeeded? ------------------------------+
 
 Install the updated
 application keys
-
 ~~~~~~~~~~~
 {: #fig-flowchart-keys-token-invalid title="Handling of an Access Token or of a set of Application Keys that have Become Invalid" artwork-align="center"}
 
@@ -485,7 +472,6 @@ Then, EDHOC resumes its execution and advances its protocol state.
 The flowchart in {{fig-flowchart-spo-high-level}} shows the high-level interaction between the core EDHOC processing and the SPO, with particular reference to an incoming EDHOC message_2 or message_3.
 
 ~~~~~~~~~~~ aasvg
-
 EDHOC message_X
 (X = 2 or 3)
 
@@ -535,14 +521,12 @@ EDHOC message_X
 |                                                                     |
 |                                               Side-Processor Object |
 +---------------------------------------------------------------------+
-
 ~~~~~~~~~~~
 {: #fig-flowchart-spo-high-level title="High-Level Interaction Between the Core EDHOC Processing and the Side-Processor Object (SPO)" artwork-align="center"}
 
 The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken for processing an incoming EDHOC message_2 and message_3.
 
 ~~~~~~~~~~~ aasvg
-
   Incoming
   EDHOC message_X
   (X = 2 or 3)
@@ -666,7 +650,6 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
  | Advance the    | (core EDHOC processing)
  | protocol state |
  +----------------+
-
 ~~~~~~~~~~~
 {: #fig-flowchart-spo-low-level title="Processing steps for EDHOC message_2 and message_3" artwork-align="center"}
 
