@@ -667,3 +667,5 @@ This document has no actions for IANA.
 {: numbered="no"}
 
 The author sincerely thanks {{{Christian Amsüss}}}, {{{Geovane Fedrecheski}}}, {{{Rikard Höglund}}}, {{{John Preuß Mattsson}}}, {{{Göran Selander}}}, and {{{Mališa Vučinić}}} for their comments and feedback.
+
+The work on this document has been partly supported by the Sweden's Innovation Agency VINNOVA and the Celtic-Next project CYPRESS.
