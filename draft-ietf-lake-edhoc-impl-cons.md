@@ -663,6 +663,13 @@ This document has no actions for IANA.
 
 --- back
 
+# Document Updates # {#sec-document-updates}
+{:removeinrfc}
+
+## Version -00 to -01 ## {#sec-00-01}
+
+* Editorial improvements.
+
 # Acknowledgments # {#acknowledgments}
 {: numbered="no"}
 
