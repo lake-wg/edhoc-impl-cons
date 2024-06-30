@@ -82,6 +82,8 @@ Table of Contents
    7.  References
      7.1.  Normative References
      7.2.  Informative References
+   Appendix A.  Document Updates
+     A.1.  Version -00 to -01
    Acknowledgments
    Author's Address
 
@@ -1126,6 +1128,14 @@ Table of Contents
               Constrained Environments Using the OAuth 2.0 Framework
               (ACE-OAuth)", RFC 9200, DOI 10.17487/RFC9200, August 2022,
               <https://www.rfc-editor.org/rfc/rfc9200>.
+
+Appendix A.  Document Updates
+
+   This section is to be removed before publishing as an RFC.
+
+A.1.  Version -00 to -01
+
+   *  Editorial improvements.
 
 Acknowledgments
 
