@@ -4,8 +4,8 @@
 
 LAKE Working Group                                             M. Tiloca
 Internet-Draft                                                   RISE AB
-Intended status: Informational                               3 June 2024
-Expires: 5 December 2024
+Intended status: Informational                              30 June 2024
+Expires: 1 January 2025
 
 
   Implementation Considerations for Ephemeral Diffie-Hellman Over COSE
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 December 2024.
+   This Internet-Draft will expire on 1 January 2025.
 
 Copyright Notice
 
