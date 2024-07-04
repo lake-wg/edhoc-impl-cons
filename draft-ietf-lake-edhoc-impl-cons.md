@@ -322,7 +322,7 @@ When processing a received EDHOC message M that specifies an authentication cred
 
 Irrespective of the adopted trust policy, P actually uses CRED only if it is determined to be fine to use in the context of the ongoing EDHOC session, also depending on the specific identity of the other peer (see {{Sections 3.5 and D.2 of RFC9528}}). If this is not the case, P aborts the EDHOC session with the other peer.
 
-## Enforcement in the EDHOC and OSCORE Profile of ACE
+## Enforcement in the EDHOC and OSCORE Profile of ACE # {#sec-trust-models-ace-prof}
 
 As discussed in {{sec-keys-token-invalid}}, two EDHOC peers can be using the ACE framework {{RFC9200}} and specifically the EDHOC and OSCORE profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}. In particular:
 
@@ -399,9 +399,11 @@ The SPO performs the following tasks on an incoming EDHOC message M.
 
    * The execution of instructions that the SPO has received from the application, concerning EAD items to produce irrespective of other EAD items included in M.
 
-The following subsections describe more in detail the actions performed by the SPO on the different, incoming EDHOC messages.
+In the following, {{sec-message-side-processing-m1}} to {{sec-message-side-processing-m2-m3}} describe more in detail the actions performed by the SPO on the different, incoming EDHOC messages.
 
-## EDHOC message_1
+Then, {{sec-message-side-processing-ace-prof}} describes further, special handling of incoming EDHOC messages in particular situations.
+
+## EDHOC message_1 ## {#sec-message-side-processing-m1}
 
 During the processing of an incoming EDHOC message_1, EDHOC invokes the SPO only once, after the Responder peer has successfully decoded the message and accepted the selected cipher suite.
 
@@ -411,7 +413,7 @@ Once all such EAD items have been processed the SPO transfers control back to ED
 
 Then, EDHOC resumes its execution and advances its protocol state.
 
-## EDHOC message_4
+## EDHOC message_4 ## {#sec-message-side-processing-m4}
 
 During the processing of an incoming EDHOC message_4, EDHOC invokes the SPO only once, after the Initiator peer has successfully decrypted the message.
 
@@ -419,7 +421,7 @@ If the EAD_4 field is present, the SPO processes the EAD items included therein.
 
 Once all such EAD items have been processed, the SPO transfers control back to EDHOC, which resumes its execution and advances its protocol state.
 
-## EDHOC message_2 and message_3
+## EDHOC message_2 and message_3 ## {#sec-message-side-processing-m2-m3}
 
 The following refers to "message_X" as an incoming EDHOC message_2 or message_3, and to "message verification" as the verification of Signature_or_MAC_X in message_X.
 
@@ -682,6 +684,37 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
 ~~~~~~~~~~~
 {: #fig-flowchart-spo-low-level title="Processing steps for EDHOC message_2 and message_3" artwork-align="center"}
 
+## Side Processing in the EDHOC and OSCORE Profile of ACE ## {#sec-message-side-processing-ace-prof}
+
+This section describes methods to perform special handling of incoming EDHOC messages in particular situations.
+
+### EDHOC and OSCORE Profile of ACE
+
+{{sec-trust-models-ace-prof}} discusses the case where two EDHOC peer use the ACE framework {{RFC9200}} and specifically the EDHOC and OSCORE profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
+
+In particular, {{sec-trust-models-ace-prof}} considers a PEER_C that, when running EDHOC with PEER_RS, uses a dedicated EDHOC EAD item for uploading at PEER_RS an ACE Access Token, which in turn includes its own public authentication credential AUTH_CRED_C.
+
+Also as noted in {{sec-trust-models-ace-prof}}, this practically builds on PEER_RS supporting the trust policy "LEARNING" (see {{sec-trust-models}}), at least for its EDHOC resource used for exchanging the EDHOC messages of the EDHOC session in question.
+
+* Editor's note: TODO
+
+  PEER_RS might have reasons to enforce the trust policy "NO_LEARNING" anyway. In that case, unless PEER_RS already stores AUTH_CRED_C, the upload of the Access Token by means of the EAD item has to fail, and consequently the EDHOC session is aborted.
+
+  Explain how the SPO can practically ensure that to be the outcome.
+
+* Editor's note: TODO
+
+  AUTH_CRED_C is always specified (by value or by reference) in ID_CRED_R (ID_CRED_I) of EDHOC message_2 (EDHOC message_3).
+
+  AUTH_CRED_C can also be specified (by value or by reference) within an Access Token, which is conveyed by an EDHOC EAD item in an EDHOC message that PEER_C sends to PEER_RS. The details also depend on the two EDHOC peers using either the EDHOC forward message flow or the EDHOC reverse message flow (see {{Section A.2 of RFC9528}}).
+
+  When such an Access Token is uploaded by means of an EDHOC EAD item, PEER_RS has to perform consistency checks between the AUTH_CRED_C specified in ID_CRED_R or ID_CRED_I, and the AUTH_CRED_C specified within the Access Token.
+
+  Explain when PEER_RS becomes able to perform the consistency check, for the different cases, depending on using the EDHOC forward message flow or the EDHOC reverse message flow, and on the specific EDHOC message including the EAD item that conveys the Access Token including AUTH_CRED_C.
+
+  In the end, some of this content might better fit in {{I-D.ietf-ace-edhoc-oscore-profile}}, while this document can keep only implementation-specific details.
+
+
 # Using EDHOC over CoAP with Block-Wise # {#sec-block-wise}
 
 {{Section A.2 of RFC9528}} specifies how to transfer EDHOC over CoAP {{RFC7252}}. In such a case, the EDHOC messages (possibly prepended by an EDHOC connection identifier) are transported in the payload of CoAP requests and responses, according to the EDHOC forward message flow or the EDHOC reverse message flow. Furthermore, {{Section A.1 of RFC9528}} specifies how to derive an OSCORE Security Context {{RFC8613}} from an EDHOC session.
@@ -788,6 +821,8 @@ This document has no actions for IANA.
 ## Version -00 to -01 ## {#sec-00-01}
 
 * Added considerations on trust policies when using the EDHOC and OSCORE profile of the ACE framework.
+
+* Placeholder section on special processing when using the EDHOC and OSCORE profile of the ACE framework.
 
 * Added considerations on using EDHOC with CoAP and Block-wise.
 
