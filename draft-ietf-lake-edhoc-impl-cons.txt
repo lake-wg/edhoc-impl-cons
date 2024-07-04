@@ -78,6 +78,8 @@ Table of Contents
        4.3.1.  Pre-Verification Side Processing
        4.3.2.  Post-Verification Side Processing
        4.3.3.  Flowcharts
+     4.4.  Side Processing in the EDHOC and OSCORE Profile of ACE
+       4.4.1.  EDHOC and OSCORE Profile of ACE
    5.  Using EDHOC over CoAP with Block-Wise
      5.1.  Notation
      5.2.  Pre-requirements
@@ -727,8 +729,12 @@ Table of Contents
          the application, concerning EAD items to produce irrespective
          of other EAD items included in M.
 
-   The following subsections describe more in detail the actions
-   performed by the SPO on the different, incoming EDHOC messages.
+   In the following, Section 4.1 to Section 4.3 describe more in detail
+   the actions performed by the SPO on the different, incoming EDHOC
+   messages.
+
+   Then, Section 4.4 describes further, special handling of incoming
+   EDHOC messages in particular situations.
 
 4.1.  EDHOC message_1
 
@@ -1087,6 +1093,63 @@ Table of Contents
 
         Figure 5: Processing steps for EDHOC message_2 and message_3
 
+4.4.  Side Processing in the EDHOC and OSCORE Profile of ACE
+
+   This section describes methods to perform special handling of
+   incoming EDHOC messages in particular situations.
+
+4.4.1.  EDHOC and OSCORE Profile of ACE
+
+   Section 3.1 discusses the case where two EDHOC peer use the ACE
+   framework [RFC9200] and specifically the EDHOC and OSCORE profile of
+   ACE defined in [I-D.ietf-ace-edhoc-oscore-profile].
+
+   In particular, Section 3.1 considers a PEER_C that, when running
+   EDHOC with PEER_RS, uses a dedicated EDHOC EAD item for uploading at
+   PEER_RS an ACE Access Token, which in turn includes its own public
+   authentication credential AUTH_CRED_C.
+
+   Also as noted in Section 3.1, this practically builds on PEER_RS
+   supporting the trust policy "LEARNING" (see Section 3), at least for
+   its EDHOC resource used for exchanging the EDHOC messages of the
+   EDHOC session in question.
+
+   *  Editor's note: TODO
+
+      PEER_RS might have reasons to enforce the trust policy
+      "NO_LEARNING" anyway.  In that case, unless PEER_RS already stores
+      AUTH_CRED_C, the upload of the Access Token by means of the EAD
+      item has to fail, and consequently the EDHOC session is aborted.
+
+      Explain how the SPO can practically ensure that to be the outcome.
+
+   *  Editor's note: TODO
+
+      AUTH_CRED_C is always specified (by value or by reference) in
+      ID_CRED_R (ID_CRED_I) of EDHOC message_2 (EDHOC message_3).
+
+      AUTH_CRED_C can also be specified (by value or by reference)
+      within an Access Token, which is conveyed by an EDHOC EAD item in
+      an EDHOC message that PEER_C sends to PEER_RS.  The details also
+      depend on the two EDHOC peers using either the EDHOC forward
+      message flow or the EDHOC reverse message flow (see Appendix A.2
+      of [RFC9528]).
+
+      When such an Access Token is uploaded by means of an EDHOC EAD
+      item, PEER_RS has to perform consistency checks between the
+      AUTH_CRED_C specified in ID_CRED_R or ID_CRED_I, and the
+      AUTH_CRED_C specified within the Access Token.
+
+      Explain when PEER_RS becomes able to perform the consistency
+      check, for the different cases, depending on using the EDHOC
+      forward message flow or the EDHOC reverse message flow, and on the
+      specific EDHOC message including the EAD item that conveys the
+      Access Token including AUTH_CRED_C.
+
+      In the end, some of this content might better fit in
+      [I-D.ietf-ace-edhoc-oscore-profile], while this document can keep
+      only implementation-specific details.
+
 5.  Using EDHOC over CoAP with Block-Wise
 
    Appendix A.2 of [RFC9528] specifies how to transfer EDHOC over CoAP
@@ -1388,6 +1451,9 @@ Appendix A.  Document Updates
 A.1.  Version -00 to -01
 
    *  Added considerations on trust policies when using the EDHOC and
+      OSCORE profile of the ACE framework.
+
+   *  Placeholder section on special processing when using the EDHOC and
       OSCORE profile of the ACE framework.
 
    *  Added considerations on using EDHOC with CoAP and Block-wise.
