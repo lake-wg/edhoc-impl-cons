@@ -401,7 +401,7 @@ The SPO performs the following tasks on an incoming EDHOC message M.
 
 In the following, {{sec-message-side-processing-m1}} to {{sec-message-side-processing-m2-m3}} describe more in detail the actions performed by the SPO on the different, incoming EDHOC messages.
 
-Then, {{sec-message-side-processing-ace-prof}} describes further, special handling of incoming EDHOC messages in particular situations.
+Then, {{sec-message-side-processing-particular}} describes further, special handling of incoming EDHOC messages in particular situations.
 
 ## EDHOC message_1 ## {#sec-message-side-processing-m1}
 
@@ -684,11 +684,11 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
 ~~~~~~~~~~~
 {: #fig-flowchart-spo-low-level title="Processing steps for EDHOC message_2 and message_3" artwork-align="center"}
 
-## Side Processing in the EDHOC and OSCORE Profile of ACE ## {#sec-message-side-processing-ace-prof}
+## Side Processing in Particular Situations ## {#sec-message-side-processing-particular}
 
 This section describes methods to perform special handling of incoming EDHOC messages in particular situations.
 
-### EDHOC and OSCORE Profile of ACE
+### EDHOC and OSCORE Profile of ACE ### {#sec-message-side-processing-ace-prof}
 
 {{sec-trust-models-ace-prof}} discusses the case where two EDHOC peer use the ACE framework {{RFC9200}} and specifically the EDHOC and OSCORE profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
 
