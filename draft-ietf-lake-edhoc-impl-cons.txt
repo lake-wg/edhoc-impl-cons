@@ -991,6 +991,7 @@ Table of Contents
    +---------|---------------------------------------------------------+
              |
              |
+             v
 
     Control transferred back
     to the core EDHOC processing
@@ -1003,6 +1004,7 @@ Table of Contents
     +------------------+
              |
              |
+             v
 
     Control transferred to
     the side-processor object
@@ -1026,6 +1028,7 @@ Table of Contents
    +---------|----------------------------------------+
              |
              |
+             v
 
     Control transferred back
     to the core EDHOC processing
