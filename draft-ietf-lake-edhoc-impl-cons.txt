@@ -78,7 +78,7 @@ Table of Contents
        4.3.1.  Pre-Verification Side Processing
        4.3.2.  Post-Verification Side Processing
        4.3.3.  Flowcharts
-     4.4.  Side Processing in the EDHOC and OSCORE Profile of ACE
+     4.4.  Side Processing in Particular Situations
        4.4.1.  EDHOC and OSCORE Profile of ACE
    5.  Using EDHOC over CoAP with Block-Wise
      5.1.  Notation
@@ -1093,7 +1093,7 @@ Table of Contents
 
         Figure 5: Processing steps for EDHOC message_2 and message_3
 
-4.4.  Side Processing in the EDHOC and OSCORE Profile of ACE
+4.4.  Side Processing in Particular Situations
 
    This section describes methods to perform special handling of
    incoming EDHOC messages in particular situations.
