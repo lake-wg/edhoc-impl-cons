@@ -609,6 +609,7 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
 +---------|---------------------------------------------------------+
           |
           |
+          v
 
  Control transferred back
  to the core EDHOC processing
@@ -621,6 +622,7 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
  +------------------+
           |
           |
+          v
 
  Control transferred to
  the side-processor object
@@ -644,6 +646,7 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
 +---------|----------------------------------------+
           |
           |
+          v
 
  Control transferred back
  to the core EDHOC processing
