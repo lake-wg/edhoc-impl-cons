@@ -24,8 +24,11 @@ author:
     email: marco.tiloca@ri.se
 
 normative:
+  RFC7252:
+  RFC7959:
   RFC8613:
   RFC9528:
+  I-D.ietf-core-oscore-edhoc:
 
 informative:
   RFC2986:
@@ -64,11 +67,13 @@ In order to prevent multiple, independent re-discoveries and assessments of thos
 
 * Branched-off, side processing of incoming EDHOC messages, with particular reference to: i) fetching and validation of authentication credentials; and ii) processing of External Authorization Data (EAD) items, which in turn might play a role in the fetching and validation of authentication credentials. This topic is discussed in {{sec-message-side-processing}}.
 
+* Effectively using EDHOC over the Constrained Application Protocol (CoAP) {{RFC7252}} in combination with Block-Wise Transfers for CoAP {{RFC7959}}, possibly together with the optimized EDHOC execution workflow defined in {{I-D.ietf-core-oscore-edhoc}}. This topic is discussed in {{sec-block-wise}}.
+
 ## Terminology ## {#terminology}
 
 {::boilerplate bcp14-tagged}
 
-The reader is expected to be familiar with terms and concepts related to the EDHOC protocol and defined in {{RFC9528}}.
+The reader is expected to be familiar with terms and concepts related to the EDHOC protocol {{RFC9528}}, the Constrained Application Protocol (CoAP) {{RFC7252}}, and Block-Wise Transfers for CoAP {{RFC7959}}.
 
 # Handling of Invalid EDHOC Sessions and Application Keys # {#sec-session-handling}
 
@@ -653,6 +658,96 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
 ~~~~~~~~~~~
 {: #fig-flowchart-spo-low-level title="Processing steps for EDHOC message_2 and message_3" artwork-align="center"}
 
+# Using EDHOC over CoAP with Block-Wise # {#sec-block-wise}
+
+{{Section A.2 of RFC9528}} specifies how to transfer EDHOC over CoAP {{RFC7252}}. In such a case, the EDHOC messages (possibly prepended by an EDHOC connection identifier) are transported in the payload of CoAP requests and responses, according to the EDHOC forward message flow or the EDHOC reverse message flow. Furthermore, {{Section A.1 of RFC9528}} specifies how to derive an OSCORE Security Context {{RFC8613}} from an EDHOC session.
+
+Building on that, {{I-D.ietf-core-oscore-edhoc}} further details the use of EDHOC with CoAP and OSCORE, and specifies an optimization approach for the EDHOC forward message flow that combines the EDHOC execution with the first subsequent OSCORE transaction. This is achieved by means of an "EDHOC + OSCORE request", i.e., a single CoAP request message that conveys both EDHOC message_3 of the ongoing EDHOC session and an OSCORE-protected application request, where the latter is protected with the OSCORE Security Context derived from that EDHOC session.
+
+This section provides guidelines and recommendations for CoAP clients supporting Block-wise transfers for CoAP {{RFC7959}} and the EDHOC + OSCORE request defined in {{I-D.ietf-core-oscore-edhoc}}.
+
+The following especially considers a CoAP client that may perform only "inner" Block-wise, but not "outer" Block-wise operations (see {{Section 4.1.3.4 of RFC8613}}). That is, the considered CoAP client does not (further) split an OSCORE-protected request like an intermediary (e.g., a proxy) might do. This is the typical case for OSCORE endpoints (see {{Section 4.1.3.4 of RFC8613}}).
+
+## Notation
+
+The rest of this section refers to the following notation.
+
+* SIZE_APP: the size in bytes of the application data to be included in a CoAP request. When Block-wise is used, this is referred to as the "body" to be fragmented into blocks.
+
+* SIZE_EDHOC: the size in bytes of EDHOC message_3, if this is sent as part of the EDHOC + OSCORE request. Otherwise, the size of EDHOC message_3 plus the size in bytes of the EDHOC Connection Identifier C_R, encoded as per {{Section 3.3 of RFC9528}}.
+
+* SIZE_MTU: the maximum amount of transmittable bytes before having to use Block-wise. This is, for example, 64 KiB as maximum datagram size when using UDP, or 1280 bytes as the maximum size for an IPv6 MTU.
+
+* SIZE_OH: the size in bytes of the overall overhead due to all the communication layers underlying the application. This takes into account also the overhead introduced by the OSCORE processing.
+
+* LIMIT = (SIZE_MTU - SIZE_OH): the practical maximum size in bytes to be considered by the application before using Block-wise.
+
+* SIZE_BLOCK: the size in bytes of inner blocks.
+
+* ceil(): the ceiling function.
+
+## Pre-requirements # {#sec-block-wise-pre-req}
+
+Before sending an EDHOC + OSCORE request, the CoAP client has to perform the following checks. Note that, while the CoAP client is able to fragment the application data, it cannot fragment the EDHOC + OSCORE request or the EDHOC message_3 added therein.
+
+* If inner Block-wise is not used, hence SIZE_APP <= LIMIT, the CoAP client must verify whether all the following conditions hold:
+
+  - COND1: SIZE_EDHOC <= LIMIT
+
+  - COND2: (SIZE_APP + SIZE_EDHOC) <= LIMIT
+
+* If inner Block-wise is used, the CoAP client must verify whether all the following conditions hold:
+
+  - COND3: SIZE_EDHOC <= LIMIT
+
+  - COND4: (SIZE_BLOCK + SIZE_EDHOC) <= LIMIT
+
+In either case, if not all the corresponding conditions hold, the CoAP client should not send the EDHOC + OSCORE request. Instead, the CoAP client can continue by switching to the purely sequential, original EDHOC workflow (see {{Section A.2.1 of RFC9528}}). That is, the CoAP client first sends EDHOC message_3 prepended by the EDHOC Connection Identifier C_R encoded as per {{Section 3.3 of RFC9528}}, and then sends the OSCORE-protected CoAP request once the EDHOC execution is completed.
+
+## Effectively Using Block-Wise
+
+In order to avoid further fragmentation at lower layers when sending an EDHOC + OSCORE request, the CoAP client has to use inner Block-wise if _any_ of the following conditions holds:
+
+* COND5: SIZE_APP > LIMIT
+
+* COND6: (SIZE_APP + SIZE_EDHOC) > LIMIT
+
+In particular, consistently with {{sec-block-wise-pre-req}}, the used SIZE_BLOCK has to be such that the following condition also holds:
+
+* COND7: (SIZE_BLOCK + SIZE_EDHOC) <= LIMIT
+
+Note that the CoAP client might still use Block-wise due to reasons different from exceeding the size indicated by LIMIT.
+
+The following shows the number of round trips for completing both the EDHOC execution and the first OSCORE-protected exchange, under the assumption that the exchange of EDHOC message_1 and EDHOC message_2 do not result in using Block-wise.
+
+If _both_ the conditions COND5 and COND6 hold, the use of Block-wise results in the following number of round trips experienced by the CoAP client.
+
+* If the original EDHOC execution workflow is used (see {{Section A.2.1 of RFC9528}}), the number of round trips RT_ORIG is equal to 1 + ceil(SIZE_EDHOC / SIZE_BLOCK) + ceil(SIZE_APP / SIZE_BLOCK).
+
+* If the optimized EDHOC execution workflow is used (see {{Section 3 of I-D.ietf-core-oscore-edhoc}}), the number of round trips RT_COMB is equal to 1 + ceil(SIZE_APP / SIZE_BLOCK).
+
+It follows that RT_COMB < RT_ORIG, i.e., the optimized EDHOC execution workflow always yields a lower number of round trips.
+
+Instead, the convenience of using the optimized EDHOC execution workflow becomes questionable if _both_ the following conditions hold:
+
+* COND8: SIZE_APP <= LIMIT
+
+* COND9: (SIZE_APP + SIZE_EDHOC) > LIMIT
+
+That is, since SIZE_APP <= LIMIT, using Block-wise would not be required when using the original EDHOC execution workflow, provided that SIZE_EDHOC <= LIMIT still holds.
+
+At the same time, using the combined workflow is in itself what actually triggers the use of Block-wise, since (SIZE_APP + SIZE_EDHOC) > LIMIT.
+
+Therefore, the following round trips are experienced by the CoAP client.
+
+*  The original EDHOC execution workflow run without using Block-wise results in a number of round trips RT_ORIG equal to 3.
+
+*  The optimized EDHOC execution workflow run using Block-wise results in a number of round trips RT_COMB equal to 1 + ceil(SIZE_APP / SIZE_BLOCK).
+
+It follows that RT_COMB >= RT_ORIG, i.e., the optimized EDHOC execution workflow might still be not worse than the original EDHOC execution workflow in terms of round trips. This is the case only if the used SIZE_BLOCK is such that ceil(SIZE_APP / SIZE_BLOCK) is equal to 2, i.e., the EDHOC + OSCORE request is fragmented into only 2 inner blocks. However, even in such a case, there would be no advantage in terms or round trips compared to the original workflow, while still requiring the CoAP client and the CoAP server to perform the processing due to using the EDHOC + OSCORE request and Block-wise transferring.
+
+Therefore, if both the conditions COND8 and COND9 hold, the CoAP client should not send the EDHOC + OSCORE request. Instead, the CoAP client should continue by switching to the original EDHOC execution workflow. That is, the CoAP client first sends EDHOC message_3 prepended by the EDHOC Connection Identifier C_R encoded as per {{Section 3.3 of RFC9528}}, and then sends the OSCORE-protected CoAP request once the EDHOC execution is completed.
+
 # Security Considerations # {#sec-security-considerations}
 
 TBD
@@ -667,6 +762,8 @@ This document has no actions for IANA.
 {:removeinrfc}
 
 ## Version -00 to -01 ## {#sec-00-01}
+
+* Added considerations on using EDHOC with CoAP and Block-wise.
 
 * Editorial improvements.
 
