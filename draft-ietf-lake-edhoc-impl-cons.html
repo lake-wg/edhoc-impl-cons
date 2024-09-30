@@ -9,22 +9,22 @@
 <meta content="
        This document provides considerations for guiding the implementation of the authenticated key exchange protocol Ephemeral Diffie-Hellman Over COSE (EDHOC). 
     " name="description">
-<meta content="xml2rfc 3.22.0" name="generator">
+<meta content="xml2rfc 3.23.1" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-lake-edhoc-impl-cons-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.22.0
-    Python 3.12.3
+  xml2rfc 3.23.1
+    Python 3.12.6
     ConfigArgParse 1.7
-    google-i18n-address 3.1.0
+    google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.4
     lxml 4.9.4
-    platformdirs 4.2.2
+    platformdirs 4.3.6
     pycountry 22.3.5
     PyYAML 6.0.1
     requests 2.32.3
-    setuptools 69.5.1
+    setuptools 70.3.0
     wcwidth 0.2.13
 -->
 <link href="draft-ietf-lake-edhoc-impl-cons.xml" rel="alternate" type="application/rfc+xml">
@@ -1024,11 +1024,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Implementation Considerations for EDHOC</td>
-<td class="right">July 2024</td>
+<td class="right">September 2024</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tiloca</td>
-<td class="center">Expires 5 January 2025</td>
+<td class="center">Expires 3 April 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1041,12 +1041,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lake-edhoc-impl-cons-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-07-04" class="published">4 July 2024</time>
+<time datetime="2024-09-30" class="published">30 September 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-01-05">5 January 2025</time></dd>
+<dd class="expires"><time datetime="2025-04-03">3 April 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1091,7 +1091,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 5 January 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 3 April 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1218,7 +1218,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.9.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-document-updates" class="internal xref">Document Updates</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
-                <p id="section-toc.1-1.9.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-version-00-to-01" class="internal xref">Version -00 to -01</a></p>
+                <p id="section-toc.1-1.9.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-version-01-to-02" class="internal xref">Version -01 to -02</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-version-00-to-01" class="internal xref">Version -00 to -01</a></p>
 </li>
             </ul>
 </li>
@@ -1292,7 +1295,7 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
 <a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-edhoc-sessions-become-inval" class="section-name selfRef">EDHOC Sessions Become Invalid</a>
         </h3>
 <p id="section-2.1-1">The application at a peer P may have learned that a completed EDHOC session S has to be invalidated. When S is marked as invalid, the application at P purges S and deletes each set of application keys (e.g., the OSCORE Security Context) that was generated from S.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
-<p id="section-2.1-2">Then, the applications runs a new execution of the EDHOC protocol with the other peer. Upon successfully completing the EDHOC execution, the two peers derive and install a new set of application keys from this latest EDHOC session.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
+<p id="section-2.1-2">Then, the application runs a new execution of the EDHOC protocol with the other peer. Upon successfully completing the EDHOC execution, the two peers derive and install a new set of application keys from this latest EDHOC session.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
 <p id="section-2.1-3">The flowchart in <a href="#fig-flowchart-session-invalid" class="auto internal xref">Figure 1</a> shows the handling of an EDHOC session that has become invalid.<a href="#section-2.1-3" class="pilcrow">¶</a></p>
 <span id="name-handling-of-an-edhoc-sessio"></span><div id="fig-flowchart-session-invalid">
 <figure id="figure-1">
@@ -1333,10 +1336,10 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
 </div>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
-<a href="#name-handling-of-an-edhoc-sessio" class="selfRef">Handling of an EDHOC Session that has Become Invalid</a>
+<a href="#name-handling-of-an-edhoc-sessio" class="selfRef">Handling of an EDHOC Session that Has Become Invalid</a>
           </figcaption></figure>
 </div>
-<p id="section-2.1-5">An EDHOC session may have become invalid, for example, because an authentication credential CRED_X may have expired, or because P may have learned from a trusted source that CRED_X has been revoked. This effectively invalidates CRED_X, and therefore also invalidates any EDHOC session where CRED_X was used as authentication credential of either peer in the session (i.e., P itself or the other peer). In such a case, the application at P has to additionally delete CRED_X and any stored, corresponding credential identifier.<a href="#section-2.1-5" class="pilcrow">¶</a></p>
+<p id="section-2.1-5">An EDHOC session may have become invalid, for example, because an authentication credential CRED_X may have expired, or because the peer P may have learned from a trusted source that CRED_X has been revoked. This effectively invalidates CRED_X, and therefore also invalidates any EDHOC session where CRED_X was used as authentication credential of either peer in the session (i.e., P itself or the other peer). In such a case, the application at P has to additionally delete CRED_X and any stored, corresponding credential identifier.<a href="#section-2.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-keys-invalid">
@@ -1348,10 +1351,10 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
 <p id="section-2.2-2">A current set SET of application keys shared with another peer can become unsafe to use, for example, due to the following reasons.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2.2-3.1">
-            <p id="section-2.2-3.1.1">SET has reached its pre-determined expiration time; or<a href="#section-2.2-3.1.1" class="pilcrow">¶</a></p>
+            <p id="section-2.2-3.1.1">SET has reached a pre-determined expiration time; or<a href="#section-2.2-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-2.2-3.2">
-            <p id="section-2.2-3.2.1">SET has been established for a pre-defined, now elapsed amount of time, according to enforced application policies; or<a href="#section-2.2-3.2.1" class="pilcrow">¶</a></p>
+            <p id="section-2.2-3.2.1">SET has been established to use for a now elapsed amount of time, according to enforced application policies; or<a href="#section-2.2-3.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-2.2-3.3">
             <p id="section-2.2-3.3.1">Some elements of SET have been used enough times to approach cryptographic limits that should not be passed, e.g., according to the properties of the specifically used security algorithms. With particular reference to an OSCORE Security Context, such limits are discussed in <span>[<a href="#I-D.ietf-core-oscore-key-limits" class="cite xref">I-D.ietf-core-oscore-key-limits</a>]</span>.<a href="#section-2.2-3.3.1" class="pilcrow">¶</a></p>
@@ -1467,7 +1470,7 @@ If the key update protocol terminates successfully, the updated application keys
 </div>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
-<a href="#name-handling-of-a-set-of-applic" class="selfRef">Handling of a set of Application Keys that has Become Invalid</a>
+<a href="#name-handling-of-a-set-of-applic" class="selfRef">Handling of a Set of Application Keys that Has Become Invalid</a>
           </figcaption></figure>
 </div>
 </section>
@@ -1478,17 +1481,17 @@ If the key update protocol terminates successfully, the updated application keys
 <a href="#section-2.3" class="section-number selfRef">2.3. </a><a href="#name-application-keys-or-bound-a" class="section-name selfRef">Application Keys or Bound Access Rights Become Invalid</a>
         </h3>
 <p id="section-2.3-1">The following considers two peers that use the ACE framework for authentication and authorization in constrained environments <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, and specifically the EDHOC and OSCORE profile of ACE defined in <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>.<a href="#section-2.3-1" class="pilcrow">¶</a></p>
-<p id="section-2.3-2">When doing so, one of the two peers acts as ACE Resource Server (RS) hosting protected resources. The other peer acts as ACE Client, requests from an ACE Authorization Server (AS) an Access Token that specifies access rights for accessing protected resources at the RS, and uploads the Access Token to the RS as part of the ACE workflow.<a href="#section-2.3-2" class="pilcrow">¶</a></p>
-<p id="section-2.3-3">Consistent with the used EDHOC and OSCORE profile of ACE, the two peers run EDHOC in order to specifically derive an OSCORE Security Context as their shared set of application keys (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.1" class="relref">Appendix A.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>). The successfully completed EDHOC session is bound to the Access Token.<a href="#section-2.3-3" class="pilcrow">¶</a></p>
-<p id="section-2.3-4">After that, the peer acting as ACE Client can access the protected resources hosted at the other peer, according to the access rights specified in the Access Token. The communications between the two peers are protected by means of the established OSCORE Security Context, which is also bound to the used Access Token.<a href="#section-2.3-4" class="pilcrow">¶</a></p>
-<p id="section-2.3-5">Later on, the application at one of the two peers P may have learned that the established OSCORE Security Context CTX is not safe to use anymore, e.g., from the used OSCORE library or from an OSCORE layer that takes part to the communication stack. The reasons that make CTX not safe to use anymore are the same ones discussed in <a href="#sec-keys-invalid" class="auto internal xref">Section 2.2</a> when considering a set of application keys in general, plus the event where the Access Token bound to CTX becomes invalid (e.g., it has expired or it has been revoked).<a href="#section-2.3-5" class="pilcrow">¶</a></p>
+<p id="section-2.3-2">When doing so, one of the two peers acts as ACE resource server (RS) hosting protected resources. The other peer acts as ACE client, requests from an ACE authorization server (AS) an access token that specifies access rights for accessing protected resources at the RS, and uploads the access token to the RS as part of the ACE workflow.<a href="#section-2.3-2" class="pilcrow">¶</a></p>
+<p id="section-2.3-3">Consistent with the used EDHOC and OSCORE profile of ACE, the two peers run EDHOC in order to specifically derive an OSCORE Security Context as their shared set of application keys (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.1" class="relref">Appendix A.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>). The successfully completed EDHOC session is bound to the access token.<a href="#section-2.3-3" class="pilcrow">¶</a></p>
+<p id="section-2.3-4">After that, the peer acting as ACE client can access the protected resources hosted at the other peer, according to the access rights specified in the access token. The communications between the two peers are protected by means of the established OSCORE Security Context, which is also bound to the used access token.<a href="#section-2.3-4" class="pilcrow">¶</a></p>
+<p id="section-2.3-5">Later on, the application at one of the two peers P may have learned that the established OSCORE Security Context CTX is not safe to use anymore, e.g., from the used OSCORE library or from an OSCORE layer that takes part to the communication stack. The reasons that make CTX not safe to use anymore are the same ones discussed in <a href="#sec-keys-invalid" class="auto internal xref">Section 2.2</a> when considering a set of application keys in general, plus the event where the access token bound to CTX becomes invalid (e.g., it has expired or it has been revoked).<a href="#section-2.3-5" class="pilcrow">¶</a></p>
 <p id="section-2.3-6">When this happens, the application at the peer P proceeds as follows.<a href="#section-2.3-6" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-2.3-7">
 <li id="section-2.3-7.1">
             <p id="section-2.3-7.1.1">If the following conditions both hold, then the application moves to step 2. Otherwise, it moves to step 3.<a href="#section-2.3-7.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2.3-7.1.2.1">
-                <p id="section-2.3-7.1.2.1.1">The Access Token is still valid. That is, it has not expired yet and the peer P is not aware that it has been revoked.<a href="#section-2.3-7.1.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-2.3-7.1.2.1.1">The access token is still valid. That is, it has not expired yet and the peer P is not aware that it has been revoked.<a href="#section-2.3-7.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-2.3-7.1.2.2">
                 <p id="section-2.3-7.1.2.2.1">Let us define S as the EDHOC session from which the peer P has derived CTX or the eldest CTX's ancestor OSCORE Security Context. Then, since the completion of S with the other peer, the application at P has received from the other peer at least one message protected with any set of application keys derived from S. That is, P has persisted S (see <span><a href="https://rfc-editor.org/rfc/rfc9528#section-5.4.2" class="relref">Section 5.4.2</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-2.3-7.1.2.2.1" class="pilcrow">¶</a></p>
@@ -1504,14 +1507,14 @@ If the execution of KUDOS does not terminate successfully or if the peer P does 
             <p id="section-2.3-7.3.1">The application at the peer P performs the following actions.<a href="#section-2.3-7.3.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2.3-7.3.2.1">
-                <p id="section-2.3-7.3.2.1.1">If the Access Token is not valid anymore, the peer P deletes all the EDHOC sessions associated with the Access Token, as well as the OSCORE Security Context derived from each of those sessions.<a href="#section-2.3-7.3.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-2.3-7.3.2.1.1">If the access token is not valid anymore, the peer P deletes all the EDHOC sessions associated with the access token, as well as the OSCORE Security Context derived from each of those sessions.<a href="#section-2.3-7.3.2.1.1" class="pilcrow">¶</a></p>
 <p id="section-2.3-7.3.2.1.2">
-If the peer P acted as ACE Client, then P obtains a new Access Token from the ACE AS, and uploads it to the other peer acting as ACE RS.<a href="#section-2.3-7.3.2.1.2" class="pilcrow">¶</a></p>
+If the peer P acted as ACE client, then P obtains a new access token from the ACE AS, and uploads it to the other peer acting as ACE RS.<a href="#section-2.3-7.3.2.1.2" class="pilcrow">¶</a></p>
 <p id="section-2.3-7.3.2.1.3">
 Finally, the application at P moves to step 4.<a href="#section-2.3-7.3.2.1.3" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-2.3-7.3.2.2">
-                <p id="section-2.3-7.3.2.2.1">If the Access Token is valid while the OSCORE Security Context CTX is not, then the peer P deletes CTX.<a href="#section-2.3-7.3.2.2.1" class="pilcrow">¶</a></p>
+                <p id="section-2.3-7.3.2.2.1">If the access token is valid while the OSCORE Security Context CTX is not, then the peer P deletes CTX.<a href="#section-2.3-7.3.2.2.1" class="pilcrow">¶</a></p>
 <p id="section-2.3-7.3.2.2.2">
 After that, the peer P deletes the EDHOC session from which CTX was generated, or from which the eldest CTX's ancestor OSCORE Security Context was generated before any key update occurred (e.g., by means of KUDOS or other key update methods).<a href="#section-2.3-7.3.2.2.2" class="pilcrow">¶</a></p>
 <p id="section-2.3-7.3.2.2.3">
@@ -1523,7 +1526,7 @@ Finally, the application at P moves to step 4.<a href="#section-2.3-7.3.2.2.3" c
             <p id="section-2.3-7.4.1">The peer P runs a new execution of the EDHOC protocol with the other peer. Upon successfully completing the EDHOC execution, the two peers derive and install a new OSCORE Security Context from this latest EDHOC session.<a href="#section-2.3-7.4.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
-<p id="section-2.3-8">The flowchart in <a href="#fig-flowchart-keys-token-invalid" class="auto internal xref">Figure 3</a> shows the handling of an Access Token or of a set of application keys that have become invalid.<a href="#section-2.3-8" class="pilcrow">¶</a></p>
+<p id="section-2.3-8">The flowchart in <a href="#fig-flowchart-keys-token-invalid" class="auto internal xref">Figure 3</a> shows the handling of an access token or of a set of application keys that have become invalid.<a href="#section-2.3-8" class="pilcrow">¶</a></p>
 <span id="name-handling-of-an-access-token"></span><div id="fig-flowchart-keys-token-invalid">
 <figure id="figure-3">
           <div id="section-2.3-9.1">
@@ -2575,7 +2578,7 @@ In the end, some of this content might better fit in <span>[<a href="#I-D.ietf-a
             <p id="section-5.1-2.1.1">SIZE_APP: the size in bytes of the application data to be included in a CoAP request. When Block-wise is used, this is referred to as the "body" to be fragmented into blocks.<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-2.2">
-            <p id="section-5.1-2.2.1">SIZE_EDHOC: the size in bytes of EDHOC message_3, if this is sent as part of the EDHOC + OSCORE request. Otherwise, the size of EDHOC message_3 plus the size in bytes of the EDHOC Connection Identifier C_R, encoded as per <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.2.1">SIZE_EDHOC: the size in bytes of EDHOC message_3, if this is sent as part of the EDHOC + OSCORE request. Otherwise, the size in bytes of EDHOC message_3 plus the size in bytes of the EDHOC Connection Identifier C_R, encoded as per <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-2.3">
             <p id="section-5.1-2.3.1">SIZE_MTU: the maximum amount of transmittable bytes before having to use Block-wise. This is, for example, 64 KiB as maximum datagram size when using UDP, or 1280 bytes as the maximum size for an IPv6 MTU.<a href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
@@ -2702,6 +2705,7 @@ In the end, some of this content might better fit in <span>[<a href="#I-D.ietf-a
 <p id="section-7-1">This document has no actions for IANA.<a href="#section-7-1" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="sec-combined-references">
 <section id="section-8">
       <h2 id="name-references">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-references" class="section-name selfRef">References</a>
@@ -2751,23 +2755,23 @@ In the end, some of this content might better fit in <span>[<a href="#I-D.ietf-a
 <dl class="references">
 <dt id="I-D.ietf-ace-edhoc-oscore-profile">[I-D.ietf-ace-edhoc-oscore-profile]</dt>
         <dd>
-<span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Tiloca, M.</span>, and <span class="refAuthor">R. Höglund</span>, <span class="refTitle">"Ephemeral Diffie-Hellman Over COSE (EDHOC) and Object Security for Constrained Environments (OSCORE) Profile for Authentication and Authorization for Constrained Environments (ACE)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-edhoc-oscore-profile-04</span>, <time datetime="2024-03-04" class="refDate">4 March 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-04">https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-04</a>&gt;</span>. </dd>
+<span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Tiloca, M.</span>, and <span class="refAuthor">R. Höglund</span>, <span class="refTitle">"Ephemeral Diffie-Hellman Over COSE (EDHOC) and Object Security for Constrained Environments (OSCORE) Profile for Authentication and Authorization for Constrained Environments (ACE)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-edhoc-oscore-profile-05</span>, <time datetime="2024-07-08" class="refDate">8 July 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-05">https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-05</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-core-oscore-key-limits">[I-D.ietf-core-oscore-key-limits]</dt>
         <dd>
-<span class="refAuthor">Höglund, R.</span> and <span class="refAuthor">M. Tiloca</span>, <span class="refTitle">"Key Usage Limits for OSCORE"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-core-oscore-key-limits-02</span>, <time datetime="2024-01-10" class="refDate">10 January 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-limits-02">https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-limits-02</a>&gt;</span>. </dd>
+<span class="refAuthor">Höglund, R.</span> and <span class="refAuthor">M. Tiloca</span>, <span class="refTitle">"Key Usage Limits for OSCORE"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-core-oscore-key-limits-03</span>, <time datetime="2024-07-08" class="refDate">8 July 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-limits-03">https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-limits-03</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-core-oscore-key-update">[I-D.ietf-core-oscore-key-update]</dt>
         <dd>
-<span class="refAuthor">Höglund, R.</span> and <span class="refAuthor">M. Tiloca</span>, <span class="refTitle">"Key Update for OSCORE (KUDOS)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-core-oscore-key-update-07</span>, <time datetime="2024-03-04" class="refDate">4 March 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-update-07">https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-update-07</a>&gt;</span>. </dd>
+<span class="refAuthor">Höglund, R.</span> and <span class="refAuthor">M. Tiloca</span>, <span class="refTitle">"Key Update for OSCORE (KUDOS)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-core-oscore-key-update-08</span>, <time datetime="2024-07-08" class="refDate">8 July 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-update-08">https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-update-08</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-cose-cbor-encoded-cert">[I-D.ietf-cose-cbor-encoded-cert]</dt>
         <dd>
-<span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Raza, S.</span>, <span class="refAuthor">Höglund, J.</span>, and <span class="refAuthor">M. Furuhed</span>, <span class="refTitle">"CBOR Encoded X.509 Certificates (C509 Certificates)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cose-cbor-encoded-cert-09</span>, <time datetime="2024-03-04" class="refDate">4 March 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cose-cbor-encoded-cert-09">https://datatracker.ietf.org/doc/html/draft-ietf-cose-cbor-encoded-cert-09</a>&gt;</span>. </dd>
+<span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Raza, S.</span>, <span class="refAuthor">Höglund, J.</span>, and <span class="refAuthor">M. Furuhed</span>, <span class="refTitle">"CBOR Encoded X.509 Certificates (C509 Certificates)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cose-cbor-encoded-cert-11</span>, <time datetime="2024-07-08" class="refDate">8 July 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cose-cbor-encoded-cert-11">https://datatracker.ietf.org/doc/html/draft-ietf-cose-cbor-encoded-cert-11</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-lake-authz">[I-D.ietf-lake-authz]</dt>
         <dd>
-<span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Vučinić, M.</span>, <span class="refAuthor">Fedrecheski, G.</span>, and <span class="refAuthor">M. Richardson</span>, <span class="refTitle">"Lightweight Authorization using Ephemeral Diffie-Hellman Over COSE"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lake-authz-01</span>, <time datetime="2024-03-04" class="refDate">4 March 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lake-authz-01">https://datatracker.ietf.org/doc/html/draft-ietf-lake-authz-01</a>&gt;</span>. </dd>
+<span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Vučinić, M.</span>, <span class="refAuthor">Fedrecheski, G.</span>, and <span class="refAuthor">M. Richardson</span>, <span class="refTitle">"Lightweight Authorization using Ephemeral Diffie-Hellman Over COSE"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lake-authz-02</span>, <time datetime="2024-07-05" class="refDate">5 July 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lake-authz-02">https://datatracker.ietf.org/doc/html/draft-ietf-lake-authz-02</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2986">[RFC2986]</dt>
         <dd>
@@ -2793,29 +2797,42 @@ In the end, some of this content might better fit in <span>[<a href="#I-D.ietf-a
 </section>
 </div>
 </section>
+</div>
 <div id="sec-document-updates">
 <section id="appendix-A">
       <h2 id="name-document-updates">
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-document-updates" class="section-name selfRef">Document Updates</a>
       </h2>
 <p id="appendix-A-1">This section is to be removed before publishing as an RFC.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
-<div id="sec-00-01">
+<div id="sec-01-02">
 <section id="appendix-A.1">
-        <h3 id="name-version-00-to-01">
-<a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-version-00-to-01" class="section-name selfRef">Version -00 to -01</a>
+        <h3 id="name-version-01-to-02">
+<a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-version-01-to-02" class="section-name selfRef">Version -01 to -02</a>
         </h3>
 <ul class="normal">
 <li class="normal" id="appendix-A.1-1.1">
-            <p id="appendix-A.1-1.1.1">Added considerations on trust policies when using the EDHOC and OSCORE profile of the ACE framework.<a href="#appendix-A.1-1.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.1-1.1.1">Editorial improvements.<a href="#appendix-A.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-A.1-1.2">
-            <p id="appendix-A.1-1.2.1">Placeholder section on special processing when using the EDHOC and OSCORE profile of the ACE framework.<a href="#appendix-A.1-1.2.1" class="pilcrow">¶</a></p>
+        </ul>
+</section>
+</div>
+<div id="sec-00-01">
+<section id="appendix-A.2">
+        <h3 id="name-version-00-to-01">
+<a href="#appendix-A.2" class="section-number selfRef">A.2. </a><a href="#name-version-00-to-01" class="section-name selfRef">Version -00 to -01</a>
+        </h3>
+<ul class="normal">
+<li class="normal" id="appendix-A.2-1.1">
+            <p id="appendix-A.2-1.1.1">Added considerations on trust policies when using the EDHOC and OSCORE profile of the ACE framework.<a href="#appendix-A.2-1.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-A.1-1.3">
-            <p id="appendix-A.1-1.3.1">Added considerations on using EDHOC with CoAP and Block-wise.<a href="#appendix-A.1-1.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-A.2-1.2">
+            <p id="appendix-A.2-1.2.1">Placeholder section on special processing when using the EDHOC and OSCORE profile of the ACE framework.<a href="#appendix-A.2-1.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-A.1-1.4">
-            <p id="appendix-A.1-1.4.1">Editorial improvements.<a href="#appendix-A.1-1.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-A.2-1.3">
+            <p id="appendix-A.2-1.3.1">Added considerations on using EDHOC with CoAP and Block-wise.<a href="#appendix-A.2-1.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.2-1.4">
+            <p id="appendix-A.2-1.4.1">Editorial improvements.<a href="#appendix-A.2-1.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
