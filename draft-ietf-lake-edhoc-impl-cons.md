@@ -41,6 +41,7 @@ informative:
   I-D.ietf-core-oscore-key-limits:
   I-D.ietf-cose-cbor-encoded-cert:
   I-D.ietf-lake-authz:
+  I-D.ietf-ace-workflow-and-params:
 
 entity:
   SELF: "[RFC-XXXX]"
@@ -184,7 +185,7 @@ application keys
 
 The following considers two peers that use the ACE framework for authentication and authorization in constrained environments {{RFC9200}}, and specifically the EDHOC and OSCORE profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
 
-When doing so, one of the two peers acts as ACE resource server (RS) hosting protected resources. The other peer acts as ACE client, requests from an ACE authorization server (AS) an access token that specifies access rights for accessing protected resources at the RS, and uploads the access token to the RS as part of the ACE workflow.
+When doing so, one of the two peers acts as ACE resource server (RS) hosting protected resources. The other peer acts as ACE client, requests from an ACE authorization server (AS) an access token that specifies access rights for accessing protected resources at the RS, and uploads the access token to the RS as part of the ACE workflow. Alternatively, the AS can upload the access token to the RS on behalf of the client, as per the alternative workflow defined in {{I-D.ietf-ace-workflow-and-params}}.
 
 Consistent with the used EDHOC and OSCORE profile of ACE, the two peers run EDHOC in order to specifically derive an OSCORE Security Context as their shared set of application keys (see {{Section A.1 of RFC9528}}). The successfully completed EDHOC session is bound to the access token.
 
