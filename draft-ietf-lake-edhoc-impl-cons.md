@@ -276,7 +276,7 @@ succeeded? ------------------------------+
 Install the updated
 application keys
 ~~~~~~~~~~~
-{: #fig-flowchart-keys-token-invalid title="Handling of an Access Token or of a set of Application Keys that have Become Invalid" artwork-align="center"}
+{: #fig-flowchart-keys-token-invalid title="Handling of an access token or of a set of Application Keys that have Become Invalid" artwork-align="center"}
 
 # Trust Models for Learning New Authentication Credentials # {#sec-trust-models}
 
@@ -286,7 +286,7 @@ There are different ways for P to acquire an authentication credential CRED of a
 
 Alternatively, CRED can be specified by the other peer during the EDHOC execution with P. This relies on EDHOC message_2 or message_3, whose respective ID_CRED_R and ID_CRED_I can specify CRED by value, or instead a URI or other external reference where CRED can be retrieved from (see {{Section 3.5.3 of RFC9528}}).
 
-Also during the EDHOC execution, an External Authorization Data (EAD) field might include an EAD item that specifies CRED by value or reference. This is the case, e.g., for the EAD item defined in {{I-D.ietf-ace-edhoc-oscore-profile}}, which is used in the EAD_3 field of EDHOC message_3 and transports (a reference to) an Access Token that in turn specifies CRED_I by value or by reference.
+Also during the EDHOC execution, an External Authorization Data (EAD) field might include an EAD item that specifies CRED by value or reference. This is the case, e.g., for the EAD item defined in {{I-D.ietf-ace-edhoc-oscore-profile}}, which is used in the EAD_3 field of EDHOC message_3 and transports (a reference to) an access token that in turn specifies CRED_I by value or by reference.
 
 When obtaining a new credential CRED, the peer P has to validate it before storing it. The validation steps to perform depend on the specific type of CRED (e.g., a public key certificate {{RFC5280}}{{I-D.ietf-cose-cbor-encoded-cert}}), and can rely on (the authentication credential of) a trusted third party acting as a trust anchor.
 
@@ -326,21 +326,21 @@ Irrespective of the adopted trust policy, P actually uses CRED only if it is det
 
 As discussed in {{sec-keys-token-invalid}}, two EDHOC peers can be using the ACE framework {{RFC9200}} and specifically the EDHOC and OSCORE profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}. In particular:
 
-* One of the two EDHOC peers, namely PEER_RS, acts as ACE Resource Server (RS).
+* One of the two EDHOC peers, namely PEER_RS, acts as ACE resource server (RS).
 
-* The other EDHOC peer, namely PEER_C, acts as ACE Client, and obtains from the ACE Authorization Server (AS) an Access Token for accessing protected resources at PEER_RS.
+* The other EDHOC peer, namely PEER_C, acts as ACE client, and obtains from the ACE authorization server (AS) an access token for accessing protected resources at PEER_RS.
 
-  Together with other information, the Access Token specifies (by value or by reference) the public authentication credential AUTH_CRED_C that PEER_C is going to use when running EDHOC with PEER_RS.
+  Together with other information, the access token specifies (by value or by reference) the public authentication credential AUTH_CRED_C that PEER_C is going to use when running EDHOC with PEER_RS.
 
   Note that AUTH_CRED_C will be used as either CRED_I or CRED_R, depending on whether the two peers use the EDHOC forward message flow (i.e., PEER_C is the EDHOC Initiator) or the EDHOC reverse message flow (i.e., PEER_C is the EDHOC Responder), respectively (see {{Section A.2 of RFC9528}}).
 
-When using the EDHOC and OSCORE profile of ACE, it is also possible for PEER_C to upload the Access Token at PEER_RS by means of a dedicated EDHOC EAD item, while running EDHOC with PEER_RS.
+When using the EDHOC and OSCORE profile of ACE, it is also possible for PEER_C to upload the access token at PEER_RS by means of a dedicated EDHOC EAD item, while running EDHOC with PEER_RS.
 
 In order to ensure that this effectively works, PEER_RS has to support the trust policy "LEARNING", at least for its EDHOC resource used for exchanging the EDHOC messages of the EDHOC session in question.
 
-That is, PEER_RS is expected to not store AUTH_CRED_C in advance, and instead to gain knowledge of it as specified in the Access Token issued by the AS and uploaded by PEER_C. If PEER_RS has to learn AUTH_CRED_C as a new public authentication credential during an EDHOC session, indeed this requires PEER_RS to enforce the trust policy "LEARNING".
+That is, PEER_RS is expected to not store AUTH_CRED_C in advance, and instead to gain knowledge of it as specified in the access token issued by the AS and uploaded by PEER_C. If PEER_RS has to learn AUTH_CRED_C as a new public authentication credential during an EDHOC session, indeed this requires PEER_RS to enforce the trust policy "LEARNING".
 
-In fact, when the AS issues the first Access Token ever such that it specifies AUTH_CRED_C and is intended to be uploaded to PEER_RS, it is expected that the Access Token specifies AUTH_CRED_C by value and that PEER_RS is not currently storing AUTH_CRED_C.
+In fact, when the AS issues the first access token ever such that it specifies AUTH_CRED_C and is intended to be uploaded to PEER_RS, it is expected that the access token specifies AUTH_CRED_C by value and that PEER_RS is not currently storing AUTH_CRED_C.
 
 
 # Side Processing of Incoming EDHOC Messages # {#sec-message-side-processing}
@@ -692,13 +692,13 @@ This section describes methods to perform special handling of incoming EDHOC mes
 
 {{sec-trust-models-ace-prof}} discusses the case where two EDHOC peer use the ACE framework {{RFC9200}} and specifically the EDHOC and OSCORE profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
 
-In particular, {{sec-trust-models-ace-prof}} considers a PEER_C that, when running EDHOC with PEER_RS, uses a dedicated EDHOC EAD item for uploading at PEER_RS an ACE Access Token, which in turn includes its own public authentication credential AUTH_CRED_C.
+In particular, {{sec-trust-models-ace-prof}} considers a PEER_C that, when running EDHOC with PEER_RS, uses a dedicated EDHOC EAD item for uploading at PEER_RS an ACE access token, which in turn includes its own public authentication credential AUTH_CRED_C.
 
 Also as noted in {{sec-trust-models-ace-prof}}, this practically builds on PEER_RS supporting the trust policy "LEARNING" (see {{sec-trust-models}}), at least for its EDHOC resource used for exchanging the EDHOC messages of the EDHOC session in question.
 
 * Editor's note: TODO
 
-  PEER_RS might have reasons to enforce the trust policy "NO_LEARNING" anyway. In that case, unless PEER_RS already stores AUTH_CRED_C, the upload of the Access Token by means of the EAD item has to fail, and consequently the EDHOC session is aborted.
+  PEER_RS might have reasons to enforce the trust policy "NO_LEARNING" anyway. In that case, unless PEER_RS already stores AUTH_CRED_C, the upload of the access token by means of the EAD item has to fail, and consequently the EDHOC session is aborted.
 
   Explain how the SPO can practically ensure that to be the outcome.
 
@@ -706,11 +706,11 @@ Also as noted in {{sec-trust-models-ace-prof}}, this practically builds on PEER_
 
   AUTH_CRED_C is always specified (by value or by reference) in ID_CRED_R (ID_CRED_I) of EDHOC message_2 (EDHOC message_3).
 
-  AUTH_CRED_C can also be specified (by value or by reference) within an Access Token, which is conveyed by an EDHOC EAD item in an EDHOC message that PEER_C sends to PEER_RS. The details also depend on the two EDHOC peers using either the EDHOC forward message flow or the EDHOC reverse message flow (see {{Section A.2 of RFC9528}}).
+  AUTH_CRED_C can also be specified (by value or by reference) within an access token, which is conveyed by an EDHOC EAD item in an EDHOC message that PEER_C sends to PEER_RS. The details also depend on the two EDHOC peers using either the EDHOC forward message flow or the EDHOC reverse message flow (see {{Section A.2 of RFC9528}}).
 
-  When such an Access Token is uploaded by means of an EDHOC EAD item, PEER_RS has to perform consistency checks between the AUTH_CRED_C specified in ID_CRED_R or ID_CRED_I, and the AUTH_CRED_C specified within the Access Token.
+  When such an access token is uploaded by means of an EDHOC EAD item, PEER_RS has to perform consistency checks between the AUTH_CRED_C specified in ID_CRED_R or ID_CRED_I, and the AUTH_CRED_C specified within the access token.
 
-  Explain when PEER_RS becomes able to perform the consistency check, for the different cases, depending on using the EDHOC forward message flow or the EDHOC reverse message flow, and on the specific EDHOC message including the EAD item that conveys the Access Token including AUTH_CRED_C.
+  Explain when PEER_RS becomes able to perform the consistency check, for the different cases, depending on using the EDHOC forward message flow or the EDHOC reverse message flow, and on the specific EDHOC message including the EAD item that conveys the access token including AUTH_CRED_C.
 
   In the end, some of this content might better fit in {{I-D.ietf-ace-edhoc-oscore-profile}}, while this document can keep only implementation-specific details.
 
