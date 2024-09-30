@@ -185,11 +185,13 @@ application keys
 
 The following considers two peers that use the ACE framework for authentication and authorization in constrained environments {{RFC9200}}, and specifically the EDHOC and OSCORE profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
 
-When doing so, one of the two peers acts as ACE resource server (RS) hosting protected resources. The other peer acts as ACE client, requests from an ACE authorization server (AS) an access token that specifies access rights for accessing protected resources at the RS, and uploads the access token to the RS as part of the ACE workflow. Alternatively, the AS can upload the access token to the RS on behalf of the client, as per the alternative workflow defined in {{I-D.ietf-ace-workflow-and-params}}.
+When doing so, one of the two peers acts as ACE resource server (RS) hosting protected resources. The other peer acts as ACE client and requests from an ACE authorization server (AS) an access token, which specifies access rights for accessing protected resources at the RS as well as the public authentication credential of the client, namely AUTH_CRED_C.
 
-Consistent with the used EDHOC and OSCORE profile of ACE, the two peers run EDHOC in order to specifically derive an OSCORE Security Context as their shared set of application keys (see {{Section A.1 of RFC9528}}). The successfully completed EDHOC session is bound to the access token.
+After that, C uploads the access token to the RS as part of the ACE workflow. This can occur before running EDHOC with the RS, or by means of an EAD item conveyed within an EDHOC message during the EDHOC execution. Alternatively, the AS can upload the access token to the RS on behalf of the client, as per the alternative workflow defined in {{I-D.ietf-ace-workflow-and-params}}.
 
-After that, the peer acting as ACE client can access the protected resources hosted at the other peer, according to the access rights specified in the access token. The communications between the two peers are protected by means of the established OSCORE Security Context, which is also bound to the used access token.
+Consistent with the used EDHOC and OSCORE profile of ACE, the two peers run EDHOC in order to specifically derive an OSCORE Security Context as their shared set of application keys (see {{Section A.1 of RFC9528}}). At the RS, the access token is bound to the successfully completed EDHOC session and the established OSCORE Security Context.
+
+After that, the peer acting as ACE client can access the protected resources hosted at the other peer, according to the access rights specified in the access token. The communications between the two peers are protected by means of the established OSCORE Security Context.
 
 Later on, the application at one of the two peers P may have learned that the established OSCORE Security Context CTX is not safe to use anymore, e.g., from the used OSCORE library or from an OSCORE layer that takes part to the communication stack. The reasons that make CTX not safe to use anymore are the same ones discussed in {{sec-keys-invalid}} when considering a set of application keys in general, plus the event where the access token bound to CTX becomes invalid (e.g., it has expired or it has been revoked).
 
@@ -209,7 +211,9 @@ When this happens, the application at the peer P proceeds as follows.
 
    * If the access token is not valid anymore, the peer P deletes all the EDHOC sessions associated with the access token, as well as the OSCORE Security Context derived from each of those sessions.
 
-     If the peer P acted as ACE client, then P obtains a new access token from the ACE AS, and uploads it to the other peer acting as ACE RS.
+     Note that, when specifically considering the EDHOC and OSCORE profile of ACE, an access token is associated with at most one EDHOC session (see {{Section 4.4 of I-D.ietf-ace-edhoc-oscore-profile}}).
+
+     If the peer P acted as ACE client, then P obtains from the ACE AS a new access token, which is uploaded to the other peer acting as ACE RS.
 
      Finally, the application at P moves to step 4.
 
@@ -221,20 +225,24 @@ When this happens, the application at the peer P proceeds as follows.
 
 4. The peer P runs a new execution of the EDHOC protocol with the other peer. Upon successfully completing the EDHOC execution, the two peers derive and install a new OSCORE Security Context from this latest EDHOC session.
 
+   At the RS, the access token is bound to this latest EDHOC session and the newly established OSCORE Security Context.
+
 The flowchart in {{fig-flowchart-keys-token-invalid}} shows the handling of an access token or of a set of application keys that have become invalid.
 
 ~~~~~~~~~~~ aasvg
-Invalid token specifying CRED_I,
+Invalid access token
+specifying AUTH_CRED_C,
 or invalid application keys
 
   |
   |
   v
               NO
-Is the token ----> Delete the associated --> Obtain and --> Rerun ---+
-still valid?       EDHOC sessions and        upload a       EDHOC    |
-                   the application keys      new token               |
-  |                derived from those                         ^      |
+Is the       ----> Delete the associated --> Obtain and --> Rerun ---+
+access token       EDHOC sessions and        upload a       EDHOC    |
+still valid?       the application keys      new access              |
+                   derived from those        token            ^      |
+  |                                                           |      |
   |                                                           |      |
   | YES                                                       |      |
   v                                                           |      |
@@ -277,7 +285,7 @@ succeeded? ------------------------------+
 Install the updated
 application keys
 ~~~~~~~~~~~
-{: #fig-flowchart-keys-token-invalid title="Handling of an access token or of a set of Application Keys that have Become Invalid" artwork-align="center"}
+{: #fig-flowchart-keys-token-invalid title="Handling of an Access Token or of a Set of Application Keys that Have Become Invalid" artwork-align="center"}
 
 # Trust Models for Learning New Authentication Credentials # {#sec-trust-models}
 
@@ -820,6 +828,8 @@ This document has no actions for IANA.
 {:removeinrfc}
 
 ## Version -01 to -02 ## {#sec-01-02}
+
+* Improved content on the EDHOC and OSCORE profile of ACE.
 
 * Editorial improvements.
 
