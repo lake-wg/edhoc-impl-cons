@@ -331,6 +331,9 @@ Table of Contents
    requests from an ACE authorization server (AS) an access token that
    specifies access rights for accessing protected resources at the RS,
    and uploads the access token to the RS as part of the ACE workflow.
+   Alternatively, the AS can upload the access token to the RS on behalf
+   of the client, as per the alternative workflow defined in
+   [I-D.ietf-ace-workflow-and-params].
 
    Consistent with the used EDHOC and OSCORE profile of ACE, the two
    peers run EDHOC in order to specifically derive an OSCORE Security
@@ -1388,6 +1391,15 @@ Table of Contents
               draft-ietf-ace-edhoc-oscore-profile-05, 8 July 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
               edhoc-oscore-profile-05>.
+
+   [I-D.ietf-ace-workflow-and-params]
+              Tiloca, M. and G. Selander, "Alternative Workflow and
+              OAuth Parameters for the Authentication and Authorization
+              for Constrained Environments (ACE) Framework", Work in
+              Progress, Internet-Draft, draft-ietf-ace-workflow-and-
+              params-02, 8 July 2024,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
+              workflow-and-params-02>.
 
    [I-D.ietf-core-oscore-key-limits]
               Höglund, R. and M. Tiloca, "Key Usage Limits for OSCORE",
