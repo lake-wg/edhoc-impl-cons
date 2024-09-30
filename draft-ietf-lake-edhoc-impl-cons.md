@@ -293,9 +293,9 @@ A peer P relies on authentication credentials of other peers, in order to authen
 
 There are different ways for P to acquire an authentication credential CRED of another peer. For example, CRED can be supplied to P out-of-band by a trusted provider.
 
-Alternatively, CRED can be specified by the other peer during the EDHOC execution with P. This relies on EDHOC message_2 or message_3, whose respective ID_CRED_R and ID_CRED_I can specify CRED by value, or instead a URI or other external reference where CRED can be retrieved from (see {{Section 3.5.3 of RFC9528}}).
+Alternatively, CRED can be specified by the other peer during the EDHOC execution with P. This can rely on EDHOC message_2 or message_3, whose respective ID_CRED_R and ID_CRED_I can specify CRED by value, or instead a URI or other external reference where CRED can be retrieved from (see {{Section 3.5.3 of RFC9528}}).
 
-Also during the EDHOC execution, an External Authorization Data (EAD) field might include an EAD item that specifies CRED by value or reference. This is the case, e.g., for the EAD item defined in {{I-D.ietf-ace-edhoc-oscore-profile}}, which is used in the EAD_3 field of EDHOC message_3 and transports (a reference to) an access token that in turn specifies CRED_I by value or by reference.
+Also during the EDHOC execution, an External Authorization Data (EAD) field might include an EAD item that specifies CRED by value or reference. This is the case, e.g., for the EAD items defined by the EDHOC and OSCORE profile of the ACE framework {{I-D.ietf-ace-edhoc-oscore-profile}}. In particular, they can be used for transporting (a reference to) an access token, which in turn specifies by value or by reference the public authentication credential of the EDHOC peer acting as ACE client.
 
 When obtaining a new credential CRED, the peer P has to validate it before storing it. The validation steps to perform depend on the specific type of CRED (e.g., a public key certificate {{RFC5280}}{{I-D.ietf-cose-cbor-encoded-cert}}), and can rely on (the authentication credential of) a trusted third party acting as a trust anchor.
 
@@ -311,13 +311,21 @@ In future executions of EDHOC with the other peer associated with CRED, this all
 
 When processing a received EDHOC message M that specifies an authentication credential CRED, the peer P can enforce one of the following trust policies in order to determine whether to trust CRED.
 
-* NO-LEARNING: according to this policy, the peer P trusts CRED if and only if P is already storing CRED at message reception time.
+* NO-LEARNING: according to this policy, the peer P trusts CRED only if P is already storing CRED at message reception time, unless in cases where situation-specific exceptions apply and are deliberately enforced (see below).
 
-   That is, upon receiving M, the peer P can continue the execution of EDHOC only if both the following conditions hold.
+   That is, upon receiving M, the peer P should continue the execution of EDHOC only if both the following conditions hold.
 
    * P currently stores CRED, as specified by reference or by value in ID_CRED_I/ID_CRED_R or in the value of an EAD item; and
 
    * CRED is still valid, i.e., P believes CRED to not be expired or revoked.
+
+   Exceptions may apply and be actually enforced in cases where, during an EDHOC execution, P obtains additional information that allows it to trust and validate CRED, even though CRED is not already stored upon receiving M. Such exceptions typically rely on a trusted party that vouches for CRED, such as in the following cases:
+
+   * In the procedure defined in {{I-D.ietf-lake-authz}}, the EDHOC Initiator U receives an EDHOC message_2 where ID_CRED_R specifies the authentication credential of the EDHOC Responder V by value. In the same EDHOC message_2, an EAD item specifies a voucher issued by a trusted enrollment server W, which conveys authorization information about V and V's authentication credential CRED. Through a successful verification of the voucher, U is able to trust CRED (if found valid), even though it did not already store CRED upon receiving EDHOC message_2.
+
+   * In the EDHOC and OSCORE profile of the ACE framework defined in {{I-D.ietf-ace-edhoc-oscore-profile}}, the EDHOC peer acting as ACE client C can include an EAD item in an EDHOC message sent to the other EDHOC peer acting as ACE resource server (RS). The EAD item transports (a reference to) an access token issued by a trusted ACE authorization server (AS). In turn, the access token specifies CRED as the authentication credential of C, by value or by reference. Through a successful verification of the access token, the RS is able to trust CRED (if found valid), even if not already storing it upon receiving the EDHOC message with the EAD item.
+
+   If the peer P admits such an exception and actually enforces it on an authentication credential CRED, then P effectively handles CRED according to the trust policy "LEARNING" specified below.
 
 * LEARNING: according to this policy, the peer P trusts CRED even if P is not already storing CRED at message reception time.
 
@@ -333,24 +341,21 @@ Irrespective of the adopted trust policy, P actually uses CRED only if it is det
 
 ## Enforcement in the EDHOC and OSCORE Profile of ACE # {#sec-trust-models-ace-prof}
 
-As discussed in {{sec-keys-token-invalid}}, two EDHOC peers can be using the ACE framework {{RFC9200}} and specifically the EDHOC and OSCORE profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}. In particular:
+As discussed in {{sec-keys-token-invalid}}, two EDHOC peers can be using the ACE framework {{RFC9200}} and specifically the EDHOC and OSCORE profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
 
-* One of the two EDHOC peers, namely PEER_RS, acts as ACE resource server (RS).
+In this case, one of the two EDHOC peers, namely PEER_RS, acts as ACE resource server (RS). Instead, the other EDHOC peer, namely PEER_C, acts as ACE client, and obtains from the ACE authorization server (AS) an access token for accessing protected resources at PEER_RS.
 
-* The other EDHOC peer, namely PEER_C, acts as ACE client, and obtains from the ACE authorization server (AS) an access token for accessing protected resources at PEER_RS.
+Together with other information, the access token specifies (by value or by reference) the public authentication credential AUTH_CRED_C that PEER_C is going to use when running EDHOC with PEER_RS. Note that AUTH_CRED_C will be used as either CRED_I or CRED_R, depending on whether the two peers use the EDHOC forward message flow (i.e., PEER_C is the EDHOC Initiator) or the EDHOC reverse message flow (i.e., PEER_C is the EDHOC Responder), respectively (see {{Section A.2 of RFC9528}}).
 
-  Together with other information, the access token specifies (by value or by reference) the public authentication credential AUTH_CRED_C that PEER_C is going to use when running EDHOC with PEER_RS.
+When the AS issues the first access token that specifies AUTH_CRED_C and is intended to be uploaded to PEER_RS, it is expected that the access token specifies AUTH_CRED_C by value, and that PEER_RS is not currently storing AUTH_CRED_C, but instead will obtain it upon receiving the access token.
 
-  Note that AUTH_CRED_C will be used as either CRED_I or CRED_R, depending on whether the two peers use the EDHOC forward message flow (i.e., PEER_C is the EDHOC Initiator) or the EDHOC reverse message flow (i.e., PEER_C is the EDHOC Responder), respectively (see {{Section A.2 of RFC9528}}).
+While such an access token can be uploaded to PEER_RS before running EDHOC, it is also possible for PEER_C to upload it through a dedicated EAD item, while running EDHOC with PEER_RS. In such a case, PEER_RS has to learn AUTH_CRED_C as a new public authentication credential during an EDHOC session.
 
-When using the EDHOC and OSCORE profile of ACE, it is also possible for PEER_C to upload the access token at PEER_RS by means of a dedicated EDHOC EAD item, while running EDHOC with PEER_RS.
+At least for its EDHOC resource used for exchanging the EDHOC messages of the EDHOC session in question, this requires PEER_RS to:
 
-In order to ensure that this effectively works, PEER_RS has to support the trust policy "LEARNING", at least for its EDHOC resource used for exchanging the EDHOC messages of the EDHOC session in question.
+* Enforce the trust policy "LEARNING"; or
 
-That is, PEER_RS is expected to not store AUTH_CRED_C in advance, and instead to gain knowledge of it as specified in the access token issued by the AS and uploaded by PEER_C. If PEER_RS has to learn AUTH_CRED_C as a new public authentication credential during an EDHOC session, indeed this requires PEER_RS to enforce the trust policy "LEARNING".
-
-In fact, when the AS issues the first access token ever such that it specifies AUTH_CRED_C and is intended to be uploaded to PEER_RS, it is expected that the access token specifies AUTH_CRED_C by value and that PEER_RS is not currently storing AUTH_CRED_C.
-
+* If enforcing the trust policy "NO-LEARNING", additionally enforce an overriding exception when an incoming EDHOC message includes an EAD item conveying (a reference to) an access token, as discussed earlier in this section.
 
 # Side Processing of Incoming EDHOC Messages # {#sec-message-side-processing}
 
@@ -464,9 +469,9 @@ PHASE_1 - During PHASE_1, the SPO at the recipient peer P determines CRED, i.e.,
 
 4. If the retrieval of CRED has succeeded, the SPO moves to step 5. Otherwise, the SPO moves to step 11.
 
-5. If the enforced trust policy for new authentication credentials is "NO-LEARNING" (see {{sec-trust-models}}), the SPO moves to step 11. Otherwise, the SPO moves to step 6.
+5. If the enforced trust policy for new authentication credentials is "NO-LEARNING" and P does not admit any exceptions that are acceptable to enforce for message_X (see {{sec-trust-models}}), the SPO moves to step 11. Otherwise, the SPO moves to step 6.
 
-6. If this step has been reached, the peer P enforces the trust policy "LEARNING" (see {{sec-trust-models}}) and it is not already storing the retrieved CRED.
+6. If this step has been reached, the peer P is not already storing the retrieved CRED and, at the same time, it enforces either the trust policy "LEARNING" or the trust policy "NO-LEARNING" while also enforcing an exception acceptable for message_X (see {{sec-trust-models}}).
 
    Consistently, the SPO determines if CRED is currently valid, e.g., by asserting that CRED has not expired and has not been revoked. Then, the SPO moves to step 7.
 
@@ -509,6 +514,7 @@ Then, EDHOC resumes its execution and advances its protocol state.
 The flowchart in {{fig-flowchart-spo-high-level}} shows the high-level interaction between the core EDHOC processing and the SPO, with particular reference to an incoming EDHOC message_2 or message_3.
 
 ~~~~~~~~~~~ aasvg
+Incoming
 EDHOC message_X
 (X = 2 or 3)
 
@@ -581,64 +587,73 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
  the side-processor object
 
           |
-+---------|---------------------------------------------------------+
-|         |           Pre-verification side processing (PHASE_1)    |
-|         v                                                         |
-| +---------------------+     +--------------+    +-------------+   |
-| | 1. Does ID_CRED_X   | NO  | 3. Retrieve  |    | 4. Is the   |   |
-| | or an EAD item      |---->| CRED via     |--->| retrieval   |   |
-| | point to an already |     | ID_CRED_X or |    | of CRED     |   |
-| | stored CRED?        |     | an EAD item  |    | successful? |   |
-| +---------------------+     +--------------+    +-------------+   |
-|         |                                        |          |     |
-|         |                                        | NO       | YES |
-|         |                         +--------------+          |     |
-|         | YES                     |                         |     |
-|         v                         v                         v     |
-| +-----------------+ NO      +-----------+  YES +----------------+ |
-| | 2. Is this CRED |-------->| 11. Abort |<-----| 5. Is the      | |
-| | still valid?    |         | the EDHOC |      | used policy    | |
-| +-----------------+         | session   |      | "NO-LEARNING"? | |
-|         |                   |           |      +----------------+ |
-|         | YES               |           |                   |     |
-|         v                   |           |   The used policy | NO  |
-| +--------------------+ NO   |           |   is "LEARNING"   |     |
-| | 9. Is this CRED    |----->|           |                   v     |
-| | good to use in the |      +-----------+         +-------------+ |
-| | context of this    |               ^            | 6. Validate | |
-| | EDHOC session?     |<--+           |            | CRED        | |
-| +--------------------+   |           |            +-------------+ |
-|         |                |           |                      |     |
-|         | YES            |           | NO                   |     |
-|         |                |           |                      v     |
-|         |                |        +-----------------------------+ |
-|         |                |        | 7. Is CRED valid?           | |
-|         |                |        +-----------------------------+ |
-|         |                |           |                            |
-|         |                |           | YES                        |
-|         |                |           v                            |
-|         v                |        +-----------------------------+ |
-| +------------------+     |        | 8. Store CRED as valid and  | |
-| | 10. Continue by  |     +--------| trusted.                    | |
-| | considering this |              |                             | |
-| | CRED as the      |              | Pair CRED with consistent   | |
-| | authentication   |              | credential identifiers, for | |
-| | credential of    |              | each supported type of      | |
-| | the other peer   |              | credential identifier.      | |
-| +------------------+              +-----------------------------+ |
-|         |                                                         |
-+---------|---------------------------------------------------------+
++---------|----------------------------------------------------------+
+|         |            Pre-verification side processing (PHASE_1)    |
+|         v                                                          |
+| +---------------------+     +--------------+     +-------------+   |
+| | 1. Does ID_CRED_X   | NO  | 3. Retrieve  |     | 4. Is the   |   |
+| | or an EAD item      |---->| CRED via     |---->| retrieval   |   |
+| | point to an already |     | ID_CRED_X or |     | of CRED     |   |
+| | stored CRED?        |     | an EAD item  |     | successful? |   |
+| +---------------------+     +--------------+     +-------------+   |
+|         |                                         |          |     |
+|         |                                         | NO       | YES |
+|         |                         +---------------+          |     |
+|         | YES                     |                          |     |
+|         v                         v                          v     |
+| +-----------------+ NO      +-----------+   YES +----------------+ |
+| | 2. Is this CRED |-------->| 11. Abort |<------| 5. Is the used | |
+| | still valid?    |         | the EDHOC |       | trust policy   | |
+| +-----------------+         | session   |       | "NO-LEARNING", | |
+|         |                   |           |       | without any    | |
+|         |                   |           |       | acceptable     | |
+|         |                   |           |       | exceptions?    | |
+|         |                   |           |       +----------------+ |
+|         | YES               |           |                    |     |
+|         v                   |           |    Here the used   | NO  |
+| +--------------------+ NO   |           |    trust policy is |     |
+| | 9. Is this CRED    |----->|           |    "LEARNING", or  |     |
+| | good to use in the |      +-----------+    "NO-LEARNING"   |     |
+| | context of this    |               ^       together with   |     |
+| | EDHOC session?     |<--+           |       an overriding   |     |
+| +--------------------+   |           |       exception       |     |
+|         |                |           |                       |     |
+|         |                |           |                       v     |
+|         |                |           |             +-------------+ |
+|         |                |           |             | 6. Validate | |
+|         |                |           |             | CRED        | |
+|         |                |           |             +-------------+ |
+|         |                |           |                       |     |
+|         | YES            |           | NO                    |     |
+|         |                |           |                       v     |
+|         |                |        +------------------------------+ |
+|         |                |        | 7. Is CRED valid?            | |
+|         |                |        +------------------------------+ |
+|         |                |           |                             |
+|         |                |           | YES                         |
+|         |                |           v                             |
+|         v                |        +------------------------------+ |
+| +------------------+     |        | 8. Store CRED as valid and   | |
+| | 10. Continue by  |     +--------| trusted.                     | |
+| | considering this |              |                              | |
+| | CRED as the      |              | Pair CRED with consistent    | |
+| | authentication   |              | credential identifiers, for  | |
+| | credential of    |              | each supported type of       | |
+| | the other peer   |              | credential identifier.       | |
+| +------------------+              +------------------------------+ |
+|         |                                                          |
++---------|----------------------------------------------------------+
           |
           |
-+---------|---------------------------------------------------------+
-|         |           Pre-verification side processing (PHASE_2)    |
-|         v                                                         |
-| +---------------------------------------------------------+       |
-| | Process the EAD items that have not been processed yet, |       |
-| | and that can be processed before message verification   |       |
-| +---------------------------------------------------------+       |
-|         |                                                         |
-+---------|---------------------------------------------------------+
++---------|----------------------------------------------------------+
+|         |           Pre-verification side processing (PHASE_2)     |
+|         v                                                          |
+| +--------------------------------------------------------+         |
+| | Process the EAD items that have not been processed yet |         |
+| | and that can be processed before message verification  |         |
+| +--------------------------------------------------------+         |
+|         |                                                          |
++---------|----------------------------------------------------------+
           |
           |
           v
@@ -699,11 +714,11 @@ This section describes methods to perform special handling of incoming EDHOC mes
 
 ### EDHOC and OSCORE Profile of ACE ### {#sec-message-side-processing-ace-prof}
 
-{{sec-trust-models-ace-prof}} discusses the case where two EDHOC peer use the ACE framework {{RFC9200}} and specifically the EDHOC and OSCORE profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
+{{sec-trust-models-ace-prof}} discusses the case where two EDHOC peers use the ACE framework {{RFC9200}} and specifically the EDHOC and OSCORE profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
 
-In particular, {{sec-trust-models-ace-prof}} considers a PEER_C that, when running EDHOC with PEER_RS, uses a dedicated EDHOC EAD item for uploading at PEER_RS an ACE access token, which in turn includes its own public authentication credential AUTH_CRED_C.
+In particular, {{sec-trust-models-ace-prof}} considers a PEER_C that, when running EDHOC with PEER_RS, uses a dedicated EDHOC EAD item for uploading at PEER_RS an access token, which in turn includes its own public authentication credential AUTH_CRED_C.
 
-Also as noted in {{sec-trust-models-ace-prof}}, this practically builds on PEER_RS supporting the trust policy "LEARNING" (see {{sec-trust-models}}), at least for its EDHOC resource used for exchanging the EDHOC messages of the EDHOC session in question.
+As also discussed in {{sec-trust-models-ace-prof}}, this practically requires PEER_RS to enforce either the trust policy "LEARNING" or the trust policy "NO-LEARNING" with additional overriding exceptions (see {{sec-trust-models}}), at least for the EDHOC resource used for exchanging the EDHOC messages of the EDHOC session in question.
 
 * Editor's note: TODO
 
@@ -830,6 +845,8 @@ This document has no actions for IANA.
 ## Version -01 to -02 ## {#sec-01-02}
 
 * Improved content on the EDHOC and OSCORE profile of ACE.
+
+* Admit situation-specific exceptions to the NO-LEARNING policy.
 
 * Editorial improvements.
 
