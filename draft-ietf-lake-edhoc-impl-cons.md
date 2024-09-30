@@ -93,7 +93,7 @@ Nevertheless, the same considerations are applicable in case EDHOC is used to de
 
 The application at a peer P may have learned that a completed EDHOC session S has to be invalidated. When S is marked as invalid, the application at P purges S and deletes each set of application keys (e.g., the OSCORE Security Context) that was generated from S.
 
-Then, the applications runs a new execution of the EDHOC protocol with the other peer. Upon successfully completing the EDHOC execution, the two peers derive and install a new set of application keys from this latest EDHOC session.
+Then, the application runs a new execution of the EDHOC protocol with the other peer. Upon successfully completing the EDHOC execution, the two peers derive and install a new set of application keys from this latest EDHOC session.
 
 The flowchart in {{fig-flowchart-session-invalid}} shows the handling of an EDHOC session that has become invalid.
 
@@ -102,9 +102,9 @@ Invalid     Delete the EDHOC session      Rerun     Derive and
 EDHOC   --> and the application keys  --> EDHOC --> install new
 session     derived from it                         application keys
 ~~~~~~~~~~~
-{: #fig-flowchart-session-invalid title="Handling of an EDHOC Session that has Become Invalid" artwork-align="center"}
+{: #fig-flowchart-session-invalid title="Handling of an EDHOC Session that Has Become Invalid" artwork-align="center"}
 
-An EDHOC session may have become invalid, for example, because an authentication credential CRED_X may have expired, or because P may have learned from a trusted source that CRED_X has been revoked. This effectively invalidates CRED_X, and therefore also invalidates any EDHOC session where CRED_X was used as authentication credential of either peer in the session (i.e., P itself or the other peer). In such a case, the application at P has to additionally delete CRED_X and any stored, corresponding credential identifier.
+An EDHOC session may have become invalid, for example, because an authentication credential CRED_X may have expired, or because the peer P may have learned from a trusted source that CRED_X has been revoked. This effectively invalidates CRED_X, and therefore also invalidates any EDHOC session where CRED_X was used as authentication credential of either peer in the session (i.e., P itself or the other peer). In such a case, the application at P has to additionally delete CRED_X and any stored, corresponding credential identifier.
 
 ## Application Keys Become Invalid ## {#sec-keys-invalid}
 
@@ -112,9 +112,9 @@ The application at a peer P may have learned that a set of application keys is n
 
 A current set SET of application keys shared with another peer can become unsafe to use, for example, due to the following reasons.
 
-* SET has reached its pre-determined expiration time; or
+* SET has reached a pre-determined expiration time; or
 
-* SET has been established for a pre-defined, now elapsed amount of time, according to enforced application policies; or
+* SET has been established to use for a now elapsed amount of time, according to enforced application policies; or
 
 * Some elements of SET have been used enough times to approach cryptographic limits that should not be passed, e.g., according to the properties of the specifically used security algorithms. With particular reference to an OSCORE Security Context, such limits are discussed in {{I-D.ietf-core-oscore-key-limits}}.
 
@@ -178,25 +178,25 @@ succeeded? ---------------------------+
 Install the updated
 application keys
 ~~~~~~~~~~~
-{: #fig-flowchart-keys-invalid title="Handling of a set of Application Keys that has Become Invalid" artwork-align="center"}
+{: #fig-flowchart-keys-invalid title="Handling of a Set of Application Keys that Has Become Invalid" artwork-align="center"}
 
 ## Application Keys or Bound Access Rights Become Invalid ## {#sec-keys-token-invalid}
 
 The following considers two peers that use the ACE framework for authentication and authorization in constrained environments {{RFC9200}}, and specifically the EDHOC and OSCORE profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
 
-When doing so, one of the two peers acts as ACE Resource Server (RS) hosting protected resources. The other peer acts as ACE Client, requests from an ACE Authorization Server (AS) an Access Token that specifies access rights for accessing protected resources at the RS, and uploads the Access Token to the RS as part of the ACE workflow.
+When doing so, one of the two peers acts as ACE resource server (RS) hosting protected resources. The other peer acts as ACE client, requests from an ACE authorization server (AS) an access token that specifies access rights for accessing protected resources at the RS, and uploads the access token to the RS as part of the ACE workflow.
 
-Consistent with the used EDHOC and OSCORE profile of ACE, the two peers run EDHOC in order to specifically derive an OSCORE Security Context as their shared set of application keys (see {{Section A.1 of RFC9528}}). The successfully completed EDHOC session is bound to the Access Token.
+Consistent with the used EDHOC and OSCORE profile of ACE, the two peers run EDHOC in order to specifically derive an OSCORE Security Context as their shared set of application keys (see {{Section A.1 of RFC9528}}). The successfully completed EDHOC session is bound to the access token.
 
-After that, the peer acting as ACE Client can access the protected resources hosted at the other peer, according to the access rights specified in the Access Token. The communications between the two peers are protected by means of the established OSCORE Security Context, which is also bound to the used Access Token.
+After that, the peer acting as ACE client can access the protected resources hosted at the other peer, according to the access rights specified in the access token. The communications between the two peers are protected by means of the established OSCORE Security Context, which is also bound to the used access token.
 
-Later on, the application at one of the two peers P may have learned that the established OSCORE Security Context CTX is not safe to use anymore, e.g., from the used OSCORE library or from an OSCORE layer that takes part to the communication stack. The reasons that make CTX not safe to use anymore are the same ones discussed in {{sec-keys-invalid}} when considering a set of application keys in general, plus the event where the Access Token bound to CTX becomes invalid (e.g., it has expired or it has been revoked).
+Later on, the application at one of the two peers P may have learned that the established OSCORE Security Context CTX is not safe to use anymore, e.g., from the used OSCORE library or from an OSCORE layer that takes part to the communication stack. The reasons that make CTX not safe to use anymore are the same ones discussed in {{sec-keys-invalid}} when considering a set of application keys in general, plus the event where the access token bound to CTX becomes invalid (e.g., it has expired or it has been revoked).
 
 When this happens, the application at the peer P proceeds as follows.
 
 1. If the following conditions both hold, then the application moves to step 2. Otherwise, it moves to step 3.
 
-   * The Access Token is still valid. That is, it has not expired yet and the peer P is not aware that it has been revoked.
+   * The access token is still valid. That is, it has not expired yet and the peer P is not aware that it has been revoked.
 
    * Let us define S as the EDHOC session from which the peer P has derived CTX or the eldest CTX's ancestor OSCORE Security Context. Then, since the completion of S with the other peer, the application at P has received from the other peer at least one message protected with any set of application keys derived from S. That is, P has persisted S (see {{Section 5.4.2 of RFC9528}}).
 
@@ -206,21 +206,21 @@ When this happens, the application at the peer P proceeds as follows.
 
 3. The application at the peer P performs the following actions.
 
-   * If the Access Token is not valid anymore, the peer P deletes all the EDHOC sessions associated with the Access Token, as well as the OSCORE Security Context derived from each of those sessions.
+   * If the access token is not valid anymore, the peer P deletes all the EDHOC sessions associated with the access token, as well as the OSCORE Security Context derived from each of those sessions.
 
-      If the peer P acted as ACE Client, then P obtains a new Access Token from the ACE AS, and uploads it to the other peer acting as ACE RS.
+     If the peer P acted as ACE client, then P obtains a new access token from the ACE AS, and uploads it to the other peer acting as ACE RS.
 
-      Finally, the application at P moves to step 4.
+     Finally, the application at P moves to step 4.
 
-   * If the Access Token is valid while the OSCORE Security Context CTX is not, then the peer P deletes CTX.
+   * If the access token is valid while the OSCORE Security Context CTX is not, then the peer P deletes CTX.
 
-      After that, the peer P deletes the EDHOC session from which CTX was generated, or from which the eldest CTX's ancestor OSCORE Security Context was generated before any key update occurred (e.g., by means of KUDOS or other key update methods).
+     After that, the peer P deletes the EDHOC session from which CTX was generated, or from which the eldest CTX's ancestor OSCORE Security Context was generated before any key update occurred (e.g., by means of KUDOS or other key update methods).
 
-      Finally, the application at P moves to step 4.
+     Finally, the application at P moves to step 4.
 
 4. The peer P runs a new execution of the EDHOC protocol with the other peer. Upon successfully completing the EDHOC execution, the two peers derive and install a new OSCORE Security Context from this latest EDHOC session.
 
-The flowchart in {{fig-flowchart-keys-token-invalid}} shows the handling of an Access Token or of a set of application keys that have become invalid.
+The flowchart in {{fig-flowchart-keys-token-invalid}} shows the handling of an access token or of a set of application keys that have become invalid.
 
 ~~~~~~~~~~~ aasvg
 Invalid token specifying CRED_I,
@@ -731,7 +731,7 @@ The rest of this section refers to the following notation.
 
 * SIZE_APP: the size in bytes of the application data to be included in a CoAP request. When Block-wise is used, this is referred to as the "body" to be fragmented into blocks.
 
-* SIZE_EDHOC: the size in bytes of EDHOC message_3, if this is sent as part of the EDHOC + OSCORE request. Otherwise, the size of EDHOC message_3 plus the size in bytes of the EDHOC Connection Identifier C_R, encoded as per {{Section 3.3 of RFC9528}}.
+* SIZE_EDHOC: the size in bytes of EDHOC message_3, if this is sent as part of the EDHOC + OSCORE request. Otherwise, the size in bytes of EDHOC message_3 plus the size in bytes of the EDHOC Connection Identifier C_R, encoded as per {{Section 3.3 of RFC9528}}.
 
 * SIZE_MTU: the maximum amount of transmittable bytes before having to use Block-wise. This is, for example, 64 KiB as maximum datagram size when using UDP, or 1280 bytes as the maximum size for an IPv6 MTU.
 
@@ -817,6 +817,10 @@ This document has no actions for IANA.
 
 # Document Updates # {#sec-document-updates}
 {:removeinrfc}
+
+## Version -01 to -02 ## {#sec-01-02}
+
+* Editorial improvements.
 
 ## Version -00 to -01 ## {#sec-00-01}
 
