@@ -716,23 +716,43 @@ This section describes methods to perform special handling of incoming EDHOC mes
 
 {{sec-trust-models-ace-prof}} discusses the case where two EDHOC peers use the ACE framework {{RFC9200}} and specifically the EDHOC and OSCORE profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
 
-In particular, {{sec-trust-models-ace-prof}} considers a PEER_C that, when running EDHOC with PEER_RS, uses a dedicated EDHOC EAD item for uploading at PEER_RS an access token, which in turn includes its own public authentication credential AUTH_CRED_C.
+In particular, {{sec-trust-models-ace-prof}} considers a peer PEER_C that, when running EDHOC with a peer PEER_RS, uses a dedicated EAD item for uploading an access token at PEER_RS. In turn, the access token specifies AUTH_CRED_C as the public authentication credential of PEER_C.
 
-As also discussed in {{sec-trust-models-ace-prof}}, this practically requires PEER_RS to enforce either the trust policy "LEARNING" or the trust policy "NO-LEARNING" with additional overriding exceptions (see {{sec-trust-models}}), at least for the EDHOC resource used for exchanging the EDHOC messages of the EDHOC session in question.
+As also discussed in {{sec-trust-models-ace-prof}}, this practically requires PEER_RS to enforce either the trust policy "LEARNING" or the trust policy "NO-LEARNING" with situation-specific, overriding exceptions (see {{sec-trust-models}}), at least for the EDHOC resource used for exchanging the EDHOC messages of the EDHOC session in question.
 
-* Editor's note: TODO
+However, PEER_RS might have reasons to enforce the trust policy "NO_LEARNING" with no exceptions. In such a case, unless PEER_RS already stores AUTH_CRED_C, the upload of the access token by means of the EAD item has to consistently fail, and PEER_RS has to consequently abort the EDHOC session.
 
-  PEER_RS might have reasons to enforce the trust policy "NO_LEARNING" anyway. In that case, unless PEER_RS already stores AUTH_CRED_C, the upload of the access token by means of the EAD item has to fail, and consequently the EDHOC session is aborted.
+This requires PEER_RS to perform an early check of the access token conveyed in the EAD item, in order to retrieve AUTH_CRED_C and determine whether it is already storing AUTH_CRED_C. The SPO can perform such a task, as part of steps 3 and 4 of PHASE_1 of the pre-verification side processing (see {{sec-pre-verif}}).
 
-  Explain how the SPO can practically ensure that to be the outcome.
+In order to be reliable, this task requires to perform a cryptographic validation of the access token. Moreover, the access token can be encrypted, which makes the actual retrieval of AUTH_CRED_C not straighforward. In practice, the SPO has a number of viable options.
+
+* The SPO can directly perform the necessary cryptographic processing of the access token, including decryption if necessary.
+
+  This requires to provide the SPO with the same security context, parameters, and cryptographic material that are available at a token validator component of PEER_RS, and that are shared with the ACE authorization server that has issued the access token.
+
+  If the SPO fails the validation and cryptographic processing of the access token, or if it does not already store the AUTH_CRED_C specified by the access token, then the SPO aborts the EDHOC session.
+
+  A downside of this approach is that the token validator component of PEER_RS will later repeat the cryptographic processing of the access token, when eventually provided by the SPO with the access token like if the latter was uploaded to PEER_RS as normally expected in the ACE framework.
+
+* The SPO can engage in an internal, synchronous exchange with a token validator component of PEER_RS that is normally responsible for the validation and cryptographic processing of access tokens. For example, the SPO can proceed as follows.
+
+  1. The SPO creates a copy CREDS_BEFORE of the stored authentication credentials of its other EDHOC peers.
+
+  2. The SPO provides the token validator component of PEER_RS with the access token to undergo cryptographic processing and validation. If such process succeeds, the token validator component stores the access token, and adds AUTH_CRED_C to the current set of authentication credentials of other EDHOC peers.
+
+  3. After learning of the successful validation of the access token from the token validator component, the SPO checks whether the set of currently stored authentication credentials of other EDHOC peers includes an element that is not included in CREDS_BEFORE.
+
+  4. In case of a positive match, then the found element is AUTH_CRED_C, which PEER_RS was not supposed to learn as per the enforced "NO-LEARNING" policy.
+
+     Consequently, the SPO requests the token validator element to purge the access token, deletes CREDS_BEFORE, deletes AUTH_CRED_C from the set of currently stored authentication credentials of other EDHOC peers, and aborts the EDHOC session.
 
 * Editor's note: TODO
 
   AUTH_CRED_C is always specified (by value or by reference) in ID_CRED_R (ID_CRED_I) of EDHOC message_2 (EDHOC message_3).
 
-  AUTH_CRED_C can also be specified (by value or by reference) within an access token, which is conveyed by an EDHOC EAD item in an EDHOC message that PEER_C sends to PEER_RS. The details also depend on the two EDHOC peers using either the EDHOC forward message flow or the EDHOC reverse message flow (see {{Section A.2 of RFC9528}}).
+  AUTH_CRED_C can also be specified (by value or by reference) within an access token, which is conveyed by an EAD item in an EDHOC message that PEER_C sends to PEER_RS. The details also depend on the two EDHOC peers using either the EDHOC forward message flow or the EDHOC reverse message flow (see {{Section A.2 of RFC9528}}).
 
-  When such an access token is uploaded by means of an EDHOC EAD item, PEER_RS has to perform consistency checks between the AUTH_CRED_C specified in ID_CRED_R or ID_CRED_I, and the AUTH_CRED_C specified within the access token.
+  When such an access token is uploaded by means of an EAD item, PEER_RS has to perform consistency checks between the AUTH_CRED_C specified in ID_CRED_R or ID_CRED_I, and the AUTH_CRED_C specified within the access token.
 
   Explain when PEER_RS becomes able to perform the consistency check, for the different cases, depending on using the EDHOC forward message flow or the EDHOC reverse message flow, and on the specific EDHOC message including the EAD item that conveys the access token including AUTH_CRED_C.
 
@@ -846,7 +866,9 @@ This document has no actions for IANA.
 
 * Improved content on the EDHOC and OSCORE profile of ACE.
 
-* Admit situation-specific exceptions to the NO-LEARNING policy.
+* Admit situation-specific exceptions to the "NO-LEARNING" policy.
+
+* Using the EDHOC and OSCORE profile of ACE with the "NO-LEARNING" policy.
 
 * Editorial improvements.
 
