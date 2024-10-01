@@ -1193,7 +1193,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-notation" class="internal xref">Notation</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
-                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-pre-requirements" class="internal xref">Pre-requirements</a></p>
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-pre-requirements-for-the-ed" class="internal xref">Pre-requirements for the EDHOC + OSCORE Request</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
                 <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-effectively-using-block-wis" class="internal xref">Effectively Using Block-Wise</a></p>
@@ -1258,7 +1258,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
           <p id="section-1-5.3.1">Branched-off, side processing of incoming EDHOC messages, with particular reference to: i) fetching and validation of authentication credentials; and ii) processing of External Authorization Data (EAD) items, which in turn might play a role in the fetching and validation of authentication credentials. This topic is discussed in <a href="#sec-message-side-processing" class="auto internal xref">Section 4</a>.<a href="#section-1-5.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-5.4">
-          <p id="section-1-5.4.1">Effectively using EDHOC over the Constrained Application Protocol (CoAP) <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span> in combination with Block-Wise Transfers for CoAP <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span>, possibly together with the optimized EDHOC execution workflow defined in <span>[<a href="#I-D.ietf-core-oscore-edhoc" class="cite xref">I-D.ietf-core-oscore-edhoc</a>]</span>. This topic is discussed in <a href="#sec-block-wise" class="auto internal xref">Section 5</a>.<a href="#section-1-5.4.1" class="pilcrow">¶</a></p>
+          <p id="section-1-5.4.1">Effectively using EDHOC over the Constrained Application Protocol (CoAP) <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span> in combination with Block-wise Transfers for CoAP <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span>, possibly together with the optimized EDHOC execution workflow defined in <span>[<a href="#I-D.ietf-core-oscore-edhoc" class="cite xref">I-D.ietf-core-oscore-edhoc</a>]</span>. This topic is discussed in <a href="#sec-block-wise" class="auto internal xref">Section 5</a>.<a href="#section-1-5.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <div id="terminology">
@@ -1270,7 +1270,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 "<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
-<p id="section-1.1-2">The reader is expected to be familiar with terms and concepts related to the EDHOC protocol <span>[<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>, the Constrained Application Protocol (CoAP) <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>, and Block-Wise Transfers for CoAP <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span>.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
+<p id="section-1.1-2">The reader is expected to be familiar with terms and concepts related to the EDHOC protocol <span>[<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>, the Constrained Application Protocol (CoAP) <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>, and Block-wise Transfers for CoAP <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span>.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2633,9 +2633,9 @@ Consequently, the SPO requests the token validator element to purge the access t
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-using-edhoc-over-coap-with-" class="section-name selfRef">Using EDHOC over CoAP with Block-Wise</a>
       </h2>
 <p id="section-5-1"><span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.2" class="relref">Appendix A.2</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span> specifies how to transfer EDHOC over CoAP <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>. In such a case, the EDHOC messages (possibly prepended by an EDHOC connection identifier) are transported in the payload of CoAP requests and responses, according to the EDHOC forward message flow or the EDHOC reverse message flow. Furthermore, <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.1" class="relref">Appendix A.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span> specifies how to derive an OSCORE Security Context <span>[<a href="#RFC8613" class="cite xref">RFC8613</a>]</span> from an EDHOC session.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">Building on that, <span>[<a href="#I-D.ietf-core-oscore-edhoc" class="cite xref">I-D.ietf-core-oscore-edhoc</a>]</span> further details the use of EDHOC with CoAP and OSCORE, and specifies an optimization approach for the EDHOC forward message flow that combines the EDHOC execution with the first subsequent OSCORE transaction. This is achieved by means of an "EDHOC + OSCORE request", i.e., a single CoAP request message that conveys both EDHOC message_3 of the ongoing EDHOC session and an OSCORE-protected application request, where the latter is protected with the OSCORE Security Context derived from that EDHOC session.<a href="#section-5-2" class="pilcrow">¶</a></p>
-<p id="section-5-3">This section provides guidelines and recommendations for CoAP clients supporting Block-wise transfers for CoAP <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span> and the EDHOC + OSCORE request defined in <span>[<a href="#I-D.ietf-core-oscore-edhoc" class="cite xref">I-D.ietf-core-oscore-edhoc</a>]</span>.<a href="#section-5-3" class="pilcrow">¶</a></p>
-<p id="section-5-4">The following especially considers a CoAP client that may perform only "inner" Block-wise, but not "outer" Block-wise operations (see <span><a href="https://rfc-editor.org/rfc/rfc8613#section-4.1.3.4" class="relref">Section 4.1.3.4</a> of [<a href="#RFC8613" class="cite xref">RFC8613</a>]</span>). That is, the considered CoAP client does not (further) split an OSCORE-protected request like an intermediary (e.g., a proxy) might do. This is the typical case for OSCORE endpoints (see <span><a href="https://rfc-editor.org/rfc/rfc8613#section-4.1.3.4" class="relref">Section 4.1.3.4</a> of [<a href="#RFC8613" class="cite xref">RFC8613</a>]</span>).<a href="#section-5-4" class="pilcrow">¶</a></p>
+<p id="section-5-2">Building on that, <span>[<a href="#I-D.ietf-core-oscore-edhoc" class="cite xref">I-D.ietf-core-oscore-edhoc</a>]</span> further details the use of EDHOC with CoAP and OSCORE, and specifies an optimization approach for the EDHOC forward message flow that combines the EDHOC execution with the first subsequent OSCORE transaction. This is achieved by means of an "EDHOC + OSCORE request", i.e., a single CoAP request message that conveys both EDHOC message_3 of the ongoing EDHOC session and the OSCORE-protected application data, where the latter is protected with the OSCORE Security Context derived from that EDHOC session.<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-3">This section provides guidelines and recommendations for CoAP endpoints supporting Block-wise transfers for CoAP <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span> and specifically for CoAP clients supporting the EDHOC + OSCORE request defined in <span>[<a href="#I-D.ietf-core-oscore-edhoc" class="cite xref">I-D.ietf-core-oscore-edhoc</a>]</span>. The use of Block-wise transfers can be desirable, e.g., for EDHOC messages that include a large ID_CRED_I or ID_CRED_R, or that include a large EAD field.<a href="#section-5-3" class="pilcrow">¶</a></p>
+<p id="section-5-4">The following especially considers a CoAP endpoint that may perform only "inner" Block-wise, but not "outer" Block-wise operations (see <span><a href="https://rfc-editor.org/rfc/rfc8613#section-4.1.3.4" class="relref">Section 4.1.3.4</a> of [<a href="#RFC8613" class="cite xref">RFC8613</a>]</span>). That is, the considered CoAP endpoint does not (further) split an OSCORE-protected message like an intermediary (e.g., a proxy) might do. This is the typical case for CoAP endpoints using OSCORE (see <span><a href="https://rfc-editor.org/rfc/rfc8613#section-4.1.3.4" class="relref">Section 4.1.3.4</a> of [<a href="#RFC8613" class="cite xref">RFC8613</a>]</span>).<a href="#section-5-4" class="pilcrow">¶</a></p>
 <div id="notation">
 <section id="section-5.1">
         <h3 id="name-notation">
@@ -2644,10 +2644,14 @@ Consequently, the SPO requests the token validator element to purge the access t
 <p id="section-5.1-1">The rest of this section refers to the following notation.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.1-2.1">
-            <p id="section-5.1-2.1.1">SIZE_APP: the size in bytes of the application data to be included in a CoAP request. When Block-wise is used, this is referred to as the "body" to be fragmented into blocks.<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.1.1">SIZE_BODY: the size in bytes of the data to be transmitted with CoAP. When Block-wise is used, such data is referred to as the "body" to be fragmented into blocks, each of which to be transmitted in one CoAP message.<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
+<p id="section-5.1-2.1.2">
+With the exception of EDHOC message_3, the considered body can also be an EDHOC message, possibly prepended by an EDHOC connection identifier encoded as per <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>.<a href="#section-5.1-2.1.2" class="pilcrow">¶</a></p>
+<p id="section-5.1-2.1.3">
+When specifically using the EDHOC + OSCORE request, the considered body is the application data to be protected with OSCORE, (whose first block is) to be sent together with EDHOC message_3 as part of the EDHOC + OSCORE request.<a href="#section-5.1-2.1.3" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-2.2">
-            <p id="section-5.1-2.2.1">SIZE_EDHOC: the size in bytes of EDHOC message_3, if this is sent as part of the EDHOC + OSCORE request. Otherwise, the size in bytes of EDHOC message_3 plus the size in bytes of the EDHOC Connection Identifier C_R, encoded as per <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.2.1">SIZE_EDHOC_M3: the size in bytes of EDHOC message_3, if this is sent as part of the EDHOC + OSCORE request. Otherwise, the size in bytes of EDHOC message_3, plus, if included, the size in bytes of a prepended EDHOC connection identifier encoded as per <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-2.3">
             <p id="section-5.1-2.3.1">SIZE_MTU: the maximum amount of transmittable bytes before having to use Block-wise. This is, for example, 64 KiB as maximum datagram size when using UDP, or 1280 bytes as the maximum size for an IPv6 MTU.<a href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
@@ -2669,19 +2673,19 @@ Consequently, the SPO requests the token validator element to purge the access t
 </div>
 <div id="sec-block-wise-pre-req">
 <section id="section-5.2">
-        <h3 id="name-pre-requirements">
-<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-pre-requirements" class="section-name selfRef">Pre-requirements</a>
+        <h3 id="name-pre-requirements-for-the-ed">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-pre-requirements-for-the-ed" class="section-name selfRef">Pre-requirements for the EDHOC + OSCORE Request</a>
         </h3>
-<p id="section-5.2-1">Before sending an EDHOC + OSCORE request, the CoAP client has to perform the following checks. Note that, while the CoAP client is able to fragment the application data, it cannot fragment the EDHOC + OSCORE request or the EDHOC message_3 added therein.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-1">Before sending an EDHOC + OSCORE request, a CoAP client has to perform the following checks. Note that, while the CoAP client is able to fragment the plain application data before any OSCORE processing, it cannot fragment the EDHOC + OSCORE request or the EDHOC message_3 added therein.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.2-2.1">
-            <p id="section-5.2-2.1.1">If inner Block-wise is not used, hence SIZE_APP &lt;= LIMIT, the CoAP client must verify whether all the following conditions hold:<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-2.1.1">If inner Block-wise is not used, hence SIZE_BODY &lt;= LIMIT, the CoAP client must verify whether all the following conditions hold:<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.2-2.1.2.1">
-                <p id="section-5.2-2.1.2.1.1">COND1: SIZE_EDHOC &lt;= LIMIT<a href="#section-5.2-2.1.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-5.2-2.1.2.1.1">COND1: SIZE_EDHOC_M3 &lt;= LIMIT<a href="#section-5.2-2.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-5.2-2.1.2.2">
-                <p id="section-5.2-2.1.2.2.1">COND2: (SIZE_APP + SIZE_EDHOC) &lt;= LIMIT<a href="#section-5.2-2.1.2.2.1" class="pilcrow">¶</a></p>
+                <p id="section-5.2-2.1.2.2.1">COND2: (SIZE_BODY + SIZE_EDHOC_M3) &lt;= LIMIT<a href="#section-5.2-2.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
@@ -2689,10 +2693,10 @@ Consequently, the SPO requests the token validator element to purge the access t
             <p id="section-5.2-2.2.1">If inner Block-wise is used, the CoAP client must verify whether all the following conditions hold:<a href="#section-5.2-2.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.2-2.2.2.1">
-                <p id="section-5.2-2.2.2.1.1">COND3: SIZE_EDHOC &lt;= LIMIT<a href="#section-5.2-2.2.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-5.2-2.2.2.1.1">COND3: SIZE_EDHOC_M3 &lt;= LIMIT<a href="#section-5.2-2.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-5.2-2.2.2.2">
-                <p id="section-5.2-2.2.2.2.1">COND4: (SIZE_BLOCK + SIZE_EDHOC) &lt;= LIMIT<a href="#section-5.2-2.2.2.2.1" class="pilcrow">¶</a></p>
+                <p id="section-5.2-2.2.2.2.1">COND4: (SIZE_BLOCK + SIZE_EDHOC_M3) &lt;= LIMIT<a href="#section-5.2-2.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
@@ -2708,16 +2712,16 @@ Consequently, the SPO requests the token validator element to purge the access t
 <p id="section-5.3-1">In order to avoid further fragmentation at lower layers when sending an EDHOC + OSCORE request, the CoAP client has to use inner Block-wise if <em>any</em> of the following conditions holds:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.3-2.1">
-            <p id="section-5.3-2.1.1">COND5: SIZE_APP &gt; LIMIT<a href="#section-5.3-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-2.1.1">COND5: SIZE_BODY &gt; LIMIT<a href="#section-5.3-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.3-2.2">
-            <p id="section-5.3-2.2.1">COND6: (SIZE_APP + SIZE_EDHOC) &gt; LIMIT<a href="#section-5.3-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-2.2.1">COND6: (SIZE_BODY + SIZE_EDHOC_M3) &gt; LIMIT<a href="#section-5.3-2.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-5.3-3">In particular, consistently with <a href="#sec-block-wise-pre-req" class="auto internal xref">Section 5.2</a>, the used SIZE_BLOCK has to be such that the following condition also holds:<a href="#section-5.3-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.3-4.1">
-            <p id="section-5.3-4.1.1">COND7: (SIZE_BLOCK + SIZE_EDHOC) &lt;= LIMIT<a href="#section-5.3-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-4.1.1">COND7: (SIZE_BLOCK + SIZE_EDHOC_M3) &lt;= LIMIT<a href="#section-5.3-4.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-5.3-5">Note that the CoAP client might still use Block-wise due to reasons different from exceeding the size indicated by LIMIT.<a href="#section-5.3-5" class="pilcrow">¶</a></p>
@@ -2725,35 +2729,36 @@ Consequently, the SPO requests the token validator element to purge the access t
 <p id="section-5.3-7">If <em>both</em> the conditions COND5 and COND6 hold, the use of Block-wise results in the following number of round trips experienced by the CoAP client.<a href="#section-5.3-7" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.3-8.1">
-            <p id="section-5.3-8.1.1">If the original EDHOC execution workflow is used (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.2.1" class="relref">Appendix A.2.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>), the number of round trips RT_ORIG is equal to 1 + ceil(SIZE_EDHOC / SIZE_BLOCK) + ceil(SIZE_APP / SIZE_BLOCK).<a href="#section-5.3-8.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-8.1.1">If the original EDHOC execution workflow is used (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.2.1" class="relref">Appendix A.2.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>), the number of round trips RT_ORIG is equal to 1 + ceil(SIZE_EDHOC_M3 / SIZE_BLOCK) + ceil(SIZE_BODY / SIZE_BLOCK).<a href="#section-5.3-8.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.3-8.2">
-            <p id="section-5.3-8.2.1">If the optimized EDHOC execution workflow is used (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-edhoc-11#section-3" class="relref">Section 3</a> of [<a href="#I-D.ietf-core-oscore-edhoc" class="cite xref">I-D.ietf-core-oscore-edhoc</a>]</span>), the number of round trips RT_COMB is equal to 1 + ceil(SIZE_APP / SIZE_BLOCK).<a href="#section-5.3-8.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-8.2.1">If the optimized EDHOC execution workflow is used (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-edhoc-11#section-3" class="relref">Section 3</a> of [<a href="#I-D.ietf-core-oscore-edhoc" class="cite xref">I-D.ietf-core-oscore-edhoc</a>]</span>), the number of round trips RT_COMB is equal to 1 + ceil(SIZE_BODY / SIZE_BLOCK).<a href="#section-5.3-8.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-5.3-9">It follows that RT_COMB &lt; RT_ORIG, i.e., the optimized EDHOC execution workflow always yields a lower number of round trips.<a href="#section-5.3-9" class="pilcrow">¶</a></p>
 <p id="section-5.3-10">Instead, the convenience of using the optimized EDHOC execution workflow becomes questionable if <em>both</em> the following conditions hold:<a href="#section-5.3-10" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.3-11.1">
-            <p id="section-5.3-11.1.1">COND8: SIZE_APP &lt;= LIMIT<a href="#section-5.3-11.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-11.1.1">COND8: SIZE_BODY &lt;= LIMIT<a href="#section-5.3-11.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.3-11.2">
-            <p id="section-5.3-11.2.1">COND9: (SIZE_APP + SIZE_EDHOC) &gt; LIMIT<a href="#section-5.3-11.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-11.2.1">COND9: (SIZE_BODY + SIZE_EDHOC_M3) &gt; LIMIT<a href="#section-5.3-11.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-5.3-12">That is, since SIZE_APP &lt;= LIMIT, using Block-wise would not be required when using the original EDHOC execution workflow, provided that SIZE_EDHOC &lt;= LIMIT still holds.<a href="#section-5.3-12" class="pilcrow">¶</a></p>
-<p id="section-5.3-13">At the same time, using the combined workflow is in itself what actually triggers the use of Block-wise, since (SIZE_APP + SIZE_EDHOC) &gt; LIMIT.<a href="#section-5.3-13" class="pilcrow">¶</a></p>
+<p id="section-5.3-12">That is, since SIZE_BODY &lt;= LIMIT, using Block-wise would not be required when using the original EDHOC execution workflow, provided that SIZE_EDHOC_M3 &lt;= LIMIT still holds.<a href="#section-5.3-12" class="pilcrow">¶</a></p>
+<p id="section-5.3-13">At the same time, using the combined workflow is in itself what actually triggers the use of Block-wise, since (SIZE_BODY + SIZE_EDHOC_M3) &gt; LIMIT.<a href="#section-5.3-13" class="pilcrow">¶</a></p>
 <p id="section-5.3-14">Therefore, the following round trips are experienced by the CoAP client.<a href="#section-5.3-14" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.3-15.1">
             <p id="section-5.3-15.1.1">The original EDHOC execution workflow run without using Block-wise results in a number of round trips RT_ORIG equal to 3.<a href="#section-5.3-15.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.3-15.2">
-            <p id="section-5.3-15.2.1">The optimized EDHOC execution workflow run using Block-wise results in a number of round trips RT_COMB equal to 1 + ceil(SIZE_APP / SIZE_BLOCK).<a href="#section-5.3-15.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-15.2.1">The optimized EDHOC execution workflow run using Block-wise results in a number of round trips RT_COMB equal to 1 + ceil(SIZE_BODY / SIZE_BLOCK).<a href="#section-5.3-15.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-5.3-16">It follows that RT_COMB &gt;= RT_ORIG, i.e., the optimized EDHOC execution workflow might still be not worse than the original EDHOC execution workflow in terms of round trips. This is the case only if the used SIZE_BLOCK is such that ceil(SIZE_APP / SIZE_BLOCK) is equal to 2, i.e., the EDHOC + OSCORE request is fragmented into only 2 inner blocks. However, even in such a case, there would be no advantage in terms or round trips compared to the original workflow, while still requiring the CoAP client and the CoAP server to perform the processing due to using the EDHOC + OSCORE request and Block-wise transferring.<a href="#section-5.3-16" class="pilcrow">¶</a></p>
-<p id="section-5.3-17">Therefore, if both the conditions COND8 and COND9 hold, the CoAP client should not send the EDHOC + OSCORE request. Instead, the CoAP client should continue by switching to the original EDHOC execution workflow. That is, the CoAP client first sends EDHOC message_3 prepended by the EDHOC Connection Identifier C_R encoded as per <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>, and then sends the OSCORE-protected CoAP request once the EDHOC execution is completed.<a href="#section-5.3-17" class="pilcrow">¶</a></p>
+<p id="section-5.3-16">It follows that RT_COMB &gt;= RT_ORIG, i.e., the optimized EDHOC execution workflow might still be not worse than the original EDHOC execution workflow in terms of round trips. This is the case only if the used SIZE_BLOCK is such that ceil(SIZE_BODY / SIZE_BLOCK) is equal to 2, i.e., the plain application data is fragmented into only 2 inner blocks, and thus the EDHOC + OSCORE request is followed by only one more request message transporting the last block of the body.<a href="#section-5.3-16" class="pilcrow">¶</a></p>
+<p id="section-5.3-17">However, even in such a case, there would be no advantage in terms or round trips compared to the original workflow, while still requiring the CoAP client and the CoAP server to perform the processing due to using the EDHOC + OSCORE request and Block-wise transferring.<a href="#section-5.3-17" class="pilcrow">¶</a></p>
+<p id="section-5.3-18">Therefore, if both the conditions COND8 and COND9 hold, the CoAP client should not send the EDHOC + OSCORE request. Instead, the CoAP client should continue by switching to the original EDHOC execution workflow. That is, the CoAP client first sends EDHOC message_3 prepended by the EDHOC Connection Identifier C_R encoded as per <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>, and then sends the OSCORE-protected CoAP request once the EDHOC execution is completed.<a href="#section-5.3-18" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2893,7 +2898,10 @@ Consequently, the SPO requests the token validator element to purge the access t
             <p id="appendix-A.1-1.3.1">Using the EDHOC and OSCORE profile of ACE with the "NO-LEARNING" policy.<a href="#appendix-A.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-A.1-1.4">
-            <p id="appendix-A.1-1.4.1">Editorial improvements.<a href="#appendix-A.1-1.4.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.1-1.4.1">Revised guidelines on using EDHOC with CoAP and Block-wise.<a href="#appendix-A.1-1.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.1-1.5">
+            <p id="appendix-A.1-1.5.1">Editorial improvements.<a href="#appendix-A.1-1.5.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
