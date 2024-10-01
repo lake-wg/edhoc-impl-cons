@@ -415,7 +415,7 @@ The SPO performs the following tasks on an incoming EDHOC message M.
 
 In the following, {{sec-message-side-processing-m1}} to {{sec-message-side-processing-m2-m3}} describe more in detail the actions performed by the SPO on the different, incoming EDHOC messages.
 
-Then, {{sec-message-side-processing-particular}} describes further, special handling of incoming EDHOC messages in particular situations.
+Then, {{sec-message-side-processing-special}} describes further, special handling of incoming EDHOC messages in particular situations.
 
 ## EDHOC message_1 ## {#sec-message-side-processing-m1}
 
@@ -708,7 +708,7 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
 ~~~~~~~~~~~
 {: #fig-flowchart-spo-low-level title="Processing steps for EDHOC message_2 and message_3" artwork-align="center"}
 
-## Side Processing in Particular Situations ## {#sec-message-side-processing-particular}
+## Special Cases of Message Handling ## {#sec-message-side-processing-special}
 
 This section describes methods to perform special handling of incoming EDHOC messages in particular situations.
 
@@ -746,18 +746,23 @@ In order to be reliable, this task requires to perform a cryptographic validatio
 
      Consequently, the SPO requests the token validator element to purge the access token, deletes CREDS_BEFORE, deletes AUTH_CRED_C from the set of currently stored authentication credentials of other EDHOC peers, and aborts the EDHOC session.
 
-* Editor's note: TODO
+### Consistency Checks of Authentication Credentials ### {#sec-consistency-checks-auth-creds}
 
-  AUTH_CRED_C is always specified (by value or by reference) in ID_CRED_R (ID_CRED_I) of EDHOC message_2 (EDHOC message_3).
+Editor's note: TODO
 
-  AUTH_CRED_C can also be specified (by value or by reference) within an access token, which is conveyed by an EAD item in an EDHOC message that PEER_C sends to PEER_RS. The details also depend on the two EDHOC peers using either the EDHOC forward message flow or the EDHOC reverse message flow (see {{Section A.2 of RFC9528}}).
+* The following are placeholder notes that specifically consider the EDHOC and OSCORE profile of ACE {{I-D.ietf-ace-edhoc-oscore-profile}}.
 
-  When such an access token is uploaded by means of an EAD item, PEER_RS has to perform consistency checks between the AUTH_CRED_C specified in ID_CRED_R or ID_CRED_I, and the AUTH_CRED_C specified within the access token.
+* While that profile is a relevant case in point to consider, the content of this section should discuss the topic in general. With respect to ID_CRED_R/ID_CRED_I, an access token is just an example of additional means to specify an authentication credential.
 
-  Explain when PEER_RS becomes able to perform the consistency check, for the different cases, depending on using the EDHOC forward message flow or the EDHOC reverse message flow, and on the specific EDHOC message including the EAD item that conveys the access token including AUTH_CRED_C.
+* When it comes specifically to the EDHOC and OSCORE profile of ACE, some of this content might better fit in {{I-D.ietf-ace-edhoc-oscore-profile}}, while this document can keep only implementation-specific guidelines from a general point of view.
 
-  In the end, some of this content might better fit in {{I-D.ietf-ace-edhoc-oscore-profile}}, while this document can keep only implementation-specific details.
+AUTH_CRED_C is always specified (by value or by reference) in ID_CRED_R (ID_CRED_I) of EDHOC message_2 (EDHOC message_3).
 
+AUTH_CRED_C can also be specified (by value or by reference) within an access token, which can be conveyed by an EAD item in an EDHOC message that PEER_C sends to PEER_RS. The details also depend on the two EDHOC peers using either the EDHOC forward message flow or the EDHOC reverse message flow (see {{Section A.2 of RFC9528}}).
+
+When such an access token is uploaded by means of an EAD item, PEER_RS has to perform consistency checks between the AUTH_CRED_C specified in ID_CRED_R or ID_CRED_I on one hand, and the AUTH_CRED_C specified within the access token on the other hand.
+
+This needs to explain in general terms *when* PEER_RS becomes able to perform the consistency check in different cases, which differ as to the use of the EDHOC forward message flow or of the EDHOC reverse message flow, and as to the specific EDHOC message including the EAD item that conveys the access token including AUTH_CRED_C.
 
 # Using EDHOC over CoAP with Block-Wise # {#sec-block-wise}
 
