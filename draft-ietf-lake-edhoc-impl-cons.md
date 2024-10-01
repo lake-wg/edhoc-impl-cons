@@ -532,7 +532,7 @@ EDHOC message_X
 |                    v                             |                  |
 |      +--------------+    +--------------------+  |                  |
 |      | Decrypt      |    | Verify             |  |                  |
-|      | CYPHERTEXT_X |    | Signature_or_MAC_X |  |                  |
+|      | CIPHERTEXT_X |    | Signature_or_MAC_X |  |                  |
 |      +--------------+    +--------------------+  |                  |
 |                |           ^           |         |                  |
 |                |           |           |         |                  |
@@ -724,7 +724,7 @@ However, PEER_RS might have reasons to enforce the trust policy "NO_LEARNING" wi
 
 This requires PEER_RS to perform an early check of the access token conveyed in the EAD item, in order to retrieve AUTH_CRED_C and determine whether it is already storing AUTH_CRED_C. The SPO can perform such a task, as part of steps 3 and 4 of PHASE_1 of the pre-verification side processing (see {{sec-pre-verif}}).
 
-In order to be reliable, this task requires to perform a cryptographic validation of the access token. Moreover, the access token can be encrypted, which makes the actual retrieval of AUTH_CRED_C not straighforward. In practice, the SPO has a number of viable options.
+In order to be reliable, this task requires to perform a cryptographic validation of the access token. Moreover, the access token can be encrypted, which makes the actual retrieval of AUTH_CRED_C not straightforward. In practice, the SPO has a number of viable options.
 
 * The SPO can directly perform the necessary cryptographic processing of the access token, including decryption if necessary.
 
