@@ -984,7 +984,7 @@ Table of Contents
  |                    v                             |                  |
  |      +--------------+    +--------------------+  |                  |
  |      | Decrypt      |    | Verify             |  |                  |
- |      | CYPHERTEXT_X |    | Signature_or_MAC_X |  |                  |
+ |      | CIPHERTEXT_X |    | Signature_or_MAC_X |  |                  |
  |      +--------------+    +--------------------+  |                  |
  |                |           ^           |         |                  |
  |                |           |           |         |                  |
@@ -1198,8 +1198,8 @@ Table of Contents
    In order to be reliable, this task requires to perform a
    cryptographic validation of the access token.  Moreover, the access
    token can be encrypted, which makes the actual retrieval of
-   AUTH_CRED_C not straighforward.  In practice, the SPO has a number of
-   viable options.
+   AUTH_CRED_C not straightforward.  In practice, the SPO has a number
+   of viable options.
 
    *  The SPO can directly perform the necessary cryptographic
       processing of the access token, including decryption if necessary.

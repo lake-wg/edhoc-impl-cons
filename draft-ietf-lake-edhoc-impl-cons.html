@@ -2051,7 +2051,7 @@ Then, PHASE_1 ends, and the pre-verification side processing moves to the next P
                     <text x="504" y="212">state</text>
                     <text x="104" y="308">Decrypt</text>
                     <text x="260" y="308">Verify</text>
-                    <text x="124" y="324">CYPHERTEXT_X</text>
+                    <text x="124" y="324">CIPHERTEXT_X</text>
                     <text x="308" y="324">Signature_or_MAC_X</text>
                     <text x="496" y="420">.................</text>
                     <text x="108" y="436">Divert</text>
@@ -2567,7 +2567,7 @@ Then, PHASE_1 ends, and the pre-verification side processing moves to the next P
 <p id="section-4.4.1-3">As also discussed in <a href="#sec-trust-models-ace-prof" class="auto internal xref">Section 3.1</a>, this practically requires PEER_RS to enforce either the trust policy "LEARNING" or the trust policy "NO-LEARNING" with situation-specific, overriding exceptions (see <a href="#sec-trust-models" class="auto internal xref">Section 3</a>), at least for the EDHOC resource used for exchanging the EDHOC messages of the EDHOC session in question.<a href="#section-4.4.1-3" class="pilcrow">¶</a></p>
 <p id="section-4.4.1-4">However, PEER_RS might have reasons to enforce the trust policy "NO_LEARNING" with no exceptions. In such a case, unless PEER_RS already stores AUTH_CRED_C, the upload of the access token by means of the EAD item has to consistently fail, and PEER_RS has to consequently abort the EDHOC session.<a href="#section-4.4.1-4" class="pilcrow">¶</a></p>
 <p id="section-4.4.1-5">This requires PEER_RS to perform an early check of the access token conveyed in the EAD item, in order to retrieve AUTH_CRED_C and determine whether it is already storing AUTH_CRED_C. The SPO can perform such a task, as part of steps 3 and 4 of PHASE_1 of the pre-verification side processing (see <a href="#sec-pre-verif" class="auto internal xref">Section 4.3.1</a>).<a href="#section-4.4.1-5" class="pilcrow">¶</a></p>
-<p id="section-4.4.1-6">In order to be reliable, this task requires to perform a cryptographic validation of the access token. Moreover, the access token can be encrypted, which makes the actual retrieval of AUTH_CRED_C not straighforward. In practice, the SPO has a number of viable options.<a href="#section-4.4.1-6" class="pilcrow">¶</a></p>
+<p id="section-4.4.1-6">In order to be reliable, this task requires to perform a cryptographic validation of the access token. Moreover, the access token can be encrypted, which makes the actual retrieval of AUTH_CRED_C not straightforward. In practice, the SPO has a number of viable options.<a href="#section-4.4.1-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.4.1-7.1">
               <p id="section-4.4.1-7.1.1">The SPO can directly perform the necessary cryptographic processing of the access token, including decryption if necessary.<a href="#section-4.4.1-7.1.1" class="pilcrow">¶</a></p>
