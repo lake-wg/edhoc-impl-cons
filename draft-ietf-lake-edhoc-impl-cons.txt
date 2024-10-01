@@ -78,8 +78,9 @@ Table of Contents
        4.3.1.  Pre-Verification Side Processing
        4.3.2.  Post-Verification Side Processing
        4.3.3.  Flowcharts
-     4.4.  Side Processing in Particular Situations
+     4.4.  Special Cases of Message Handling
        4.4.1.  EDHOC and OSCORE Profile of ACE
+       4.4.2.  Consistency Checks of Authentication Credentials
    5.  Using EDHOC over CoAP with Block-Wise
      5.1.  Notation
      5.2.  Pre-requirements
@@ -1160,7 +1161,7 @@ Table of Contents
 
        Figure 5: Processing steps for EDHOC message_2 and message_3
 
-4.4.  Side Processing in Particular Situations
+4.4.  Special Cases of Message Handling
 
    This section describes methods to perform special handling of
    incoming EDHOC messages in particular situations.
@@ -1250,32 +1251,44 @@ Table of Contents
           credentials of other EDHOC peers, and aborts the EDHOC
           session.
 
-   *  Editor's note: TODO
+4.4.2.  Consistency Checks of Authentication Credentials
 
-      AUTH_CRED_C is always specified (by value or by reference) in
-      ID_CRED_R (ID_CRED_I) of EDHOC message_2 (EDHOC message_3).
+   Editor's note: TODO
 
-      AUTH_CRED_C can also be specified (by value or by reference)
-      within an access token, which is conveyed by an EAD item in an
-      EDHOC message that PEER_C sends to PEER_RS.  The details also
-      depend on the two EDHOC peers using either the EDHOC forward
-      message flow or the EDHOC reverse message flow (see Appendix A.2
-      of [RFC9528]).
+   *  The following are placeholder notes that specifically consider the
+      EDHOC and OSCORE profile of ACE
+      [I-D.ietf-ace-edhoc-oscore-profile].
 
-      When such an access token is uploaded by means of an EAD item,
-      PEER_RS has to perform consistency checks between the AUTH_CRED_C
-      specified in ID_CRED_R or ID_CRED_I, and the AUTH_CRED_C specified
-      within the access token.
+   *  While that profile is a relevant case in point to consider, the
+      content of this section should discuss the topic in general.  With
+      respect to ID_CRED_R/ID_CRED_I, an access token is just an example
+      of additional means to specify an authentication credential.
 
-      Explain when PEER_RS becomes able to perform the consistency
-      check, for the different cases, depending on using the EDHOC
-      forward message flow or the EDHOC reverse message flow, and on the
-      specific EDHOC message including the EAD item that conveys the
-      access token including AUTH_CRED_C.
-
-      In the end, some of this content might better fit in
+   *  When it comes specifically to the EDHOC and OSCORE profile of ACE,
+      some of this content might better fit in
       [I-D.ietf-ace-edhoc-oscore-profile], while this document can keep
-      only implementation-specific details.
+      only implementation-specific guidelines from a general point of
+      view.
+
+   AUTH_CRED_C is always specified (by value or by reference) in
+   ID_CRED_R (ID_CRED_I) of EDHOC message_2 (EDHOC message_3).
+
+   AUTH_CRED_C can also be specified (by value or by reference) within
+   an access token, which can be conveyed by an EAD item in an EDHOC
+   message that PEER_C sends to PEER_RS.  The details also depend on the
+   two EDHOC peers using either the EDHOC forward message flow or the
+   EDHOC reverse message flow (see Appendix A.2 of [RFC9528]).
+
+   When such an access token is uploaded by means of an EAD item,
+   PEER_RS has to perform consistency checks between the AUTH_CRED_C
+   specified in ID_CRED_R or ID_CRED_I on one hand, and the AUTH_CRED_C
+   specified within the access token on the other hand.
+
+   This needs to explain in general terms _when_ PEER_RS becomes able to
+   perform the consistency check in different cases, which differ as to
+   the use of the EDHOC forward message flow or of the EDHOC reverse
+   message flow, and as to the specific EDHOC message including the EAD
+   item that conveys the access token including AUTH_CRED_C.
 
 5.  Using EDHOC over CoAP with Block-Wise
 
