@@ -1028,7 +1028,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tiloca</td>
-<td class="center">Expires 4 April 2025</td>
+<td class="center">Expires 5 April 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1041,12 +1041,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lake-edhoc-impl-cons-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-10-01" class="published">1 October 2024</time>
+<time datetime="2024-10-02" class="published">2 October 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-04-04">4 April 2025</time></dd>
+<dd class="expires"><time datetime="2025-04-05">5 April 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1091,7 +1091,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 4 April 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 5 April 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1258,7 +1258,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
           <p id="section-1-5.3.1">Branched-off, side processing of incoming EDHOC messages, with particular reference to: i) fetching and validation of authentication credentials; and ii) processing of External Authorization Data (EAD) items, which in turn might play a role in the fetching and validation of authentication credentials. This topic is discussed in <a href="#sec-message-side-processing" class="auto internal xref">Section 4</a>.<a href="#section-1-5.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-5.4">
-          <p id="section-1-5.4.1">Effectively using EDHOC over the Constrained Application Protocol (CoAP) <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span> in combination with Block-wise Transfers for CoAP <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span>, possibly together with the optimized EDHOC execution workflow defined in <span>[<a href="#I-D.ietf-core-oscore-edhoc" class="cite xref">I-D.ietf-core-oscore-edhoc</a>]</span>. This topic is discussed in <a href="#sec-block-wise" class="auto internal xref">Section 5</a>.<a href="#section-1-5.4.1" class="pilcrow">¶</a></p>
+          <p id="section-1-5.4.1">Effectively using EDHOC over the Constrained Application Protocol (CoAP) <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span> in combination with Block-wise transfers for CoAP <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span>, possibly together with the optimized EDHOC execution workflow defined in <span>[<a href="#I-D.ietf-core-oscore-edhoc" class="cite xref">I-D.ietf-core-oscore-edhoc</a>]</span>. This topic is discussed in <a href="#sec-block-wise" class="auto internal xref">Section 5</a>.<a href="#section-1-5.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <div id="terminology">
@@ -1270,7 +1270,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 "<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
-<p id="section-1.1-2">The reader is expected to be familiar with terms and concepts related to the EDHOC protocol <span>[<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>, the Constrained Application Protocol (CoAP) <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>, and Block-wise Transfers for CoAP <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span>.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
+<p id="section-1.1-2">The reader is expected to be familiar with terms and concepts related to the EDHOC protocol <span>[<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>, the Constrained Application Protocol (CoAP) <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>, and Block-wise transfers for CoAP <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span>.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2155,147 +2155,161 @@ Then, PHASE_1 ends, and the pre-verification side processing moves to the next P
 <figure id="figure-5">
             <div id="section-4.3.3-4.1">
               <div class="alignCenter art-svg artwork" id="section-4.3.3-4.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2192" width="568" viewBox="0 0 568 2192" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                  <path d="M 8,304 L 8,1184" fill="none" stroke="black"></path>
-                  <path d="M 8,1232 L 8,1360" fill="none" stroke="black"></path>
-                  <path d="M 8,1712 L 8,1952" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2400" width="568" viewBox="0 0 568 2400" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                  <path d="M 8,512 L 8,1392" fill="none" stroke="black"></path>
+                  <path d="M 8,1440 L 8,1568" fill="none" stroke="black"></path>
+                  <path d="M 8,1920 L 8,2160" fill="none" stroke="black"></path>
                   <path d="M 16,144 L 16,176" fill="none" stroke="black"></path>
-                  <path d="M 16,1536 L 16,1568" fill="none" stroke="black"></path>
-                  <path d="M 16,2128 L 16,2176" fill="none" stroke="black"></path>
-                  <path d="M 24,352 L 24,432" fill="none" stroke="black"></path>
-                  <path d="M 24,528 L 24,576" fill="none" stroke="black"></path>
-                  <path d="M 24,688 L 24,768" fill="none" stroke="black"></path>
-                  <path d="M 24,1040 L 24,1152" fill="none" stroke="black"></path>
-                  <path d="M 24,1280 L 24,1328" fill="none" stroke="black"></path>
-                  <path d="M 24,1760 L 24,1808" fill="none" stroke="black"></path>
-                  <path d="M 24,1872 L 24,1920" fill="none" stroke="black"></path>
+                  <path d="M 16,240 L 16,288" fill="none" stroke="black"></path>
+                  <path d="M 16,352 L 16,384" fill="none" stroke="black"></path>
+                  <path d="M 16,1744 L 16,1776" fill="none" stroke="black"></path>
+                  <path d="M 16,2336 L 16,2384" fill="none" stroke="black"></path>
+                  <path d="M 24,560 L 24,640" fill="none" stroke="black"></path>
+                  <path d="M 24,736 L 24,784" fill="none" stroke="black"></path>
+                  <path d="M 24,896 L 24,976" fill="none" stroke="black"></path>
+                  <path d="M 24,1248 L 24,1360" fill="none" stroke="black"></path>
+                  <path d="M 24,1488 L 24,1536" fill="none" stroke="black"></path>
+                  <path d="M 24,1968 L 24,2016" fill="none" stroke="black"></path>
+                  <path d="M 24,2080 L 24,2128" fill="none" stroke="black"></path>
                   <path d="M 88,96 L 88,136" fill="none" stroke="black"></path>
-                  <path d="M 88,184 L 88,208" fill="none" stroke="black"></path>
-                  <path d="M 88,288 L 88,344" fill="none" stroke="black"></path>
-                  <path d="M 88,440 L 88,520" fill="none" stroke="black"></path>
-                  <path d="M 88,584 L 88,680" fill="none" stroke="black"></path>
-                  <path d="M 88,776 L 88,1032" fill="none" stroke="black"></path>
-                  <path d="M 88,1160 L 88,1272" fill="none" stroke="black"></path>
-                  <path d="M 88,1336 L 88,1408" fill="none" stroke="black"></path>
-                  <path d="M 88,1488 L 88,1528" fill="none" stroke="black"></path>
-                  <path d="M 88,1576 L 88,1616" fill="none" stroke="black"></path>
-                  <path d="M 88,1696 L 88,1752" fill="none" stroke="black"></path>
-                  <path d="M 88,1816 L 88,1864" fill="none" stroke="black"></path>
-                  <path d="M 88,1928 L 88,2000" fill="none" stroke="black"></path>
-                  <path d="M 88,2080 L 88,2120" fill="none" stroke="black"></path>
-                  <path d="M 152,2128 L 152,2176" fill="none" stroke="black"></path>
-                  <path d="M 168,528 L 168,576" fill="none" stroke="black"></path>
-                  <path d="M 168,1536 L 168,1568" fill="none" stroke="black"></path>
+                  <path d="M 88,184 L 88,232" fill="none" stroke="black"></path>
+                  <path d="M 88,296 L 88,344" fill="none" stroke="black"></path>
+                  <path d="M 88,392 L 88,416" fill="none" stroke="black"></path>
+                  <path d="M 88,496 L 88,552" fill="none" stroke="black"></path>
+                  <path d="M 88,648 L 88,728" fill="none" stroke="black"></path>
+                  <path d="M 88,792 L 88,888" fill="none" stroke="black"></path>
+                  <path d="M 88,984 L 88,1240" fill="none" stroke="black"></path>
+                  <path d="M 88,1368 L 88,1480" fill="none" stroke="black"></path>
+                  <path d="M 88,1544 L 88,1616" fill="none" stroke="black"></path>
+                  <path d="M 88,1696 L 88,1736" fill="none" stroke="black"></path>
+                  <path d="M 88,1784 L 88,1824" fill="none" stroke="black"></path>
+                  <path d="M 88,1904 L 88,1960" fill="none" stroke="black"></path>
+                  <path d="M 88,2024 L 88,2072" fill="none" stroke="black"></path>
+                  <path d="M 88,2136 L 88,2208" fill="none" stroke="black"></path>
+                  <path d="M 88,2288 L 88,2328" fill="none" stroke="black"></path>
+                  <path d="M 152,2336 L 152,2384" fill="none" stroke="black"></path>
+                  <path d="M 168,736 L 168,784" fill="none" stroke="black"></path>
+                  <path d="M 168,1744 L 168,1776" fill="none" stroke="black"></path>
                   <path d="M 176,144 L 176,176" fill="none" stroke="black"></path>
-                  <path d="M 176,1040 L 176,1152" fill="none" stroke="black"></path>
-                  <path d="M 192,688 L 192,768" fill="none" stroke="black"></path>
-                  <path d="M 200,352 L 200,432" fill="none" stroke="black"></path>
-                  <path d="M 224,752 L 224,1056" fill="none" stroke="black"></path>
-                  <path d="M 248,352 L 248,432" fill="none" stroke="black"></path>
-                  <path d="M 248,528 L 248,720" fill="none" stroke="black"></path>
-                  <path d="M 296,480 L 296,520" fill="none" stroke="black"></path>
-                  <path d="M 296,928 L 296,960" fill="none" stroke="black"></path>
-                  <path d="M 296,1024 L 296,1152" fill="none" stroke="black"></path>
-                  <path d="M 320,728 L 320,920" fill="none" stroke="black"></path>
-                  <path d="M 320,968 L 320,1016" fill="none" stroke="black"></path>
-                  <path d="M 344,528 L 344,720" fill="none" stroke="black"></path>
-                  <path d="M 368,352 L 368,432" fill="none" stroke="black"></path>
-                  <path d="M 384,1872 L 384,1920" fill="none" stroke="black"></path>
-                  <path d="M 392,1760 L 392,1808" fill="none" stroke="black"></path>
-                  <path d="M 408,528 L 408,640" fill="none" stroke="black"></path>
-                  <path d="M 416,352 L 416,432" fill="none" stroke="black"></path>
-                  <path d="M 416,1712 L 416,1952" fill="none" stroke="black"></path>
-                  <path d="M 424,440 L 424,480" fill="none" stroke="black"></path>
-                  <path d="M 432,816 L 432,864" fill="none" stroke="black"></path>
-                  <path d="M 480,1280 L 480,1328" fill="none" stroke="black"></path>
-                  <path d="M 512,440 L 512,520" fill="none" stroke="black"></path>
-                  <path d="M 512,648 L 512,808" fill="none" stroke="black"></path>
-                  <path d="M 512,872 L 512,920" fill="none" stroke="black"></path>
-                  <path d="M 528,352 L 528,432" fill="none" stroke="black"></path>
-                  <path d="M 544,528 L 544,640" fill="none" stroke="black"></path>
-                  <path d="M 544,816 L 544,864" fill="none" stroke="black"></path>
-                  <path d="M 544,928 L 544,960" fill="none" stroke="black"></path>
-                  <path d="M 544,1024 L 544,1152" fill="none" stroke="black"></path>
-                  <path d="M 560,304 L 560,1184" fill="none" stroke="black"></path>
-                  <path d="M 560,1232 L 560,1360" fill="none" stroke="black"></path>
+                  <path d="M 176,240 L 176,288" fill="none" stroke="black"></path>
+                  <path d="M 176,352 L 176,384" fill="none" stroke="black"></path>
+                  <path d="M 176,1248 L 176,1360" fill="none" stroke="black"></path>
+                  <path d="M 192,896 L 192,976" fill="none" stroke="black"></path>
+                  <path d="M 200,560 L 200,640" fill="none" stroke="black"></path>
+                  <path d="M 208,160 L 208,240" fill="none" stroke="black"></path>
+                  <path d="M 208,272 L 208,368" fill="none" stroke="black"></path>
+                  <path d="M 224,960 L 224,1264" fill="none" stroke="black"></path>
+                  <path d="M 248,560 L 248,640" fill="none" stroke="black"></path>
+                  <path d="M 248,736 L 248,928" fill="none" stroke="black"></path>
+                  <path d="M 296,688 L 296,728" fill="none" stroke="black"></path>
+                  <path d="M 296,1136 L 296,1168" fill="none" stroke="black"></path>
+                  <path d="M 296,1232 L 296,1360" fill="none" stroke="black"></path>
+                  <path d="M 320,936 L 320,1128" fill="none" stroke="black"></path>
+                  <path d="M 320,1176 L 320,1224" fill="none" stroke="black"></path>
+                  <path d="M 344,736 L 344,928" fill="none" stroke="black"></path>
+                  <path d="M 368,560 L 368,640" fill="none" stroke="black"></path>
+                  <path d="M 384,2080 L 384,2128" fill="none" stroke="black"></path>
+                  <path d="M 392,1968 L 392,2016" fill="none" stroke="black"></path>
+                  <path d="M 408,736 L 408,848" fill="none" stroke="black"></path>
+                  <path d="M 416,560 L 416,640" fill="none" stroke="black"></path>
+                  <path d="M 416,1920 L 416,2160" fill="none" stroke="black"></path>
+                  <path d="M 424,648 L 424,688" fill="none" stroke="black"></path>
+                  <path d="M 432,1024 L 432,1072" fill="none" stroke="black"></path>
+                  <path d="M 480,1488 L 480,1536" fill="none" stroke="black"></path>
+                  <path d="M 512,648 L 512,728" fill="none" stroke="black"></path>
+                  <path d="M 512,856 L 512,1016" fill="none" stroke="black"></path>
+                  <path d="M 512,1080 L 512,1128" fill="none" stroke="black"></path>
+                  <path d="M 528,560 L 528,640" fill="none" stroke="black"></path>
+                  <path d="M 544,736 L 544,848" fill="none" stroke="black"></path>
+                  <path d="M 544,1024 L 544,1072" fill="none" stroke="black"></path>
+                  <path d="M 544,1136 L 544,1168" fill="none" stroke="black"></path>
+                  <path d="M 544,1232 L 544,1360" fill="none" stroke="black"></path>
+                  <path d="M 560,512 L 560,1392" fill="none" stroke="black"></path>
+                  <path d="M 560,1440 L 560,1568" fill="none" stroke="black"></path>
                   <path d="M 16,144 L 176,144" fill="none" stroke="black"></path>
                   <path d="M 16,176 L 176,176" fill="none" stroke="black"></path>
-                  <path d="M 8,304 L 80,304" fill="none" stroke="black"></path>
-                  <path d="M 96,304 L 560,304" fill="none" stroke="black"></path>
-                  <path d="M 24,352 L 200,352" fill="none" stroke="black"></path>
-                  <path d="M 248,352 L 368,352" fill="none" stroke="black"></path>
-                  <path d="M 416,352 L 528,352" fill="none" stroke="black"></path>
-                  <path d="M 208,384 L 240,384" fill="none" stroke="black"></path>
-                  <path d="M 376,384 L 408,384" fill="none" stroke="black"></path>
-                  <path d="M 24,432 L 200,432" fill="none" stroke="black"></path>
-                  <path d="M 248,432 L 368,432" fill="none" stroke="black"></path>
-                  <path d="M 416,432 L 528,432" fill="none" stroke="black"></path>
-                  <path d="M 296,480 L 424,480" fill="none" stroke="black"></path>
-                  <path d="M 24,528 L 168,528" fill="none" stroke="black"></path>
-                  <path d="M 248,528 L 344,528" fill="none" stroke="black"></path>
-                  <path d="M 408,528 L 544,528" fill="none" stroke="black"></path>
-                  <path d="M 176,544 L 240,544" fill="none" stroke="black"></path>
-                  <path d="M 352,544 L 400,544" fill="none" stroke="black"></path>
-                  <path d="M 24,576 L 168,576" fill="none" stroke="black"></path>
-                  <path d="M 408,640 L 544,640" fill="none" stroke="black"></path>
-                  <path d="M 24,688 L 192,688" fill="none" stroke="black"></path>
-                  <path d="M 200,704 L 240,704" fill="none" stroke="black"></path>
-                  <path d="M 248,720 L 344,720" fill="none" stroke="black"></path>
-                  <path d="M 200,752 L 224,752" fill="none" stroke="black"></path>
-                  <path d="M 24,768 L 192,768" fill="none" stroke="black"></path>
-                  <path d="M 432,816 L 544,816" fill="none" stroke="black"></path>
-                  <path d="M 432,864 L 544,864" fill="none" stroke="black"></path>
-                  <path d="M 296,928 L 544,928" fill="none" stroke="black"></path>
-                  <path d="M 296,960 L 544,960" fill="none" stroke="black"></path>
-                  <path d="M 296,1024 L 544,1024" fill="none" stroke="black"></path>
-                  <path d="M 24,1040 L 176,1040" fill="none" stroke="black"></path>
-                  <path d="M 224,1056 L 288,1056" fill="none" stroke="black"></path>
-                  <path d="M 24,1152 L 176,1152" fill="none" stroke="black"></path>
-                  <path d="M 296,1152 L 544,1152" fill="none" stroke="black"></path>
-                  <path d="M 8,1184 L 80,1184" fill="none" stroke="black"></path>
-                  <path d="M 96,1184 L 560,1184" fill="none" stroke="black"></path>
-                  <path d="M 8,1232 L 80,1232" fill="none" stroke="black"></path>
-                  <path d="M 96,1232 L 560,1232" fill="none" stroke="black"></path>
-                  <path d="M 24,1280 L 480,1280" fill="none" stroke="black"></path>
-                  <path d="M 24,1328 L 480,1328" fill="none" stroke="black"></path>
-                  <path d="M 8,1360 L 80,1360" fill="none" stroke="black"></path>
-                  <path d="M 96,1360 L 560,1360" fill="none" stroke="black"></path>
-                  <path d="M 16,1536 L 168,1536" fill="none" stroke="black"></path>
-                  <path d="M 16,1568 L 168,1568" fill="none" stroke="black"></path>
-                  <path d="M 8,1712 L 80,1712" fill="none" stroke="black"></path>
-                  <path d="M 96,1712 L 416,1712" fill="none" stroke="black"></path>
-                  <path d="M 24,1760 L 392,1760" fill="none" stroke="black"></path>
-                  <path d="M 24,1808 L 392,1808" fill="none" stroke="black"></path>
-                  <path d="M 24,1872 L 384,1872" fill="none" stroke="black"></path>
-                  <path d="M 24,1920 L 384,1920" fill="none" stroke="black"></path>
-                  <path d="M 8,1952 L 80,1952" fill="none" stroke="black"></path>
-                  <path d="M 96,1952 L 416,1952" fill="none" stroke="black"></path>
-                  <path d="M 16,2128 L 152,2128" fill="none" stroke="black"></path>
-                  <path d="M 16,2176 L 152,2176" fill="none" stroke="black"></path>
-                  <polygon class="arrowhead" points="520,920 508,914.4 508,925.6" fill="black" transform="rotate(90,512,920)"></polygon>
-                  <polygon class="arrowhead" points="520,808 508,802.4 508,813.6" fill="black" transform="rotate(90,512,808)"></polygon>
-                  <polygon class="arrowhead" points="520,520 508,514.4 508,525.6" fill="black" transform="rotate(90,512,520)"></polygon>
-                  <polygon class="arrowhead" points="416,384 404,378.4 404,389.6" fill="black" transform="rotate(0,408,384)"></polygon>
-                  <polygon class="arrowhead" points="360,544 348,538.4 348,549.6" fill="black" transform="rotate(180,352,544)"></polygon>
-                  <polygon class="arrowhead" points="328,1016 316,1010.4 316,1021.6" fill="black" transform="rotate(90,320,1016)"></polygon>
-                  <polygon class="arrowhead" points="328,728 316,722.4 316,733.6" fill="black" transform="rotate(270,320,728)"></polygon>
-                  <polygon class="arrowhead" points="304,520 292,514.4 292,525.6" fill="black" transform="rotate(90,296,520)"></polygon>
-                  <polygon class="arrowhead" points="248,704 236,698.4 236,709.6" fill="black" transform="rotate(0,240,704)"></polygon>
-                  <polygon class="arrowhead" points="248,544 236,538.4 236,549.6" fill="black" transform="rotate(0,240,544)"></polygon>
-                  <polygon class="arrowhead" points="248,384 236,378.4 236,389.6" fill="black" transform="rotate(0,240,384)"></polygon>
-                  <polygon class="arrowhead" points="208,752 196,746.4 196,757.6" fill="black" transform="rotate(180,200,752)"></polygon>
-                  <polygon class="arrowhead" points="96,2120 84,2114.4 84,2125.6" fill="black" transform="rotate(90,88,2120)"></polygon>
-                  <polygon class="arrowhead" points="96,2000 84,1994.4 84,2005.6" fill="black" transform="rotate(90,88,2000)"></polygon>
-                  <polygon class="arrowhead" points="96,1864 84,1858.4 84,1869.6" fill="black" transform="rotate(90,88,1864)"></polygon>
-                  <polygon class="arrowhead" points="96,1752 84,1746.4 84,1757.6" fill="black" transform="rotate(90,88,1752)"></polygon>
+                  <path d="M 16,240 L 176,240" fill="none" stroke="black"></path>
+                  <path d="M 16,288 L 176,288" fill="none" stroke="black"></path>
+                  <path d="M 16,352 L 176,352" fill="none" stroke="black"></path>
+                  <path d="M 16,384 L 176,384" fill="none" stroke="black"></path>
+                  <path d="M 8,512 L 80,512" fill="none" stroke="black"></path>
+                  <path d="M 96,512 L 560,512" fill="none" stroke="black"></path>
+                  <path d="M 24,560 L 200,560" fill="none" stroke="black"></path>
+                  <path d="M 248,560 L 368,560" fill="none" stroke="black"></path>
+                  <path d="M 416,560 L 528,560" fill="none" stroke="black"></path>
+                  <path d="M 208,592 L 240,592" fill="none" stroke="black"></path>
+                  <path d="M 376,592 L 408,592" fill="none" stroke="black"></path>
+                  <path d="M 24,640 L 200,640" fill="none" stroke="black"></path>
+                  <path d="M 248,640 L 368,640" fill="none" stroke="black"></path>
+                  <path d="M 416,640 L 528,640" fill="none" stroke="black"></path>
+                  <path d="M 296,688 L 424,688" fill="none" stroke="black"></path>
+                  <path d="M 24,736 L 168,736" fill="none" stroke="black"></path>
+                  <path d="M 248,736 L 344,736" fill="none" stroke="black"></path>
+                  <path d="M 408,736 L 544,736" fill="none" stroke="black"></path>
+                  <path d="M 176,752 L 240,752" fill="none" stroke="black"></path>
+                  <path d="M 352,752 L 400,752" fill="none" stroke="black"></path>
+                  <path d="M 24,784 L 168,784" fill="none" stroke="black"></path>
+                  <path d="M 408,848 L 544,848" fill="none" stroke="black"></path>
+                  <path d="M 24,896 L 192,896" fill="none" stroke="black"></path>
+                  <path d="M 200,912 L 240,912" fill="none" stroke="black"></path>
+                  <path d="M 248,928 L 344,928" fill="none" stroke="black"></path>
+                  <path d="M 200,960 L 224,960" fill="none" stroke="black"></path>
+                  <path d="M 24,976 L 192,976" fill="none" stroke="black"></path>
+                  <path d="M 432,1024 L 544,1024" fill="none" stroke="black"></path>
+                  <path d="M 432,1072 L 544,1072" fill="none" stroke="black"></path>
+                  <path d="M 296,1136 L 544,1136" fill="none" stroke="black"></path>
+                  <path d="M 296,1168 L 544,1168" fill="none" stroke="black"></path>
+                  <path d="M 296,1232 L 544,1232" fill="none" stroke="black"></path>
+                  <path d="M 24,1248 L 176,1248" fill="none" stroke="black"></path>
+                  <path d="M 224,1264 L 288,1264" fill="none" stroke="black"></path>
+                  <path d="M 24,1360 L 176,1360" fill="none" stroke="black"></path>
+                  <path d="M 296,1360 L 544,1360" fill="none" stroke="black"></path>
+                  <path d="M 8,1392 L 80,1392" fill="none" stroke="black"></path>
+                  <path d="M 96,1392 L 560,1392" fill="none" stroke="black"></path>
+                  <path d="M 8,1440 L 80,1440" fill="none" stroke="black"></path>
+                  <path d="M 96,1440 L 560,1440" fill="none" stroke="black"></path>
+                  <path d="M 24,1488 L 480,1488" fill="none" stroke="black"></path>
+                  <path d="M 24,1536 L 480,1536" fill="none" stroke="black"></path>
+                  <path d="M 8,1568 L 80,1568" fill="none" stroke="black"></path>
+                  <path d="M 96,1568 L 560,1568" fill="none" stroke="black"></path>
+                  <path d="M 16,1744 L 168,1744" fill="none" stroke="black"></path>
+                  <path d="M 16,1776 L 168,1776" fill="none" stroke="black"></path>
+                  <path d="M 8,1920 L 80,1920" fill="none" stroke="black"></path>
+                  <path d="M 96,1920 L 416,1920" fill="none" stroke="black"></path>
+                  <path d="M 24,1968 L 392,1968" fill="none" stroke="black"></path>
+                  <path d="M 24,2016 L 392,2016" fill="none" stroke="black"></path>
+                  <path d="M 24,2080 L 384,2080" fill="none" stroke="black"></path>
+                  <path d="M 24,2128 L 384,2128" fill="none" stroke="black"></path>
+                  <path d="M 8,2160 L 80,2160" fill="none" stroke="black"></path>
+                  <path d="M 96,2160 L 416,2160" fill="none" stroke="black"></path>
+                  <path d="M 16,2336 L 152,2336" fill="none" stroke="black"></path>
+                  <path d="M 16,2384 L 152,2384" fill="none" stroke="black"></path>
+                  <polygon class="arrowhead" points="520,1128 508,1122.4 508,1133.6" fill="black" transform="rotate(90,512,1128)"></polygon>
+                  <polygon class="arrowhead" points="520,1016 508,1010.4 508,1021.6" fill="black" transform="rotate(90,512,1016)"></polygon>
+                  <polygon class="arrowhead" points="520,728 508,722.4 508,733.6" fill="black" transform="rotate(90,512,728)"></polygon>
+                  <polygon class="arrowhead" points="416,592 404,586.4 404,597.6" fill="black" transform="rotate(0,408,592)"></polygon>
+                  <polygon class="arrowhead" points="360,752 348,746.4 348,757.6" fill="black" transform="rotate(180,352,752)"></polygon>
+                  <polygon class="arrowhead" points="328,1224 316,1218.4 316,1229.6" fill="black" transform="rotate(90,320,1224)"></polygon>
+                  <polygon class="arrowhead" points="328,936 316,930.4 316,941.6" fill="black" transform="rotate(270,320,936)"></polygon>
+                  <polygon class="arrowhead" points="304,728 292,722.4 292,733.6" fill="black" transform="rotate(90,296,728)"></polygon>
+                  <polygon class="arrowhead" points="248,912 236,906.4 236,917.6" fill="black" transform="rotate(0,240,912)"></polygon>
+                  <polygon class="arrowhead" points="248,752 236,746.4 236,757.6" fill="black" transform="rotate(0,240,752)"></polygon>
+                  <polygon class="arrowhead" points="248,592 236,586.4 236,597.6" fill="black" transform="rotate(0,240,592)"></polygon>
+                  <polygon class="arrowhead" points="208,960 196,954.4 196,965.6" fill="black" transform="rotate(180,200,960)"></polygon>
+                  <polygon class="arrowhead" points="96,2328 84,2322.4 84,2333.6" fill="black" transform="rotate(90,88,2328)"></polygon>
+                  <polygon class="arrowhead" points="96,2208 84,2202.4 84,2213.6" fill="black" transform="rotate(90,88,2208)"></polygon>
+                  <polygon class="arrowhead" points="96,2072 84,2066.4 84,2077.6" fill="black" transform="rotate(90,88,2072)"></polygon>
+                  <polygon class="arrowhead" points="96,1960 84,1954.4 84,1965.6" fill="black" transform="rotate(90,88,1960)"></polygon>
+                  <polygon class="arrowhead" points="96,1824 84,1818.4 84,1829.6" fill="black" transform="rotate(90,88,1824)"></polygon>
+                  <polygon class="arrowhead" points="96,1736 84,1730.4 84,1741.6" fill="black" transform="rotate(90,88,1736)"></polygon>
                   <polygon class="arrowhead" points="96,1616 84,1610.4 84,1621.6" fill="black" transform="rotate(90,88,1616)"></polygon>
-                  <polygon class="arrowhead" points="96,1528 84,1522.4 84,1533.6" fill="black" transform="rotate(90,88,1528)"></polygon>
-                  <polygon class="arrowhead" points="96,1408 84,1402.4 84,1413.6" fill="black" transform="rotate(90,88,1408)"></polygon>
-                  <polygon class="arrowhead" points="96,1272 84,1266.4 84,1277.6" fill="black" transform="rotate(90,88,1272)"></polygon>
-                  <polygon class="arrowhead" points="96,1032 84,1026.4 84,1037.6" fill="black" transform="rotate(90,88,1032)"></polygon>
-                  <polygon class="arrowhead" points="96,680 84,674.4 84,685.6" fill="black" transform="rotate(90,88,680)"></polygon>
-                  <polygon class="arrowhead" points="96,520 84,514.4 84,525.6" fill="black" transform="rotate(90,88,520)"></polygon>
+                  <polygon class="arrowhead" points="96,1480 84,1474.4 84,1485.6" fill="black" transform="rotate(90,88,1480)"></polygon>
+                  <polygon class="arrowhead" points="96,1240 84,1234.4 84,1245.6" fill="black" transform="rotate(90,88,1240)"></polygon>
+                  <polygon class="arrowhead" points="96,888 84,882.4 84,893.6" fill="black" transform="rotate(90,88,888)"></polygon>
+                  <polygon class="arrowhead" points="96,728 84,722.4 84,733.6" fill="black" transform="rotate(90,88,728)"></polygon>
+                  <polygon class="arrowhead" points="96,552 84,546.4 84,557.6" fill="black" transform="rotate(90,88,552)"></polygon>
                   <polygon class="arrowhead" points="96,344 84,338.4 84,349.6" fill="black" transform="rotate(90,88,344)"></polygon>
+                  <polygon class="arrowhead" points="96,232 84,226.4 84,237.6" fill="black" transform="rotate(90,88,232)"></polygon>
                   <polygon class="arrowhead" points="96,136 84,130.4 84,141.6" fill="black" transform="rotate(90,88,136)"></polygon>
                   <g class="text">
                     <text x="52" y="36">Incoming</text>
@@ -2306,239 +2320,248 @@ Then, PHASE_1 ends, and the pre-verification side processing moves to the next P
                     <text x="64" y="68">2</text>
                     <text x="84" y="68">or</text>
                     <text x="108" y="68">3)</text>
-                    <text x="56" y="164">Decrypt</text>
-                    <text x="128" y="164">message_X</text>
-                    <text x="216" y="164">(Core</text>
-                    <text x="264" y="164">EDHOC</text>
-                    <text x="336" y="164">Processing)</text>
-                    <text x="40" y="244">Control</text>
-                    <text x="120" y="244">transferred</text>
-                    <text x="180" y="244">to</text>
-                    <text x="24" y="260">the</text>
-                    <text x="100" y="260">side-processor</text>
-                    <text x="188" y="260">object</text>
-                    <text x="252" y="324">Pre-verification</text>
-                    <text x="340" y="324">side</text>
-                    <text x="404" y="324">processing</text>
-                    <text x="488" y="324">(PHASE_1)</text>
-                    <text x="44" y="372">1.</text>
-                    <text x="76" y="372">Does</text>
-                    <text x="136" y="372">ID_CRED_X</text>
-                    <text x="220" y="372">NO</text>
-                    <text x="268" y="372">3.</text>
-                    <text x="316" y="372">Retrieve</text>
-                    <text x="436" y="372">4.</text>
-                    <text x="460" y="372">Is</text>
-                    <text x="488" y="372">the</text>
-                    <text x="44" y="388">or</text>
-                    <text x="68" y="388">an</text>
-                    <text x="96" y="388">EAD</text>
-                    <text x="132" y="388">item</text>
-                    <text x="276" y="388">CRED</text>
-                    <text x="312" y="388">via</text>
-                    <text x="464" y="388">retrieval</text>
-                    <text x="56" y="404">point</text>
-                    <text x="92" y="404">to</text>
-                    <text x="116" y="404">an</text>
-                    <text x="160" y="404">already</text>
-                    <text x="296" y="404">ID_CRED_X</text>
-                    <text x="348" y="404">or</text>
-                    <text x="436" y="404">of</text>
-                    <text x="468" y="404">CRED</text>
-                    <text x="60" y="420">stored</text>
-                    <text x="112" y="420">CRED?</text>
-                    <text x="268" y="420">an</text>
-                    <text x="296" y="420">EAD</text>
-                    <text x="332" y="420">item</text>
-                    <text x="472" y="420">successful?</text>
-                    <text x="444" y="468">NO</text>
-                    <text x="536" y="468">YES</text>
-                    <text x="112" y="500">YES</text>
-                    <text x="188" y="532">NO</text>
-                    <text x="384" y="532">YES</text>
-                    <text x="44" y="548">2.</text>
-                    <text x="68" y="548">Is</text>
-                    <text x="100" y="548">this</text>
-                    <text x="140" y="548">CRED</text>
-                    <text x="272" y="548">11.</text>
-                    <text x="312" y="548">Abort</text>
-                    <text x="428" y="548">5.</text>
-                    <text x="452" y="548">Is</text>
-                    <text x="480" y="548">the</text>
-                    <text x="516" y="548">used</text>
-                    <text x="56" y="564">still</text>
-                    <text x="108" y="564">valid?</text>
-                    <text x="272" y="564">the</text>
-                    <text x="312" y="564">EDHOC</text>
-                    <text x="440" y="564">trust</text>
-                    <text x="492" y="564">policy</text>
-                    <text x="288" y="580">session</text>
-                    <text x="476" y="580">"NO-LEARNING",</text>
-                    <text x="448" y="596">without</text>
-                    <text x="496" y="596">any</text>
-                    <text x="460" y="612">acceptable</text>
-                    <text x="464" y="628">exceptions?</text>
-                    <text x="112" y="660">YES</text>
-                    <text x="396" y="676">Here</text>
-                    <text x="432" y="676">the</text>
-                    <text x="468" y="676">used</text>
-                    <text x="532" y="676">NO</text>
-                    <text x="212" y="692">NO</text>
-                    <text x="400" y="692">trust</text>
-                    <text x="452" y="692">policy</text>
-                    <text x="492" y="692">is</text>
-                    <text x="44" y="708">9.</text>
-                    <text x="68" y="708">Is</text>
-                    <text x="100" y="708">this</text>
-                    <text x="140" y="708">CRED</text>
-                    <text x="424" y="708">"LEARNING",</text>
-                    <text x="484" y="708">or</text>
-                    <text x="52" y="724">good</text>
-                    <text x="84" y="724">to</text>
-                    <text x="112" y="724">use</text>
-                    <text x="140" y="724">in</text>
-                    <text x="168" y="724">the</text>
-                    <text x="432" y="724">"NO-LEARNING"</text>
-                    <text x="64" y="740">context</text>
-                    <text x="108" y="740">of</text>
-                    <text x="140" y="740">this</text>
-                    <text x="412" y="740">together</text>
-                    <text x="468" y="740">with</text>
-                    <text x="56" y="756">EDHOC</text>
-                    <text x="116" y="756">session?</text>
-                    <text x="388" y="756">an</text>
-                    <text x="444" y="756">overriding</text>
-                    <text x="416" y="772">exception</text>
-                    <text x="452" y="836">6.</text>
-                    <text x="500" y="836">Validate</text>
-                    <text x="460" y="852">CRED</text>
-                    <text x="112" y="900">YES</text>
-                    <text x="340" y="900">NO</text>
-                    <text x="316" y="948">7.</text>
-                    <text x="340" y="948">Is</text>
-                    <text x="372" y="948">CRED</text>
-                    <text x="420" y="948">valid?</text>
-                    <text x="344" y="996">YES</text>
-                    <text x="316" y="1044">8.</text>
-                    <text x="352" y="1044">Store</text>
-                    <text x="396" y="1044">CRED</text>
-                    <text x="428" y="1044">as</text>
-                    <text x="464" y="1044">valid</text>
-                    <text x="504" y="1044">and</text>
-                    <text x="48" y="1060">10.</text>
-                    <text x="100" y="1060">Continue</text>
-                    <text x="148" y="1060">by</text>
-                    <text x="340" y="1060">trusted.</text>
-                    <text x="80" y="1076">considering</text>
-                    <text x="148" y="1076">this</text>
-                    <text x="52" y="1092">CRED</text>
-                    <text x="84" y="1092">as</text>
-                    <text x="112" y="1092">the</text>
-                    <text x="324" y="1092">Pair</text>
-                    <text x="364" y="1092">CRED</text>
-                    <text x="404" y="1092">with</text>
-                    <text x="468" y="1092">consistent</text>
-                    <text x="92" y="1108">authentication</text>
-                    <text x="348" y="1108">credential</text>
-                    <text x="444" y="1108">identifiers,</text>
-                    <text x="512" y="1108">for</text>
-                    <text x="76" y="1124">credential</text>
-                    <text x="132" y="1124">of</text>
-                    <text x="324" y="1124">each</text>
-                    <text x="384" y="1124">supported</text>
-                    <text x="444" y="1124">type</text>
-                    <text x="476" y="1124">of</text>
-                    <text x="48" y="1140">the</text>
-                    <text x="88" y="1140">other</text>
-                    <text x="132" y="1140">peer</text>
-                    <text x="348" y="1140">credential</text>
-                    <text x="440" y="1140">identifier.</text>
-                    <text x="244" y="1252">Pre-verification</text>
-                    <text x="332" y="1252">side</text>
-                    <text x="396" y="1252">processing</text>
-                    <text x="480" y="1252">(PHASE_2)</text>
-                    <text x="64" y="1300">Process</text>
+                    <text x="200" y="148">\</text>
+                    <text x="52" y="164">Decode</text>
+                    <text x="120" y="164">message_X</text>
+                    <text x="60" y="260">Retrieve</text>
+                    <text x="112" y="260">the</text>
+                    <text x="216" y="260">&gt;</text>
+                    <text x="248" y="260">(Core</text>
+                    <text x="296" y="260">EDHOC</text>
+                    <text x="368" y="260">Processing)</text>
+                    <text x="60" y="276">protocol</text>
+                    <text x="120" y="276">state</text>
+                    <text x="56" y="372">Decrypt</text>
+                    <text x="128" y="372">message_X</text>
+                    <text x="200" y="388">/</text>
+                    <text x="40" y="452">Control</text>
+                    <text x="120" y="452">transferred</text>
+                    <text x="180" y="452">to</text>
+                    <text x="24" y="468">the</text>
+                    <text x="100" y="468">side-processor</text>
+                    <text x="188" y="468">object</text>
+                    <text x="252" y="532">Pre-verification</text>
+                    <text x="340" y="532">side</text>
+                    <text x="404" y="532">processing</text>
+                    <text x="488" y="532">(PHASE_1)</text>
+                    <text x="44" y="580">1.</text>
+                    <text x="76" y="580">Does</text>
+                    <text x="136" y="580">ID_CRED_X</text>
+                    <text x="220" y="580">NO</text>
+                    <text x="268" y="580">3.</text>
+                    <text x="316" y="580">Retrieve</text>
+                    <text x="436" y="580">4.</text>
+                    <text x="460" y="580">Is</text>
+                    <text x="488" y="580">the</text>
+                    <text x="44" y="596">or</text>
+                    <text x="68" y="596">an</text>
+                    <text x="96" y="596">EAD</text>
+                    <text x="132" y="596">item</text>
+                    <text x="276" y="596">CRED</text>
+                    <text x="312" y="596">via</text>
+                    <text x="464" y="596">retrieval</text>
+                    <text x="56" y="612">point</text>
+                    <text x="92" y="612">to</text>
+                    <text x="116" y="612">an</text>
+                    <text x="160" y="612">already</text>
+                    <text x="296" y="612">ID_CRED_X</text>
+                    <text x="348" y="612">or</text>
+                    <text x="436" y="612">of</text>
+                    <text x="468" y="612">CRED</text>
+                    <text x="60" y="628">stored</text>
+                    <text x="112" y="628">CRED?</text>
+                    <text x="268" y="628">an</text>
+                    <text x="296" y="628">EAD</text>
+                    <text x="332" y="628">item</text>
+                    <text x="472" y="628">successful?</text>
+                    <text x="444" y="676">NO</text>
+                    <text x="536" y="676">YES</text>
+                    <text x="112" y="708">YES</text>
+                    <text x="188" y="740">NO</text>
+                    <text x="384" y="740">YES</text>
+                    <text x="44" y="756">2.</text>
+                    <text x="68" y="756">Is</text>
+                    <text x="100" y="756">this</text>
+                    <text x="140" y="756">CRED</text>
+                    <text x="272" y="756">11.</text>
+                    <text x="312" y="756">Abort</text>
+                    <text x="428" y="756">5.</text>
+                    <text x="452" y="756">Is</text>
+                    <text x="480" y="756">the</text>
+                    <text x="516" y="756">used</text>
+                    <text x="56" y="772">still</text>
+                    <text x="108" y="772">valid?</text>
+                    <text x="272" y="772">the</text>
+                    <text x="312" y="772">EDHOC</text>
+                    <text x="440" y="772">trust</text>
+                    <text x="492" y="772">policy</text>
+                    <text x="288" y="788">session</text>
+                    <text x="476" y="788">"NO-LEARNING",</text>
+                    <text x="448" y="804">without</text>
+                    <text x="496" y="804">any</text>
+                    <text x="460" y="820">acceptable</text>
+                    <text x="464" y="836">exceptions?</text>
+                    <text x="112" y="868">YES</text>
+                    <text x="396" y="884">Here</text>
+                    <text x="432" y="884">the</text>
+                    <text x="468" y="884">used</text>
+                    <text x="532" y="884">NO</text>
+                    <text x="212" y="900">NO</text>
+                    <text x="400" y="900">trust</text>
+                    <text x="452" y="900">policy</text>
+                    <text x="492" y="900">is</text>
+                    <text x="44" y="916">9.</text>
+                    <text x="68" y="916">Is</text>
+                    <text x="100" y="916">this</text>
+                    <text x="140" y="916">CRED</text>
+                    <text x="424" y="916">"LEARNING",</text>
+                    <text x="484" y="916">or</text>
+                    <text x="52" y="932">good</text>
+                    <text x="84" y="932">to</text>
+                    <text x="112" y="932">use</text>
+                    <text x="140" y="932">in</text>
+                    <text x="168" y="932">the</text>
+                    <text x="432" y="932">"NO-LEARNING"</text>
+                    <text x="64" y="948">context</text>
+                    <text x="108" y="948">of</text>
+                    <text x="140" y="948">this</text>
+                    <text x="412" y="948">together</text>
+                    <text x="468" y="948">with</text>
+                    <text x="56" y="964">EDHOC</text>
+                    <text x="116" y="964">session?</text>
+                    <text x="388" y="964">an</text>
+                    <text x="444" y="964">overriding</text>
+                    <text x="416" y="980">exception</text>
+                    <text x="452" y="1044">6.</text>
+                    <text x="500" y="1044">Validate</text>
+                    <text x="460" y="1060">CRED</text>
+                    <text x="112" y="1108">YES</text>
+                    <text x="340" y="1108">NO</text>
+                    <text x="316" y="1156">7.</text>
+                    <text x="340" y="1156">Is</text>
+                    <text x="372" y="1156">CRED</text>
+                    <text x="420" y="1156">valid?</text>
+                    <text x="344" y="1204">YES</text>
+                    <text x="316" y="1252">8.</text>
+                    <text x="352" y="1252">Store</text>
+                    <text x="396" y="1252">CRED</text>
+                    <text x="428" y="1252">as</text>
+                    <text x="464" y="1252">valid</text>
+                    <text x="504" y="1252">and</text>
+                    <text x="48" y="1268">10.</text>
+                    <text x="100" y="1268">Continue</text>
+                    <text x="148" y="1268">by</text>
+                    <text x="340" y="1268">trusted.</text>
+                    <text x="80" y="1284">considering</text>
+                    <text x="148" y="1284">this</text>
+                    <text x="52" y="1300">CRED</text>
+                    <text x="84" y="1300">as</text>
                     <text x="112" y="1300">the</text>
-                    <text x="144" y="1300">EAD</text>
-                    <text x="184" y="1300">items</text>
-                    <text x="228" y="1300">that</text>
-                    <text x="268" y="1300">have</text>
-                    <text x="304" y="1300">not</text>
-                    <text x="340" y="1300">been</text>
-                    <text x="400" y="1300">processed</text>
-                    <text x="456" y="1300">yet</text>
-                    <text x="48" y="1316">and</text>
-                    <text x="84" y="1316">that</text>
-                    <text x="120" y="1316">can</text>
-                    <text x="148" y="1316">be</text>
-                    <text x="200" y="1316">processed</text>
-                    <text x="268" y="1316">before</text>
-                    <text x="328" y="1316">message</text>
-                    <text x="412" y="1316">verification</text>
-                    <text x="40" y="1444">Control</text>
-                    <text x="120" y="1444">transferred</text>
-                    <text x="188" y="1444">back</text>
-                    <text x="20" y="1460">to</text>
-                    <text x="48" y="1460">the</text>
-                    <text x="84" y="1460">core</text>
-                    <text x="128" y="1460">EDHOC</text>
-                    <text x="196" y="1460">processing</text>
-                    <text x="52" y="1556">Verify</text>
-                    <text x="120" y="1556">message_X</text>
-                    <text x="200" y="1556">(core</text>
-                    <text x="248" y="1556">EDHOC</text>
-                    <text x="320" y="1556">processing)</text>
+                    <text x="324" y="1300">Pair</text>
+                    <text x="364" y="1300">CRED</text>
+                    <text x="404" y="1300">with</text>
+                    <text x="468" y="1300">consistent</text>
+                    <text x="92" y="1316">authentication</text>
+                    <text x="348" y="1316">credential</text>
+                    <text x="444" y="1316">identifiers,</text>
+                    <text x="512" y="1316">for</text>
+                    <text x="76" y="1332">credential</text>
+                    <text x="132" y="1332">of</text>
+                    <text x="324" y="1332">each</text>
+                    <text x="384" y="1332">supported</text>
+                    <text x="444" y="1332">type</text>
+                    <text x="476" y="1332">of</text>
+                    <text x="48" y="1348">the</text>
+                    <text x="88" y="1348">other</text>
+                    <text x="132" y="1348">peer</text>
+                    <text x="348" y="1348">credential</text>
+                    <text x="440" y="1348">identifier.</text>
+                    <text x="244" y="1460">Pre-verification</text>
+                    <text x="332" y="1460">side</text>
+                    <text x="396" y="1460">processing</text>
+                    <text x="480" y="1460">(PHASE_2)</text>
+                    <text x="64" y="1508">Process</text>
+                    <text x="112" y="1508">the</text>
+                    <text x="144" y="1508">EAD</text>
+                    <text x="184" y="1508">items</text>
+                    <text x="228" y="1508">that</text>
+                    <text x="268" y="1508">have</text>
+                    <text x="304" y="1508">not</text>
+                    <text x="340" y="1508">been</text>
+                    <text x="400" y="1508">processed</text>
+                    <text x="456" y="1508">yet</text>
+                    <text x="48" y="1524">and</text>
+                    <text x="84" y="1524">that</text>
+                    <text x="120" y="1524">can</text>
+                    <text x="148" y="1524">be</text>
+                    <text x="200" y="1524">processed</text>
+                    <text x="268" y="1524">before</text>
+                    <text x="328" y="1524">message</text>
+                    <text x="412" y="1524">verification</text>
                     <text x="40" y="1652">Control</text>
                     <text x="120" y="1652">transferred</text>
-                    <text x="180" y="1652">to</text>
-                    <text x="24" y="1668">the</text>
-                    <text x="100" y="1668">side-processor</text>
-                    <text x="188" y="1668">object</text>
-                    <text x="248" y="1732">Post-verification</text>
-                    <text x="364" y="1732">processing</text>
-                    <text x="64" y="1780">Process</text>
-                    <text x="112" y="1780">the</text>
-                    <text x="144" y="1780">EAD</text>
-                    <text x="184" y="1780">items</text>
-                    <text x="228" y="1780">that</text>
-                    <text x="268" y="1780">have</text>
-                    <text x="300" y="1780">to</text>
-                    <text x="324" y="1780">be</text>
-                    <text x="72" y="1796">processed</text>
-                    <text x="140" y="1796">(also)</text>
-                    <text x="192" y="1796">after</text>
-                    <text x="248" y="1796">message</text>
-                    <text x="332" y="1796">verification</text>
-                    <text x="52" y="1892">Make</text>
-                    <text x="88" y="1892">all</text>
-                    <text x="120" y="1892">the</text>
-                    <text x="168" y="1892">results</text>
-                    <text x="212" y="1892">of</text>
-                    <text x="240" y="1892">the</text>
-                    <text x="272" y="1892">EAD</text>
-                    <text x="332" y="1892">processing</text>
-                    <text x="72" y="1908">available</text>
-                    <text x="124" y="1908">to</text>
-                    <text x="160" y="1908">build</text>
-                    <text x="200" y="1908">the</text>
-                    <text x="236" y="1908">next</text>
-                    <text x="280" y="1908">EDHOC</text>
-                    <text x="336" y="1908">message</text>
-                    <text x="40" y="2036">Control</text>
-                    <text x="120" y="2036">transferred</text>
-                    <text x="188" y="2036">back</text>
-                    <text x="20" y="2052">to</text>
-                    <text x="48" y="2052">the</text>
-                    <text x="84" y="2052">core</text>
-                    <text x="128" y="2052">EDHOC</text>
-                    <text x="196" y="2052">processing</text>
-                    <text x="56" y="2148">Advance</text>
-                    <text x="104" y="2148">the</text>
-                    <text x="184" y="2148">(core</text>
-                    <text x="232" y="2148">EDHOC</text>
-                    <text x="304" y="2148">processing)</text>
-                    <text x="60" y="2164">protocol</text>
-                    <text x="120" y="2164">state</text>
+                    <text x="188" y="1652">back</text>
+                    <text x="20" y="1668">to</text>
+                    <text x="48" y="1668">the</text>
+                    <text x="84" y="1668">core</text>
+                    <text x="128" y="1668">EDHOC</text>
+                    <text x="196" y="1668">processing</text>
+                    <text x="52" y="1764">Verify</text>
+                    <text x="120" y="1764">message_X</text>
+                    <text x="200" y="1764">(core</text>
+                    <text x="248" y="1764">EDHOC</text>
+                    <text x="320" y="1764">processing)</text>
+                    <text x="40" y="1860">Control</text>
+                    <text x="120" y="1860">transferred</text>
+                    <text x="180" y="1860">to</text>
+                    <text x="24" y="1876">the</text>
+                    <text x="100" y="1876">side-processor</text>
+                    <text x="188" y="1876">object</text>
+                    <text x="248" y="1940">Post-verification</text>
+                    <text x="364" y="1940">processing</text>
+                    <text x="64" y="1988">Process</text>
+                    <text x="112" y="1988">the</text>
+                    <text x="144" y="1988">EAD</text>
+                    <text x="184" y="1988">items</text>
+                    <text x="228" y="1988">that</text>
+                    <text x="268" y="1988">have</text>
+                    <text x="300" y="1988">to</text>
+                    <text x="324" y="1988">be</text>
+                    <text x="72" y="2004">processed</text>
+                    <text x="140" y="2004">(also)</text>
+                    <text x="192" y="2004">after</text>
+                    <text x="248" y="2004">message</text>
+                    <text x="332" y="2004">verification</text>
+                    <text x="52" y="2100">Make</text>
+                    <text x="88" y="2100">all</text>
+                    <text x="120" y="2100">the</text>
+                    <text x="168" y="2100">results</text>
+                    <text x="212" y="2100">of</text>
+                    <text x="240" y="2100">the</text>
+                    <text x="272" y="2100">EAD</text>
+                    <text x="332" y="2100">processing</text>
+                    <text x="72" y="2116">available</text>
+                    <text x="124" y="2116">to</text>
+                    <text x="160" y="2116">build</text>
+                    <text x="200" y="2116">the</text>
+                    <text x="236" y="2116">next</text>
+                    <text x="280" y="2116">EDHOC</text>
+                    <text x="336" y="2116">message</text>
+                    <text x="40" y="2244">Control</text>
+                    <text x="120" y="2244">transferred</text>
+                    <text x="188" y="2244">back</text>
+                    <text x="20" y="2260">to</text>
+                    <text x="48" y="2260">the</text>
+                    <text x="84" y="2260">core</text>
+                    <text x="128" y="2260">EDHOC</text>
+                    <text x="196" y="2260">processing</text>
+                    <text x="56" y="2356">Advance</text>
+                    <text x="104" y="2356">the</text>
+                    <text x="184" y="2356">(core</text>
+                    <text x="232" y="2356">EDHOC</text>
+                    <text x="304" y="2356">processing)</text>
+                    <text x="60" y="2372">protocol</text>
+                    <text x="120" y="2372">state</text>
                   </g>
                 </svg><a href="#section-4.3.3-4.1.1" class="pilcrow">¶</a>
 </div>

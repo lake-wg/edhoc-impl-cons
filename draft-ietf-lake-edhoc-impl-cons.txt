@@ -4,8 +4,8 @@
 
 LAKE Working Group                                             M. Tiloca
 Internet-Draft                                                   RISE AB
-Intended status: Informational                            1 October 2024
-Expires: 4 April 2025
+Intended status: Informational                            2 October 2024
+Expires: 5 April 2025
 
 
   Implementation Considerations for Ephemeral Diffie-Hellman Over COSE
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 April 2025.
+   This Internet-Draft will expire on 5 April 2025.
 
 Copyright Notice
 
@@ -136,7 +136,7 @@ Table of Contents
       topic is discussed in Section 4.
 
    *  Effectively using EDHOC over the Constrained Application Protocol
-      (CoAP) [RFC7252] in combination with Block-wise Transfers for CoAP
+      (CoAP) [RFC7252] in combination with Block-wise transfers for CoAP
       [RFC7959], possibly together with the optimized EDHOC execution
       workflow defined in [I-D.ietf-core-oscore-edhoc].  This topic is
       discussed in Section 5.
@@ -151,7 +151,7 @@ Table of Contents
 
    The reader is expected to be familiar with terms and concepts related
    to the EDHOC protocol [RFC9528], the Constrained Application Protocol
-   (CoAP) [RFC7252], and Block-wise Transfers for CoAP [RFC7959].
+   (CoAP) [RFC7252], and Block-wise transfers for CoAP [RFC7959].
 
 2.  Handling of Invalid EDHOC Sessions and Application Keys
 
@@ -1030,9 +1030,22 @@ Table of Contents
             |
             |
             v
-   +-------------------+
-   | Decrypt message_X |  (Core EDHOC Processing)
-   +-------------------+
+   +-------------------+  \
+   | Decode message_X  |   |
+   +-------------------+   |
+            |              |
+            |              |
+            v              |
+   +-------------------+   |
+   | Retrieve the      |    > (Core EDHOC Processing)
+   | protocol state    |   |
+   +-------------------+   |
+            |              |
+            |              |
+            v              |
+   +-------------------+   |
+   | Decrypt message_X |   |
+   +-------------------+  /
             |
             |
 
