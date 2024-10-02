@@ -68,13 +68,13 @@ In order to prevent multiple, independent re-discoveries and assessments of thos
 
 * Branched-off, side processing of incoming EDHOC messages, with particular reference to: i) fetching and validation of authentication credentials; and ii) processing of External Authorization Data (EAD) items, which in turn might play a role in the fetching and validation of authentication credentials. This topic is discussed in {{sec-message-side-processing}}.
 
-* Effectively using EDHOC over the Constrained Application Protocol (CoAP) {{RFC7252}} in combination with Block-wise Transfers for CoAP {{RFC7959}}, possibly together with the optimized EDHOC execution workflow defined in {{I-D.ietf-core-oscore-edhoc}}. This topic is discussed in {{sec-block-wise}}.
+* Effectively using EDHOC over the Constrained Application Protocol (CoAP) {{RFC7252}} in combination with Block-wise transfers for CoAP {{RFC7959}}, possibly together with the optimized EDHOC execution workflow defined in {{I-D.ietf-core-oscore-edhoc}}. This topic is discussed in {{sec-block-wise}}.
 
 ## Terminology ## {#terminology}
 
 {::boilerplate bcp14-tagged}
 
-The reader is expected to be familiar with terms and concepts related to the EDHOC protocol {{RFC9528}}, the Constrained Application Protocol (CoAP) {{RFC7252}}, and Block-wise Transfers for CoAP {{RFC7959}}.
+The reader is expected to be familiar with terms and concepts related to the EDHOC protocol {{RFC9528}}, the Constrained Application Protocol (CoAP) {{RFC7252}}, and Block-wise transfers for CoAP {{RFC7959}}.
 
 # Handling of Invalid EDHOC Sessions and Application Keys # {#sec-session-handling}
 
@@ -577,9 +577,22 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
           |
           |
           v
- +-------------------+
- | Decrypt message_X |  (Core EDHOC Processing)
- +-------------------+
+ +-------------------+  \
+ | Decode message_X  |   |
+ +-------------------+   |
+          |              |
+          |              |
+          v              |
+ +-------------------+   |
+ | Retrieve the      |    > (Core EDHOC Processing)
+ | protocol state    |   |
+ +-------------------+   |
+          |              |
+          |              |
+          v              |
+ +-------------------+   |
+ | Decrypt message_X |   |
+ +-------------------+  /
           |
           |
 
