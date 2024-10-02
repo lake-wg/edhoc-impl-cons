@@ -565,7 +565,7 @@ EDHOC message_X
 |                                               Side-Processor Object |
 +---------------------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-flowchart-spo-high-level title="High-Level Interaction Between the Core EDHOC Processing and the Side-Processor Object (SPO)" artwork-align="center"}
+{: #fig-flowchart-spo-high-level title="High-Level Interaction Between the Core EDHOC Processing and the Side-Processor Object (SPO), for EDHOC message_2 and message_3" artwork-align="center"}
 
 The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken for processing an incoming EDHOC message_2 and message_3.
 
