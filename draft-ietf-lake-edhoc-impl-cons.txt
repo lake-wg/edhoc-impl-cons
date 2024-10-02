@@ -1018,7 +1018,8 @@ Table of Contents
  +---------------------------------------------------------------------+
 
         Figure 4: High-Level Interaction Between the Core EDHOC
-             Processing and the Side-Processor Object (SPO)
+       Processing and the Side-Processor Object (SPO), for EDHOC
+                        message_2 and message_3
 
    The flowchart in Figure 5 shows the different steps taken for
    processing an incoming EDHOC message_2 and message_3.
