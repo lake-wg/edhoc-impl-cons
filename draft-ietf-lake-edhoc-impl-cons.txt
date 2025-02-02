@@ -4,8 +4,8 @@
 
 LAKE Working Group                                             M. Tiloca
 Internet-Draft                                                   RISE AB
-Intended status: Informational                            2 October 2024
-Expires: 5 April 2025
+Intended status: Informational                           2 February 2025
+Expires: 6 August 2025
 
 
   Implementation Considerations for Ephemeral Diffie-Hellman Over COSE
@@ -45,11 +45,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 April 2025.
+   This Internet-Draft will expire on 6 August 2025.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1555,48 +1555,48 @@ Table of Contents
               Security for Constrained Environments (OSCORE) Profile for
               Authentication and Authorization for Constrained
               Environments (ACE)", Work in Progress, Internet-Draft,
-              draft-ietf-ace-edhoc-oscore-profile-05, 8 July 2024,
+              draft-ietf-ace-edhoc-oscore-profile-06, 21 October 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
-              edhoc-oscore-profile-05>.
+              edhoc-oscore-profile-06>.
 
    [I-D.ietf-ace-workflow-and-params]
               Tiloca, M. and G. Selander, "Alternative Workflow and
               OAuth Parameters for the Authentication and Authorization
               for Constrained Environments (ACE) Framework", Work in
               Progress, Internet-Draft, draft-ietf-ace-workflow-and-
-              params-02, 8 July 2024,
+              params-03, 21 October 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
-              workflow-and-params-02>.
+              workflow-and-params-03>.
 
    [I-D.ietf-core-oscore-key-limits]
               Höglund, R. and M. Tiloca, "Key Usage Limits for OSCORE",
               Work in Progress, Internet-Draft, draft-ietf-core-oscore-
-              key-limits-03, 8 July 2024,
+              key-limits-04, 8 January 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-core-
-              oscore-key-limits-03>.
+              oscore-key-limits-04>.
 
    [I-D.ietf-core-oscore-key-update]
               Höglund, R. and M. Tiloca, "Key Update for OSCORE
               (KUDOS)", Work in Progress, Internet-Draft, draft-ietf-
-              core-oscore-key-update-08, 8 July 2024,
+              core-oscore-key-update-09, 21 October 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-core-
-              oscore-key-update-08>.
+              oscore-key-update-09>.
 
    [I-D.ietf-cose-cbor-encoded-cert]
               Mattsson, J. P., Selander, G., Raza, S., Höglund, J., and
               M. Furuhed, "CBOR Encoded X.509 Certificates (C509
               Certificates)", Work in Progress, Internet-Draft, draft-
-              ietf-cose-cbor-encoded-cert-11, 8 July 2024,
+              ietf-cose-cbor-encoded-cert-12, 8 January 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-cose-
-              cbor-encoded-cert-11>.
+              cbor-encoded-cert-12>.
 
    [I-D.ietf-lake-authz]
               Selander, G., Mattsson, J. P., Vučinić, M., Fedrecheski,
               G., and M. Richardson, "Lightweight Authorization using
-              Ephemeral Diffie-Hellman Over COSE", Work in Progress,
-              Internet-Draft, draft-ietf-lake-authz-02, 5 July 2024,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-lake-
-              authz-02>.
+              Ephemeral Diffie-Hellman Over COSE (ELA)", Work in
+              Progress, Internet-Draft, draft-ietf-lake-authz-03, 21
+              October 2024, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-lake-authz-03>.
 
    [RFC2986]  Nystrom, M. and B. Kaliski, "PKCS #10: Certification
               Request Syntax Specification Version 1.7", RFC 2986,
