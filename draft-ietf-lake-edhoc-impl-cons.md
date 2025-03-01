@@ -72,8 +72,6 @@ In order to prevent multiple, independent re-discoveries and assessments of thos
 
 ## Terminology ## {#terminology}
 
-{::boilerplate bcp14-tagged}
-
 The reader is expected to be familiar with terms and concepts related to the EDHOC protocol {{RFC9528}}, the Constrained Application Protocol (CoAP) {{RFC7252}}, and Block-wise transfers for CoAP {{RFC7959}}.
 
 # Handling of Invalid EDHOC Sessions and Application Keys # {#sec-session-handling}
