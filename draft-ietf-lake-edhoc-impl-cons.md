@@ -28,7 +28,7 @@ normative:
   RFC7959:
   RFC8613:
   RFC9528:
-  I-D.ietf-core-oscore-edhoc:
+  RFC9668:
 
 informative:
   RFC2986:
@@ -68,7 +68,7 @@ In order to prevent multiple, independent re-discoveries and assessments of thos
 
 * Branched-off, side processing of incoming EDHOC messages, with particular reference to: i) fetching and validation of authentication credentials; and ii) processing of External Authorization Data (EAD) items, which in turn might play a role in the fetching and validation of authentication credentials. This topic is discussed in {{sec-message-side-processing}}.
 
-* Effectively using EDHOC over the Constrained Application Protocol (CoAP) {{RFC7252}} in combination with Block-wise transfers for CoAP {{RFC7959}}, possibly together with the optimized EDHOC execution workflow defined in {{I-D.ietf-core-oscore-edhoc}}. This topic is discussed in {{sec-block-wise}}.
+* Effectively using EDHOC over the Constrained Application Protocol (CoAP) {{RFC7252}} in combination with Block-wise transfers for CoAP {{RFC7959}}, possibly together with the optimized EDHOC execution workflow defined in {{RFC9668}}. This topic is discussed in {{sec-block-wise}}.
 
 ## Terminology ## {#terminology}
 
@@ -781,9 +781,9 @@ This needs to explain in general terms *when* PEER_RS becomes able to perform th
 
 {{Section A.2 of RFC9528}} specifies how to transfer EDHOC over CoAP {{RFC7252}}. In such a case, the EDHOC messages (possibly prepended by an EDHOC connection identifier) are transported in the payload of CoAP requests and responses, according to the EDHOC forward message flow or the EDHOC reverse message flow. Furthermore, {{Section A.1 of RFC9528}} specifies how to derive an OSCORE Security Context {{RFC8613}} from an EDHOC session.
 
-Building on that, {{I-D.ietf-core-oscore-edhoc}} further details the use of EDHOC with CoAP and OSCORE, and specifies an optimization approach for the EDHOC forward message flow that combines the EDHOC execution with the first subsequent OSCORE transaction. This is achieved by means of an "EDHOC + OSCORE request", i.e., a single CoAP request message that conveys both EDHOC message_3 of the ongoing EDHOC session and the OSCORE-protected application data, where the latter is protected with the OSCORE Security Context derived from that EDHOC session.
+Building on that, {{RFC9668}} further details the use of EDHOC with CoAP and OSCORE, and specifies an optimization approach for the EDHOC forward message flow that combines the EDHOC execution with the first subsequent OSCORE transaction. This is achieved by means of an "EDHOC + OSCORE request", i.e., a single CoAP request message that conveys both EDHOC message_3 of the ongoing EDHOC session and the OSCORE-protected application data, where the latter is protected with the OSCORE Security Context derived from that EDHOC session.
 
-This section provides guidelines and recommendations for CoAP endpoints supporting Block-wise transfers for CoAP {{RFC7959}} and specifically for CoAP clients supporting the EDHOC + OSCORE request defined in {{I-D.ietf-core-oscore-edhoc}}. The use of Block-wise transfers can be desirable, e.g., for EDHOC messages that include a large ID_CRED_I or ID_CRED_R, or that include a large EAD field.
+This section provides guidelines and recommendations for CoAP endpoints supporting Block-wise transfers for CoAP {{RFC7959}} and specifically for CoAP clients supporting the EDHOC + OSCORE request defined in {{RFC9668}}. The use of Block-wise transfers can be desirable, e.g., for EDHOC messages that include a large ID_CRED_I or ID_CRED_R, or that include a large EAD field.
 
 The following especially considers a CoAP endpoint that may perform only "inner" Block-wise, but not "outer" Block-wise operations (see {{Section 4.1.3.4 of RFC8613}}). That is, the considered CoAP endpoint does not (further) split an OSCORE-protected message like an intermediary (e.g., a proxy) might do. This is the typical case for CoAP endpoints using OSCORE (see {{Section 4.1.3.4 of RFC8613}}).
 
@@ -847,7 +847,7 @@ If _both_ the conditions COND5 and COND6 hold, the use of Block-wise results in 
 
 * If the original EDHOC execution workflow is used (see {{Section A.2.1 of RFC9528}}), the number of round trips RT_ORIG is equal to 1 + ceil(SIZE_EDHOC_M3 / SIZE_BLOCK) + ceil(SIZE_BODY / SIZE_BLOCK).
 
-* If the optimized EDHOC execution workflow is used (see {{Section 3 of I-D.ietf-core-oscore-edhoc}}), the number of round trips RT_COMB is equal to 1 + ceil(SIZE_BODY / SIZE_BLOCK).
+* If the optimized EDHOC execution workflow is used (see {{Section 3 of RFC9668}}), the number of round trips RT_COMB is equal to 1 + ceil(SIZE_BODY / SIZE_BLOCK).
 
 It follows that RT_COMB < RT_ORIG, i.e., the optimized EDHOC execution workflow always yields a lower number of round trips.
 
@@ -885,6 +885,12 @@ This document has no actions for IANA.
 
 # Document Updates # {#sec-document-updates}
 {:removeinrfc}
+
+## Version -02 to -03 ## {#sec-02-03}
+
+* Updated reference.
+
+* Editorial improvements.
 
 ## Version -01 to -02 ## {#sec-01-02}
 
