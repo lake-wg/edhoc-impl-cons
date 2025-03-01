@@ -4,8 +4,8 @@
 
 LAKE Working Group                                             M. Tiloca
 Internet-Draft                                                   RISE AB
-Intended status: Informational                           2 February 2025
-Expires: 6 August 2025
+Intended status: Informational                              1 March 2025
+Expires: 2 September 2025
 
 
   Implementation Considerations for Ephemeral Diffie-Hellman Over COSE
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 August 2025.
+   This Internet-Draft will expire on 2 September 2025.
 
 Copyright Notice
 
@@ -91,8 +91,9 @@ Table of Contents
      8.1.  Normative References
      8.2.  Informative References
    Appendix A.  Document Updates
-     A.1.  Version -01 to -02
-     A.2.  Version -00 to -01
+     A.1.  Version -02 to -03
+     A.2.  Version -01 to -02
+     A.3.  Version -00 to -01
    Acknowledgments
    Author's Address
 
@@ -138,8 +139,8 @@ Table of Contents
    *  Effectively using EDHOC over the Constrained Application Protocol
       (CoAP) [RFC7252] in combination with Block-wise transfers for CoAP
       [RFC7959], possibly together with the optimized EDHOC execution
-      workflow defined in [I-D.ietf-core-oscore-edhoc].  This topic is
-      discussed in Section 5.
+      workflow defined in [RFC9668].  This topic is discussed in
+      Section 5.
 
 1.1.  Terminology
 
@@ -1314,22 +1315,21 @@ Table of Contents
    [RFC9528] specifies how to derive an OSCORE Security Context
    [RFC8613] from an EDHOC session.
 
-   Building on that, [I-D.ietf-core-oscore-edhoc] further details the
-   use of EDHOC with CoAP and OSCORE, and specifies an optimization
-   approach for the EDHOC forward message flow that combines the EDHOC
-   execution with the first subsequent OSCORE transaction.  This is
-   achieved by means of an "EDHOC + OSCORE request", i.e., a single CoAP
-   request message that conveys both EDHOC message_3 of the ongoing
-   EDHOC session and the OSCORE-protected application data, where the
-   latter is protected with the OSCORE Security Context derived from
-   that EDHOC session.
+   Building on that, [RFC9668] further details the use of EDHOC with
+   CoAP and OSCORE, and specifies an optimization approach for the EDHOC
+   forward message flow that combines the EDHOC execution with the first
+   subsequent OSCORE transaction.  This is achieved by means of an
+   "EDHOC + OSCORE request", i.e., a single CoAP request message that
+   conveys both EDHOC message_3 of the ongoing EDHOC session and the
+   OSCORE-protected application data, where the latter is protected with
+   the OSCORE Security Context derived from that EDHOC session.
 
    This section provides guidelines and recommendations for CoAP
    endpoints supporting Block-wise transfers for CoAP [RFC7959] and
    specifically for CoAP clients supporting the EDHOC + OSCORE request
-   defined in [I-D.ietf-core-oscore-edhoc].  The use of Block-wise
-   transfers can be desirable, e.g., for EDHOC messages that include a
-   large ID_CRED_I or ID_CRED_R, or that include a large EAD field.
+   defined in [RFC9668].  The use of Block-wise transfers can be
+   desirable, e.g., for EDHOC messages that include a large ID_CRED_I or
+   ID_CRED_R, or that include a large EAD field.
 
    The following especially considers a CoAP endpoint that may perform
    only "inner" Block-wise, but not "outer" Block-wise operations (see
@@ -1442,8 +1442,8 @@ Table of Contents
       SIZE_BLOCK).
 
    *  If the optimized EDHOC execution workflow is used (see Section 3
-      of [I-D.ietf-core-oscore-edhoc]), the number of round trips
-      RT_COMB is equal to 1 + ceil(SIZE_BODY / SIZE_BLOCK).
+      of [RFC9668]), the number of round trips RT_COMB is equal to 1 +
+      ceil(SIZE_BODY / SIZE_BLOCK).
 
    It follows that RT_COMB < RT_ORIG, i.e., the optimized EDHOC
    execution workflow always yields a lower number of round trips.
@@ -1508,16 +1508,6 @@ Table of Contents
 
 8.1.  Normative References
 
-   [I-D.ietf-core-oscore-edhoc]
-              Palombini, F., Tiloca, M., Höglund, R., Hristozov, S., and
-              G. Selander, "Using Ephemeral Diffie-Hellman Over COSE
-              (EDHOC) with the Constrained Application Protocol (CoAP)
-              and Object Security for Constrained RESTful Environments
-              (OSCORE)", Work in Progress, Internet-Draft, draft-ietf-
-              core-oscore-edhoc-11, 9 April 2024,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-core-
-              oscore-edhoc-11>.
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
@@ -1546,6 +1536,13 @@ Table of Contents
               "Ephemeral Diffie-Hellman Over COSE (EDHOC)", RFC 9528,
               DOI 10.17487/RFC9528, March 2024,
               <https://www.rfc-editor.org/rfc/rfc9528>.
+
+   [RFC9668]  Palombini, F., Tiloca, M., Höglund, R., Hristozov, S., and
+              G. Selander, "Using Ephemeral Diffie-Hellman Over COSE
+              (EDHOC) with the Constrained Application Protocol (CoAP)
+              and Object Security for Constrained RESTful Environments
+              (OSCORE)", RFC 9668, DOI 10.17487/RFC9668, November 2024,
+              <https://www.rfc-editor.org/rfc/rfc9668>.
 
 8.2.  Informative References
 
@@ -1629,7 +1626,13 @@ Appendix A.  Document Updates
 
    This section is to be removed before publishing as an RFC.
 
-A.1.  Version -01 to -02
+A.1.  Version -02 to -03
+
+   *  Updated reference.
+
+   *  Editorial improvements.
+
+A.2.  Version -01 to -02
 
    *  Improved content on the EDHOC and OSCORE profile of ACE.
 
@@ -1642,7 +1645,7 @@ A.1.  Version -01 to -02
 
    *  Editorial improvements.
 
-A.2.  Version -00 to -01
+A.3.  Version -00 to -01
 
    *  Added considerations on trust policies when using the EDHOC and
       OSCORE profile of the ACE framework.
