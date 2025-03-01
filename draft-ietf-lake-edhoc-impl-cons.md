@@ -86,7 +86,7 @@ Building on the above, the following expands on three relevant cases concerning 
 
 As a case in point to provide more concrete guidance, the following also considers the specific case where "applications keys" stands for the keying material and parameters that compose an OSCORE Security Context {{RFC8613}} and that are derived from an EDHOC session (see {{Section A.1 of RFC9528}}).
 
-Nevertheless, the same considerations are applicable in case EDHOC is used to derive other application keys, e.g., to key different security protocols than OSCORE or to provide the application with secure values bound to an EDHOC session.
+Nevertheless, the same considerations are applicable in case EDHOC is used to derive other application keys, e.g., when used to key different security protocols than OSCORE or to provide the application with secure values bound to an EDHOC session.
 
 ## EDHOC Sessions Become Invalid ## {#sec-session-invalid}
 
@@ -115,19 +115,19 @@ A current set SET of application keys shared with another peer can become unsafe
 
 * SET has been established to use for a now elapsed amount of time, according to enforced application policies; or
 
-* Some elements of SET have been used enough times to approach cryptographic limits that should not be passed, e.g., according to the properties of the specifically used security algorithms. With particular reference to an OSCORE Security Context, such limits are discussed in {{I-D.ietf-core-oscore-key-limits}}.
+* Some elements of SET have been used enough times to approach cryptographic limits that should not be passed, e.g., according to the properties of the security algorithms specifically used. With particular reference to an OSCORE Security Context, such limits are discussed in {{I-D.ietf-core-oscore-key-limits}}.
 
 When this happens, the application at the peer P proceeds as follows.
 
-1. If the following conditions both hold, then the application moves to step 2. Otherwise, it moves to step 3.
+1. If the following conditions both hold, then the application moves to Step 2. Otherwise, it moves to Step 3.
 
    * Let us define S as the EDHOC session from which the peer P has derived SET or the eldest SET's ancestor set of application keys. Then, since the completion of S with the other peer, the application at P has received from the other peer at least one message protected with any set of application keys derived from S. That is, P has persisted S (see {{Section 5.4.2 of RFC9528}}).
 
-   * The peer P supports a key update protocol, as an alternative to performing a new execution of EDHOC with the other peer. When SET is specifically an OSCORE Security Context, this means that the peer P supports the key update protocol KUDOS defined in {{I-D.ietf-core-oscore-key-update}}.
+   * The peer P supports a key update protocol, as an alternative to performing a new execution of EDHOC with the other peer. When SET is an OSCORE Security Context, the key update protocol supported by the peer P can be KUDOS {{I-D.ietf-core-oscore-key-update}}.
 
-2. The application at P runs the key update protocol mentioned at step 1 with the other peer, in order to update SET. When SET is specifically an OSCORE Security Context, this means that the application at P runs KUDOS with the other peer.
+2. The application at P runs the key update protocol mentioned at Step 1 with the other peer, in order to update SET. When SET is an OSCORE Security Context, the application at P can run the key update protocol KUDOS with the other peer.
 
-   If the key update protocol terminates successfully, the updated application keys are installed and no further actions are taken. Otherwise, the application at P moves to step 3.
+   If the key update protocol terminates successfully, the updated application keys are installed and no further actions are taken. Otherwise, the application at P moves to Step 3.
 
 3. The application at the peer P performs the following actions.
 
@@ -137,7 +137,7 @@ When this happens, the application at the peer P proceeds as follows.
 
    * It runs a new execution of the EDHOC protocol with the other peer. Upon successfully completing the EDHOC execution, the two peers derive and install a new set of application keys from this latest EDHOC session.
 
-The flowchart in {{fig-flowchart-keys-invalid}} shows the handling of a set of application keys that has become invalid.
+The flowchart in {{fig-flowchart-keys-invalid}} shows the handling of a set of application keys that has become invalid. In particular, it assumes such a set to be an OSCORE Security Context and the key update protocol to be KUDOS.
 
 ~~~~~~~~~~~ aasvg
 Invalid application keys
@@ -195,7 +195,7 @@ Later on, the application at one of the two peers P may have learned that the es
 
 When this happens, the application at the peer P proceeds as follows.
 
-1. If the following conditions both hold, then the application moves to step 2. Otherwise, it moves to step 3.
+1. If the following conditions both hold, then the application moves to Step 2. Otherwise, it moves to Step 3.
 
    * The access token is still valid. That is, it has not expired yet and the peer P is not aware that it has been revoked.
 
@@ -203,7 +203,7 @@ When this happens, the application at the peer P proceeds as follows.
 
 2. If the peer P supports the key update protocol KUDOS {{I-D.ietf-core-oscore-key-update}}, then P runs KUDOS with the other peer, in order to update CTX. If the execution of KUDOS terminates successfully, the updated OSCORE Security Context is installed and no further actions are taken.
 
-   If the execution of KUDOS does not terminate successfully or if the peer P does not support KUDOS altogether, then the application at P moves to step 3.
+   If the execution of KUDOS does not terminate successfully or if the peer P does not support KUDOS altogether, then the application at P moves to Step 3.
 
 3. The application at the peer P performs the following actions.
 
@@ -213,13 +213,13 @@ When this happens, the application at the peer P proceeds as follows.
 
      If the peer P acted as ACE client, then P obtains from the ACE AS a new access token, which is uploaded to the other peer acting as ACE RS.
 
-     Finally, the application at P moves to step 4.
+     Finally, the application at P moves to Step 4.
 
    * If the access token is valid while the OSCORE Security Context CTX is not, then the peer P deletes CTX.
 
      After that, the peer P deletes the EDHOC session from which CTX was generated, or from which the eldest CTX's ancestor OSCORE Security Context was generated before any key update occurred (e.g., by means of KUDOS or other key update methods).
 
-     Finally, the application at P moves to step 4.
+     Finally, the application at P moves to Step 4.
 
 4. The peer P runs a new execution of the EDHOC protocol with the other peer. Upon successfully completing the EDHOC execution, the two peers derive and install a new OSCORE Security Context from this latest EDHOC session.
 
@@ -331,7 +331,7 @@ When processing a received EDHOC message M that specifies an authentication cred
 
    1. P retrieves CRED, as specified by reference or by value in ID_CRED_I/ID_CRED_R or in the value of an EAD item.
 
-   2. P checks whether CRED is already being stored and if it is still valid. In such a case, P trusts CRED and can continue the EDHOC execution. Otherwise, P moves to step 3.
+   2. P checks whether CRED is already being stored and if it is still valid. In such a case, P trusts CRED and can continue the EDHOC execution. Otherwise, P moves to Step 3.
 
    3. P attempts to validate CRED. If the validation process is not successful, P aborts the EDHOC session with the other peer. Otherwise, P trusts and stores CRED, and can continue the EDHOC execution.
 
@@ -455,33 +455,33 @@ PHASE_1 - During PHASE_1, the SPO at the recipient peer P determines CRED, i.e.,
 
    Those may specify CRED by value or by reference, including a URI or other external reference where CRED can be retrieved from.
 
-   If CRED is already installed, the SPO moves to step 2. Otherwise, the SPO moves to step 3.
+   If CRED is already installed, the SPO moves to Step 2. Otherwise, the SPO moves to Step 3.
 
 2. The SPO determines if the stored CRED is currently valid, e.g., by asserting that CRED has not expired and has not been revoked.
 
    Performing such a validation may require the SPO to first process an EAD item included in message_X. For example, it can be an EAD item in EDHOC message_2, which confirms or revokes the validity of CRED_R specified by ID_CRED_R, as the result of an OCSP process {{RFC6960}}.
 
-   In case CRED is determined to be valid, the SPO moves to step 9. Otherwise, the SPO moves to step 11.
+   In case CRED is determined to be valid, the SPO moves to Step 9. Otherwise, the SPO moves to Step 11.
 
-3. The SPO attempts to retrieve CRED, and then moves to step 4.
+3. The SPO attempts to retrieve CRED, and then moves to Step 4.
 
-4. If the retrieval of CRED has succeeded, the SPO moves to step 5. Otherwise, the SPO moves to step 11.
+4. If the retrieval of CRED has succeeded, the SPO moves to Step 5. Otherwise, the SPO moves to Step 11.
 
-5. If the enforced trust policy for new authentication credentials is "NO-LEARNING" and P does not admit any exceptions that are acceptable to enforce for message_X (see {{sec-trust-models}}), the SPO moves to step 11. Otherwise, the SPO moves to step 6.
+5. If the enforced trust policy for new authentication credentials is "NO-LEARNING" and P does not admit any exceptions that are acceptable to enforce for message_X (see {{sec-trust-models}}), the SPO moves to Step 11. Otherwise, the SPO moves to Step 6.
 
 6. If this step has been reached, the peer P is not already storing the retrieved CRED and, at the same time, it enforces either the trust policy "LEARNING" or the trust policy "NO-LEARNING" while also enforcing an exception acceptable for message_X (see {{sec-trust-models}}).
 
-   Consistently, the SPO determines if CRED is currently valid, e.g., by asserting that CRED has not expired and has not been revoked. Then, the SPO moves to step 7.
+   Consistently, the SPO determines if CRED is currently valid, e.g., by asserting that CRED has not expired and has not been revoked. Then, the SPO moves to Step 7.
 
    Validating CRED may require the SPO to first process an EAD item included in message_X. For example, it can be an EAD item in EDHOC message_2 that: i) specifies a voucher for validating CRED_R as a CWT Claims Set (CCS) {{RFC8392}} transported by value in ID_CRED_R (see {{I-D.ietf-lake-authz}}); or instead ii) an OCSP response {{RFC6960}} for validating CRED_R as a certificate transported by value or reference in ID_CRED_R.
 
-7. If CRED has been determined valid, the SPO moves to step 8. Otherwise, the SPO moves to step 11.
+7. If CRED has been determined valid, the SPO moves to Step 8. Otherwise, the SPO moves to Step 11.
 
-8. The SPO stores CRED as a valid and trusted authentication credential associated with the other peer, together with corresponding authentication credential identifiers (see {{sec-trust-models}}). Then, the SPO moves to step 9.
+8. The SPO stores CRED as a valid and trusted authentication credential associated with the other peer, together with corresponding authentication credential identifiers (see {{sec-trust-models}}). Then, the SPO moves to Step 9.
 
 9. The SPO checks if CRED is fine to use in the context of the ongoing EDHOC session, also depending on the specific identity of the other peer (see {{Sections 3.5 and D.2 of RFC9528}}).
 
-   If this is the case, the SPO moves to step 10. Otherwise, the SPO moves to step 11.
+   If this is the case, the SPO moves to Step 10. Otherwise, the SPO moves to Step 11.
 
 10. P uses CRED as authentication credential of the other peer in the ongoing EDHOC session.
 
@@ -733,7 +733,7 @@ As also discussed in {{sec-trust-models-ace-prof}}, this practically requires PE
 
 However, PEER_RS might have reasons to enforce the trust policy "NO_LEARNING" with no exceptions. In such a case, unless PEER_RS already stores AUTH_CRED_C, the upload of the access token by means of the EAD item has to consistently fail, and PEER_RS has to consequently abort the EDHOC session.
 
-This requires PEER_RS to perform an early check of the access token conveyed in the EAD item, in order to retrieve AUTH_CRED_C and determine whether it is already storing AUTH_CRED_C. The SPO can perform such a task, as part of steps 3 and 4 of PHASE_1 of the pre-verification side processing (see {{sec-pre-verif}}).
+This requires PEER_RS to perform an early check of the access token conveyed in the EAD item, in order to retrieve AUTH_CRED_C and determine whether it is already storing AUTH_CRED_C. The SPO can perform such a task, as part of Steps 3 and 4 of PHASE_1 of the pre-verification side processing (see {{sec-pre-verif}}).
 
 In order to be reliable, this task requires to perform a cryptographic validation of the access token. Moreover, the access token can be encrypted, which makes the actual retrieval of AUTH_CRED_C not straightforward. In practice, the SPO has a number of viable options.
 
@@ -888,7 +888,7 @@ This document has no actions for IANA.
 
 * Updated reference.
 
-* Editorial improvements.
+* Clarifications and editorial improvements.
 
 ## Version -01 to -02 ## {#sec-01-02}
 
