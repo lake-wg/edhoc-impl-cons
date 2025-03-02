@@ -806,10 +806,26 @@ Table of Contents
 
    In the following, Section 4.1 to Section 4.3 describe more in detail
    the actions performed by the SPO on the different, incoming EDHOC
-   messages.
+   messages.  Then, Section 4.4 describes further, special handling of
+   incoming EDHOC messages in particular situations.
 
-   Then, Section 4.4 describes further, special handling of incoming
-   EDHOC messages in particular situations.
+   After completing the EDHOC execution, control is transferred back to
+   the application.  In particular, the application is provided with the
+   overall outcome of the EDHOC execution (i.e., successful completion
+   or failure), together with possible specific results produced by the
+   SPO throughout the EDHOC execution (e.g., due to the processing of
+   EAD items).
+
+   After that, the application might need to perform follow-up actions,
+   depending on the outcome of the EDHOC execution.  For example, the
+   SPO might have preliminarily filled application-level data
+   structures, as a result of processing EAD items.  In case of
+   successful EDHOC execution, the application might need to finalize
+   such data structures.  Instead, in case of unsuccessful EDHOC
+   execution, the application might need to clean-up or amend such data
+   structures, or even roll back what the SPO did, unless the SPO
+   already performed such actions before control was transferred back to
+   the application.
 
 4.1.  EDHOC message_1
 
@@ -1559,6 +1575,9 @@ A.1.  Version -02 to -03
 
    *  Alignment with use of EDHOC in the EDHOC and OSCORE profile of
       ACE.
+
+   *  Note on follow-up actions for the application after EDHOC
+      completion.
 
    *  Removed moot section on special handling when using the EDHOC and
       OSCORE profile of ACE.
