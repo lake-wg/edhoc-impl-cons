@@ -1211,7 +1211,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.4.2.4.1"><a href="#section-4.4" class="auto internal xref">4.4</a>.  <a href="#name-special-cases-of-message-ha" class="internal xref">Special Cases of Message Handling</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4.2.1">
-                    <p id="section-toc.1-1.4.2.4.2.1.1"><a href="#section-4.4.1" class="auto internal xref">4.4.1</a>.  <a href="#name-consistency-checks-of-authe" class="internal xref">Consistency Checks of Authentication Credentials</a></p>
+                    <p id="section-toc.1-1.4.2.4.2.1.1"><a href="#section-4.4.1" class="auto internal xref">4.4.1</a>.  <a href="#name-consistency-checks-of-authe" class="internal xref">Consistency Checks of Authentication Credentials from ID_CRED and EAD Items</a></p>
 </li>
                 </ul>
 </li>
@@ -2635,24 +2635,34 @@ Then, PHASE_1 ends, and the pre-verification side processing moves to the next P
 <div id="sec-consistency-checks-auth-creds">
 <section id="section-4.4.1">
           <h4 id="name-consistency-checks-of-authe">
-<a href="#section-4.4.1" class="section-number selfRef">4.4.1. </a><a href="#name-consistency-checks-of-authe" class="section-name selfRef">Consistency Checks of Authentication Credentials</a>
+<a href="#section-4.4.1" class="section-number selfRef">4.4.1. </a><a href="#name-consistency-checks-of-authe" class="section-name selfRef">Consistency Checks of Authentication Credentials from ID_CRED and EAD Items</a>
           </h4>
-<p id="section-4.4.1-1">Editor's note: TODO<a href="#section-4.4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.4.1-1">Typically, an EDHOC peer specifies its authentication credential (by value or by reference) only in the ID_CRED field of EDHOC message_2 (if acting as Responder) or EDHOC message_3 (if acting as Initiator).<a href="#section-4.4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.4.1-2">There may be cases where, in addition to that, an EDHOC peer provides its authentication credential also in an EAD item. In particular, such an EAD item can specify an "envelope" (by value or by reference), which in turn specifies the peer's authentication credential (by value or by reference).<a href="#section-4.4.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.4.1-3">A case in point is the EDHOC and OSCORE profile of the ACE framework <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>, where the envelope in question is an access token issued to the ACE client. In such a case, the ACE client can rely on an EAD item specifying the access token by value, or instead on a different EAD item specifying a session identifier as a reference to such access token. In either case, the access token specifies the client's authentication credential (by value or by reference).<a href="#section-4.4.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.4.1-4">During an EDHOC session, an EDHOC peer P1 might therefore receive the authentication credential of the other EDHOC peer P2 as specified by two items:<a href="#section-4.4.1-4" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4.4.1-2.1">
-              <p id="section-4.4.1-2.1.1">The following are placeholder notes that specifically consider the EDHOC and OSCORE profile of ACE <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>.<a href="#section-4.4.1-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.4.1-5.1">
+              <p id="section-4.4.1-5.1.1">ITEM_A: the ID_CRED field specifying P2's authentication credential. If P2 acts as Initiator (Responder), then ITEM_A is the ID_CRED_I (ID_CRED_R) field.<a href="#section-4.4.1-5.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.4.1-2.2">
-              <p id="section-4.4.1-2.2.1">While that profile is a relevant case in point to consider, the content of this section should discuss the topic in general. With respect to ID_CRED_R/ID_CRED_I, an access token is just an example of additional means to specify an authentication credential.<a href="#section-4.4.1-2.2.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-4.4.1-2.3">
-              <p id="section-4.4.1-2.3.1">When it comes specifically to the EDHOC and OSCORE profile of ACE, some of this content might better fit in <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>, while this document can keep only implementation-specific guidelines from a general point of view.<a href="#section-4.4.1-2.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-4.4.1-5.2">
+              <p id="section-4.4.1-5.2.1">ITEM_B: the envelope specified in an EAD item, within an EDHOC message sent by P2.<a href="#section-4.4.1-5.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-4.4.1-3">AUTH_CRED_C is always specified (by value or by reference) in ID_CRED_R (ID_CRED_I) of EDHOC message_2 (EDHOC message_3).<a href="#section-4.4.1-3" class="pilcrow">¶</a></p>
-<p id="section-4.4.1-4">AUTH_CRED_C can also be specified (by value or by reference) within an access token, which can be conveyed by an EAD item in an EDHOC message that PEER_C sends to PEER_RS. The details also depend on the two EDHOC peers using either the EDHOC forward message flow or the EDHOC reverse message flow (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.2" class="relref">Appendix A.2</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-4.4.1-4" class="pilcrow">¶</a></p>
-<p id="section-4.4.1-5">When such an access token is uploaded by means of an EAD item, PEER_RS has to perform consistency checks between the AUTH_CRED_C specified in ID_CRED_R or ID_CRED_I on one hand, and the AUTH_CRED_C specified within the access token on the other hand.<a href="#section-4.4.1-5" class="pilcrow">¶</a></p>
-<p id="section-4.4.1-6">This needs to explain in general terms <em>when</em> PEER_RS becomes able to perform the consistency check in different cases, which differ as to the use of the EDHOC forward message flow or of the EDHOC reverse message flow, and as to the specific EDHOC message including the EAD item that conveys the access token including AUTH_CRED_C.<a href="#section-4.4.1-6" class="pilcrow">¶</a></p>
+<p id="section-4.4.1-6">As part of the process where P1 validates P2's authentication credential during the EDHOC session, P1 must check that both ITEM_A and ITEM_B specify the same authentication credential, and abort the EDHOC session in case such a consistency check fails.<a href="#section-4.4.1-6" class="pilcrow">¶</a></p>
+<p id="section-4.4.1-7">The consistency check is successful only if one of the following conditions hold, and it fails otherwise.<a href="#section-4.4.1-7" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.4.1-8.1">
+              <p id="section-4.4.1-8.1.1">If both ITEM_A and ITEM_B specify an authentication credential by value, then both ITEM_A and ITEM_B specify the same value.<a href="#section-4.4.1-8.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-4.4.1-8.2">
+              <p id="section-4.4.1-8.2.1">If one among ITEM_A and ITEM_B specifies an authentication credential by value VALUE while the other one specifies an authentication credential by reference REF, then REF is a valid reference for VALUE.<a href="#section-4.4.1-8.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-4.4.1-8.3">
+              <p id="section-4.4.1-8.3.1">If ITEM_A specifies an authentication credential by reference REF_A and ITEM_B specifies an authentication credential by reference REF_B, then REF_A or REF_B allows to retrieving the value VALUE of an authentication credential from a local or remote storage, such that both REF_A and REF_B are a valid reference for VALUE.<a href="#section-4.4.1-8.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-4.4.1-9">The peer P1 performs the consistency check above as soon as it has both ITEM_A and ITEM_B available. If P1 acts as Responder, that is the case when processing the incoming EDHOC message_3. If P1 acts as Initiator, that is the case when processing the incoming EDHOC message_2 or message_4, i.e., whichever of the two messages includes ITEM_B in an EAD item of its EAD field.<a href="#section-4.4.1-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2928,10 +2938,13 @@ When specifically using the EDHOC + OSCORE request, the considered body is the a
             <p id="appendix-A.1-1.5.1">Removed moot section on special handling when using the EDHOC and OSCORE profile of ACE.<a href="#appendix-A.1-1.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-A.1-1.6">
-            <p id="appendix-A.1-1.6.1">Updated reference.<a href="#appendix-A.1-1.6.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.1-1.6.1">Consistency checks of authentication credentials from ID_CRED and EAD items.<a href="#appendix-A.1-1.6.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-A.1-1.7">
-            <p id="appendix-A.1-1.7.1">Clarifications and editorial improvements.<a href="#appendix-A.1-1.7.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.1-1.7.1">Updated reference.<a href="#appendix-A.1-1.7.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.1-1.8">
+            <p id="appendix-A.1-1.8.1">Clarifications and editorial improvements.<a href="#appendix-A.1-1.8.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
