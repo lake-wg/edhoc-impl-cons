@@ -339,6 +339,8 @@ Exceptions may apply and be actually enforced in cases where, during an EDHOC ex
 
 * In the procedure defined in {{I-D.ietf-lake-authz}}, the EDHOC Initiator U receives an EDHOC message_2 where ID_CRED_R specifies the authentication credential of the EDHOC Responder V by value. In the same EDHOC message_2, an EAD item specifies a voucher issued by a trusted enrollment server W, which conveys authorization information about V and V's authentication credential CRED. Through a successful verification of the voucher, U is able to trust CRED (if found valid), even though it did not already store CRED upon receiving EDHOC message_2. This case is further discussed in {{sec-trust-models-ela}}.
 
+Editor's note: consider moving the content in the two bullet points above to the dedicated {{sec-trust-models-ace-prof}} and {{sec-trust-models-ela}}.
+
 If the peer P admits such an exception and actually enforces it on an authentication credential CRED, then P effectively handles CRED according to the trust policy "LEARNING" specified in {{sec-policy-learning}}.
 
 ## Enforcement of Trust Policies in Specific Scenarios
