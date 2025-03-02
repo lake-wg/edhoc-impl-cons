@@ -365,7 +365,7 @@ At least for its EDHOC resource used for exchanging the EDHOC messages of the ED
 
 * If enforcing the trust policy "NO-LEARNING", additionally enforce an overriding exception when an incoming EDHOC message includes an EAD item conveying (a reference to) an access token (see {{sec-policy-no-learning}}).
 
-### In the Ligthweight Authorization using EDHOC (ELA) Procedure # {#sec-trust-models-ela}
+### In the Lightweight Authorization using EDHOC (ELA) Procedure # {#sec-trust-models-ela}
 
 TBD
 
