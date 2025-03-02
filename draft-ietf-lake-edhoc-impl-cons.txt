@@ -626,6 +626,9 @@ Table of Contents
       did not already store CRED upon receiving EDHOC message_2.  This
       case is further discussed in Section 3.3.2.
 
+   Editor's note: consider moving the content in the two bullet points
+   above to the dedicated Section 3.3.1 and Section 3.3.2.
+
    If the peer P admits such an exception and actually enforces it on an
    authentication credential CRED, then P effectively handles CRED
    according to the trust policy "LEARNING" specified in Section 3.1.
