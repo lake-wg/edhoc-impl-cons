@@ -739,23 +739,31 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
 
 This section describes methods to perform special handling of incoming EDHOC messages in particular situations.
 
-### Consistency Checks of Authentication Credentials ### {#sec-consistency-checks-auth-creds}
+### Consistency Checks of Authentication Credentials from ID\_CRED and EAD Items ### {#sec-consistency-checks-auth-creds}
 
-Editor's note: TODO
+Typically, an EDHOC peer specifies its authentication credential (by value or by reference) only in the ID_CRED field of EDHOC message_2 (if acting as Responder) or EDHOC message_3 (if acting as Initiator).
 
-* The following are placeholder notes that specifically consider the EDHOC and OSCORE profile of ACE {{I-D.ietf-ace-edhoc-oscore-profile}}.
+There may be cases where, in addition to that, an EDHOC peer provides its authentication credential also in an EAD item. In particular, such an EAD item can specify an "envelope" (by value or by reference), which in turn specifies the peer's authentication credential (by value or by reference).
 
-* While that profile is a relevant case in point to consider, the content of this section should discuss the topic in general. With respect to ID_CRED_R/ID_CRED_I, an access token is just an example of additional means to specify an authentication credential.
+A case in point is the EDHOC and OSCORE profile of the ACE framework {{I-D.ietf-ace-edhoc-oscore-profile}}, where the envelope in question is an access token issued to the ACE client. In such a case, the ACE client can rely on an EAD item specifying the access token by value, or instead on a different EAD item specifying a session identifier as a reference to such access token. In either case, the access token specifies the client's authentication credential (by value or by reference).
 
-* When it comes specifically to the EDHOC and OSCORE profile of ACE, some of this content might better fit in {{I-D.ietf-ace-edhoc-oscore-profile}}, while this document can keep only implementation-specific guidelines from a general point of view.
+During an EDHOC session, an EDHOC peer P1 might therefore receive the authentication credential of the other EDHOC peer P2 as specified by two items:
 
-AUTH_CRED_C is always specified (by value or by reference) in ID_CRED_R (ID_CRED_I) of EDHOC message_2 (EDHOC message_3).
+* ITEM_A: the ID_CRED field specifying P2's authentication credential. If P2 acts as Initiator (Responder), then ITEM_A is the ID_CRED_I (ID_CRED_R) field.
 
-AUTH_CRED_C can also be specified (by value or by reference) within an access token, which can be conveyed by an EAD item in an EDHOC message that PEER_C sends to PEER_RS. The details also depend on the two EDHOC peers using either the EDHOC forward message flow or the EDHOC reverse message flow (see {{Section A.2 of RFC9528}}).
+* ITEM_B: the envelope specified in an EAD item, within an EDHOC message sent by P2.
 
-When such an access token is uploaded by means of an EAD item, PEER_RS has to perform consistency checks between the AUTH_CRED_C specified in ID_CRED_R or ID_CRED_I on one hand, and the AUTH_CRED_C specified within the access token on the other hand.
+As part of the process where P1 validates P2's authentication credential during the EDHOC session, P1 must check that both ITEM_A and ITEM_B specify the same authentication credential, and abort the EDHOC session in case such a consistency check fails.
 
-This needs to explain in general terms *when* PEER_RS becomes able to perform the consistency check in different cases, which differ as to the use of the EDHOC forward message flow or of the EDHOC reverse message flow, and as to the specific EDHOC message including the EAD item that conveys the access token including AUTH_CRED_C.
+The consistency check is successful only if one of the following conditions hold, and it fails otherwise.
+
+* If both ITEM_A and ITEM_B specify an authentication credential by value, then both ITEM_A and ITEM_B specify the same value.
+
+* If one among ITEM_A and ITEM_B specifies an authentication credential by value VALUE while the other one specifies an authentication credential by reference REF, then REF is a valid reference for VALUE.
+
+* If ITEM_A specifies an authentication credential by reference REF_A and ITEM_B specifies an authentication credential by reference REF_B, then REF_A or REF_B allows to retrieving the value VALUE of an authentication credential from a local or remote storage, such that both REF_A and REF_B are a valid reference for VALUE.
+
+The peer P1 performs the consistency check above as soon as it has both ITEM_A and ITEM_B available. If P1 acts as Responder, that is the case when processing the incoming EDHOC message_3. If P1 acts as Initiator, that is the case when processing the incoming EDHOC message_2 or message_4, i.e., whichever of the two messages includes ITEM_B in an EAD item of its EAD field.
 
 # Using EDHOC over CoAP with Block-Wise # {#sec-block-wise}
 
@@ -877,6 +885,8 @@ This document has no actions for IANA.
 * Note on follow-up actions for the application after EDHOC completion.
 
 * Removed moot section on special handling when using the EDHOC and OSCORE profile of ACE.
+
+* Consistency checks of authentication credentials from ID_CRED and EAD items.
 
 * Updated reference.
 
