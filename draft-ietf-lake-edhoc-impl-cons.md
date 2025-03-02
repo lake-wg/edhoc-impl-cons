@@ -385,7 +385,7 @@ The approach described in this section aims to help implementors navigate the su
 
    For instance, an EAD item within the EAD_3 field may contain a Certificate Signing Request (CSR) {{RFC2986}}. Hence, such an EAD item can be processed only once the recipient peer has attained proof of the other peer possessing its private key.
 
-In order to conveniently handle such processing, the application can prepare in advance one "side-processor object" (SPO), which takes care of the operations above during the EDHOC execution.
+In order to conveniently handle such processing, the application can prepare in advance a "side-processor object" (SPO), which takes care of the operations above during the EDHOC execution.
 
 In particular, the application provides EDHOC with the SPO before starting an EDHOC execution, during which EDHOC will temporarily transfer control to the SPO at the right point in time, in order to perform the required side-processing of an incoming EDHOC message.
 
@@ -407,7 +407,7 @@ At the right point in time during the processing of an incoming EDHOC message M 
 
       With such information available, EDHOC can early abort the current session in case M includes any EAD item which is both critical and not recognized by the peer P.
 
-      If no such EAD items are found, EDHOC can remove any padding EAD item (see {{Section 3.8.1 of RFC9528}}), as well as any EAD item which is neither critical nor recognized (since the SPO is going to ignore it anyway). As a result, EDHOC is able to provide the SPO only with EAD items that will be recognized and that require actual processing.
+      If no such EAD items are found, EDHOC can remove any padding EAD item (see {{Section 3.8.1 of RFC9528}}), as well as any EAD item which is neither critical nor recognized (since the SPO is going to ignore it anyway). This results in EDHOC providing the SPO only with EAD items that will be recognized and that require actual processing.
 
    - Note that, after having processed the EAD items, the SPO might actually need to store them throughout the whole EDHOC execution, e.g., in order to refer to them also when processing later EDHOC messages in the current EDHOC session.
 
@@ -421,7 +421,7 @@ The SPO performs the following tasks on an incoming EDHOC message M.
 
 * When the SPO has completed its side processing and transfers control back to EDHOC, the SPO provides EDHOC with the produced EAD items to include in the EAD field of the next outgoing EDHOC message. The production of such EAD items can be triggered, e.g., by:
 
-   * The consumption of EAD items included in M; and
+   * The consumption of EAD items included in M.
 
    * The execution of instructions that the SPO has received from the application, concerning EAD items to produce irrespective of other EAD items included in M.
 
@@ -737,40 +737,6 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
 
 This section describes methods to perform special handling of incoming EDHOC messages in particular situations.
 
-### EDHOC and OSCORE Profile of ACE ### {#sec-message-side-processing-ace-prof}
-
-{{sec-trust-models-ace-prof}} discusses the case where two EDHOC peers use the ACE framework {{RFC9200}} and specifically the EDHOC and OSCORE profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
-
-In particular, {{sec-trust-models-ace-prof}} considers a peer PEER_C that, when running EDHOC with a peer PEER_RS, uses a dedicated EAD item for uploading an access token at PEER_RS. In turn, the access token specifies AUTH_CRED_C as the public authentication credential of PEER_C.
-
-As also discussed in {{sec-trust-models-ace-prof}}, this practically requires PEER_RS to enforce either the trust policy "LEARNING" or the trust policy "NO-LEARNING" with situation-specific, overriding exceptions (see {{sec-trust-models}}), at least for the EDHOC resource used for exchanging the EDHOC messages of the EDHOC session in question.
-
-However, PEER_RS might have reasons to enforce the trust policy "NO_LEARNING" with no exceptions. In such a case, unless PEER_RS already stores AUTH_CRED_C, the upload of the access token by means of the EAD item has to consistently fail, and PEER_RS has to consequently abort the EDHOC session.
-
-This requires PEER_RS to perform an early check of the access token conveyed in the EAD item, in order to retrieve AUTH_CRED_C and determine whether it is already storing AUTH_CRED_C. The SPO can perform such a task, as part of Steps 3 and 4 of PHASE_1 of the pre-verification side processing (see {{sec-pre-verif}}).
-
-In order to be reliable, this task requires to perform a cryptographic validation of the access token. Moreover, the access token can be encrypted, which makes the actual retrieval of AUTH_CRED_C not straightforward. In practice, the SPO has a number of viable options.
-
-* The SPO can directly perform the necessary cryptographic processing of the access token, including decryption if necessary.
-
-  This requires to provide the SPO with the same security context, parameters, and cryptographic material that are available at a token validator component of PEER_RS, and that are shared with the ACE authorization server that has issued the access token.
-
-  If the SPO fails the validation and cryptographic processing of the access token, or if it does not already store the AUTH_CRED_C specified by the access token, then the SPO aborts the EDHOC session.
-
-  A downside of this approach is that the token validator component of PEER_RS will later repeat the cryptographic processing of the access token, when eventually provided by the SPO with the access token like if the latter was uploaded to PEER_RS as normally expected in the ACE framework.
-
-* The SPO can engage in an internal, synchronous exchange with a token validator component of PEER_RS that is normally responsible for the validation and cryptographic processing of access tokens. For example, the SPO can proceed as follows.
-
-  1. The SPO creates a copy CREDS_BEFORE of the stored authentication credentials of its other EDHOC peers.
-
-  2. The SPO provides the token validator component of PEER_RS with the access token to undergo cryptographic processing and validation. If such process succeeds, the token validator component stores the access token, and adds AUTH_CRED_C to the current set of authentication credentials of other EDHOC peers.
-
-  3. After learning of the successful validation of the access token from the token validator component, the SPO checks whether the set of currently stored authentication credentials of other EDHOC peers includes an element that is not included in CREDS_BEFORE.
-
-  4. In case of a positive match, then the found element is AUTH_CRED_C, which PEER_RS was not supposed to learn as per the enforced "NO-LEARNING" policy.
-
-     Consequently, the SPO requests the token validator element to purge the access token, deletes CREDS_BEFORE, deletes AUTH_CRED_C from the set of currently stored authentication credentials of other EDHOC peers, and aborts the EDHOC session.
-
 ### Consistency Checks of Authentication Credentials ### {#sec-consistency-checks-auth-creds}
 
 Editor's note: TODO
@@ -905,6 +871,8 @@ This document has no actions for IANA.
 * More modular presentation of trust policies and their enforcement.
 
 * Alignment with use of EDHOC in the EDHOC and OSCORE profile of ACE.
+
+* Removed moot section on special handling when using the EDHOC and OSCORE profile of ACE.
 
 * Updated reference.
 
