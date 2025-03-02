@@ -74,7 +74,7 @@ Table of Contents
      3.2.  Trust Policy NO-LEARNING
      3.3.  Enforcement of Trust Policies in Specific Scenarios
        3.3.1.  In the EDHOC and OSCORE Profile of ACE
-       3.3.2.  In the Ligthweight Authorization using EDHOC (ELA)
+       3.3.2.  In the Lightweight Authorization using EDHOC (ELA)
                Procedure
    4.  Side Processing of Incoming EDHOC Messages
      4.1.  EDHOC message_1
@@ -682,7 +682,7 @@ Table of Contents
       EAD item conveying (a reference to) an access token (see
       Section 3.2).
 
-3.3.2.  In the Ligthweight Authorization using EDHOC (ELA) Procedure
+3.3.2.  In the Lightweight Authorization using EDHOC (ELA) Procedure
 
    TBD
 
