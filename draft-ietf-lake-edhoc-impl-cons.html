@@ -1048,7 +1048,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tiloca</td>
-<td class="center">Expires 2 September 2025</td>
+<td class="center">Expires 3 September 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1061,12 +1061,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lake-edhoc-impl-cons-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-03-01" class="published">1 March 2025</time>
+<time datetime="2025-03-02" class="published">2 March 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-09-02">2 September 2025</time></dd>
+<dd class="expires"><time datetime="2025-09-03">3 September 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1111,7 +1111,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 2 September 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 3 September 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1163,7 +1163,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-trust-models-for-learning-n" class="internal xref">Trust Models for Learning New Authentication Credentials</a></p>
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-trust-policies-for-learning" class="internal xref">Trust Policies for Learning New Authentication Credentials</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
                 <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-enforcement-in-the-edhoc-an" class="internal xref">Enforcement in the EDHOC and OSCORE Profile of ACE</a></p>
@@ -1275,7 +1275,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
           <p id="section-1-5.1.1">Handling of completed EDHOC sessions when they become invalid, and of application keys derived from an EDHOC session when those become invalid. This topic is discussed in <a href="#sec-session-handling" class="auto internal xref">Section 2</a>.<a href="#section-1-5.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-5.2">
-          <p id="section-1-5.2.1">Enforcing of different trust models, with respect to learning new authentication credentials during an execution of EDHOC. This topic is discussed in <a href="#sec-trust-models" class="auto internal xref">Section 3</a>.<a href="#section-1-5.2.1" class="pilcrow">¶</a></p>
+          <p id="section-1-5.2.1">Enforcement of different trust policies, with respect to learning new authentication credentials during an execution of EDHOC. This topic is discussed in <a href="#sec-trust-models" class="auto internal xref">Section 3</a>.<a href="#section-1-5.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-5.3">
           <p id="section-1-5.3.1">Branched-off, side processing of incoming EDHOC messages, with particular reference to: i) fetching and validation of authentication credentials; and ii) processing of External Authorization Data (EAD) items, which in turn might play a role in the fetching and validation of authentication credentials. This topic is discussed in <a href="#sec-message-side-processing" class="auto internal xref">Section 4</a>.<a href="#section-1-5.3.1" class="pilcrow">¶</a></p>
@@ -1504,9 +1504,9 @@ If the key update protocol terminates successfully, the updated application keys
         </h3>
 <p id="section-2.3-1">The following considers two peers that use the ACE framework for authentication and authorization in constrained environments <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, and specifically the EDHOC and OSCORE profile of ACE defined in <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>.<a href="#section-2.3-1" class="pilcrow">¶</a></p>
 <p id="section-2.3-2">When doing so, one of the two peers acts as ACE resource server (RS) hosting protected resources. The other peer acts as ACE client and requests from an ACE authorization server (AS) an access token, which specifies access rights for accessing protected resources at the RS as well as the public authentication credential of the client, namely AUTH_CRED_C.<a href="#section-2.3-2" class="pilcrow">¶</a></p>
-<p id="section-2.3-3">After that, C uploads the access token to the RS as part of the ACE workflow. This can occur before running EDHOC with the RS, or by means of an EAD item conveyed within an EDHOC message during the EDHOC execution. Alternatively, the AS can upload the access token to the RS on behalf of the client, as per the alternative workflow defined in <span>[<a href="#I-D.ietf-ace-workflow-and-params" class="cite xref">I-D.ietf-ace-workflow-and-params</a>]</span>.<a href="#section-2.3-3" class="pilcrow">¶</a></p>
+<p id="section-2.3-3">After that, C uploads the access token to the RS, by means of an EAD item included in an EDHOC message during the EDHOC execution (see below). Alternatively, the AS can upload the access token to the RS on behalf of the client, as per the alternative workflow defined in <span>[<a href="#I-D.ietf-ace-workflow-and-params" class="cite xref">I-D.ietf-ace-workflow-and-params</a>]</span>.<a href="#section-2.3-3" class="pilcrow">¶</a></p>
 <p id="section-2.3-4">Consistent with the used EDHOC and OSCORE profile of ACE, the two peers run EDHOC in order to specifically derive an OSCORE Security Context as their shared set of application keys (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.1" class="relref">Appendix A.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>). At the RS, the access token is bound to the successfully completed EDHOC session and the established OSCORE Security Context.<a href="#section-2.3-4" class="pilcrow">¶</a></p>
-<p id="section-2.3-5">After that, the peer acting as ACE client can access the protected resources hosted at the other peer, according to the access rights specified in the access token. The communications between the two peers are protected by means of the established OSCORE Security Context.<a href="#section-2.3-5" class="pilcrow">¶</a></p>
+<p id="section-2.3-5">After that, the peer acting as ACE client can access the protected resources hosted at the other peer acting as RS, according to the access rights specified in the access token. The communications between the two peers are protected by means of the established OSCORE Security Context.<a href="#section-2.3-5" class="pilcrow">¶</a></p>
 <p id="section-2.3-6">Later on, the application at one of the two peers P may have learned that the established OSCORE Security Context CTX is not safe to use anymore, e.g., from the used OSCORE library or from an OSCORE layer that takes part to the communication stack. The reasons that make CTX not safe to use anymore are the same ones discussed in <a href="#sec-keys-invalid" class="auto internal xref">Section 2.2</a> when considering a set of application keys in general, plus the event where the access token bound to CTX becomes invalid (e.g., it has expired or it has been revoked).<a href="#section-2.3-6" class="pilcrow">¶</a></p>
 <p id="section-2.3-7">When this happens, the application at the peer P proceeds as follows.<a href="#section-2.3-7" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-2.3-8">
@@ -1532,7 +1532,7 @@ If the execution of KUDOS does not terminate successfully or if the peer P does 
 <li class="normal" id="section-2.3-8.3.2.1">
                 <p id="section-2.3-8.3.2.1.1">If the access token is not valid anymore, the peer P deletes all the EDHOC sessions associated with the access token, as well as the OSCORE Security Context derived from each of those sessions.<a href="#section-2.3-8.3.2.1.1" class="pilcrow">¶</a></p>
 <p id="section-2.3-8.3.2.1.2">
-Note that, when specifically considering the EDHOC and OSCORE profile of ACE, an access token is associated with at most one EDHOC session (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-06#section-4.4" class="relref">Section 4.4</a> of [<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>).<a href="#section-2.3-8.3.2.1.2" class="pilcrow">¶</a></p>
+Note that, when specifically considering the EDHOC and OSCORE profile of ACE, an access token is associated with at most one EDHOC session (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-06#section-4.2" class="relref">Section 4.2</a> of [<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>).<a href="#section-2.3-8.3.2.1.2" class="pilcrow">¶</a></p>
 <p id="section-2.3-8.3.2.1.3">
 If the peer P acted as ACE client, then P obtains from the ACE AS a new access token, which is uploaded to the other peer acting as ACE RS.<a href="#section-2.3-8.3.2.1.3" class="pilcrow">¶</a></p>
 <p id="section-2.3-8.3.2.1.4">
@@ -1553,7 +1553,7 @@ Finally, the application at P moves to Step 4.<a href="#section-2.3-8.3.2.2.3" c
 At the RS, the access token is bound to this latest EDHOC session and the newly established OSCORE Security Context.<a href="#section-2.3-8.4.2" class="pilcrow">¶</a></p>
 </li>
         </ol>
-<p id="section-2.3-9">The flowchart in <a href="#fig-flowchart-keys-token-invalid" class="auto internal xref">Figure 3</a> shows the handling of an access token or of a set of application keys that have become invalid.<a href="#section-2.3-9" class="pilcrow">¶</a></p>
+<p id="section-2.3-9">The flowchart in <a href="#fig-flowchart-keys-token-invalid" class="auto internal xref">Figure 3</a> shows the handling of an access token or of a set of application keys that have become invalid, when using the EDHOC and OSCORE profile of the ACE framework.<a href="#section-2.3-9" class="pilcrow">¶</a></p>
 <span id="name-handling-of-an-access-token"></span><div id="fig-flowchart-keys-token-invalid">
 <figure id="figure-3">
           <div id="section-2.3-10.1">
@@ -1692,15 +1692,15 @@ At the RS, the access token is bound to this latest EDHOC session and the newly 
 </div>
 <div id="sec-trust-models">
 <section id="section-3">
-      <h2 id="name-trust-models-for-learning-n">
-<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-trust-models-for-learning-n" class="section-name selfRef">Trust Models for Learning New Authentication Credentials</a>
+      <h2 id="name-trust-policies-for-learning">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-trust-policies-for-learning" class="section-name selfRef">Trust Policies for Learning New Authentication Credentials</a>
       </h2>
 <p id="section-3-1">A peer P relies on authentication credentials of other peers, in order to authenticate those peers when running EDHOC with them.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">There are different ways for P to acquire an authentication credential CRED of another peer. For example, CRED can be supplied to P out-of-band by a trusted provider.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <p id="section-3-3">Alternatively, CRED can be specified by the other peer during the EDHOC execution with P. This can rely on EDHOC message_2 or message_3, whose respective ID_CRED_R and ID_CRED_I can specify CRED by value, or instead a URI or other external reference where CRED can be retrieved from (see <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.5.3" class="relref">Section 3.5.3</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-3-3" class="pilcrow">¶</a></p>
 <p id="section-3-4">Also during the EDHOC execution, an External Authorization Data (EAD) field might include an EAD item that specifies CRED by value or reference. This is the case, e.g., for the EAD items defined by the EDHOC and OSCORE profile of the ACE framework <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>. In particular, they can be used for transporting (a reference to) an access token, which in turn specifies by value or by reference the public authentication credential of the EDHOC peer acting as ACE client.<a href="#section-3-4" class="pilcrow">¶</a></p>
 <p id="section-3-5">When obtaining a new credential CRED, the peer P has to validate it before storing it. The validation steps to perform depend on the specific type of CRED (e.g., a public key certificate <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span><span>[<a href="#I-D.ietf-cose-cbor-encoded-cert" class="cite xref">I-D.ietf-cose-cbor-encoded-cert</a>]</span>), and can rely on (the authentication credential of) a trusted third party acting as a trust anchor.<a href="#section-3-5" class="pilcrow">¶</a></p>
-<p id="section-3-6">Upon retrieving a new CRED through the processing of a received EDHOC message and following the successful validation of CRED, the peer P stores CRED only if it assesses CRED to be also trusted, and must not store CRED otherwise.<a href="#section-3-6" class="pilcrow">¶</a></p>
+<p id="section-3-6">Upon retrieving a new CRED through the processing of a received EDHOC message and following the successful validation of CRED, the peer P stores CRED only if it assesses CRED to also be trusted, and must not store CRED otherwise.<a href="#section-3-6" class="pilcrow">¶</a></p>
 <p id="section-3-7">An exception applies for the two unauthenticated operations described in <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-D.5" class="relref">Appendix D.5</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>, where a trust relationship with an unknown or not-yet-trusted endpoint is established later. That is, CRED is verified out-of-band at a later stage, or an EDHOC session key is bound to an identity out-of-band at a later stage.<a href="#section-3-7" class="pilcrow">¶</a></p>
 <p id="section-3-8">If P stores CRED, then P will consider CRED as valid and trusted until it possibly becomes invalid, e.g., because it expires or because P gains knowledge that it has been revoked.<a href="#section-3-8" class="pilcrow">¶</a></p>
 <p id="section-3-9">When storing CRED, the peer P should generate the authentication credential identifier(s) corresponding to CRED and store them as associated with CRED. For example, if CRED is a public key certificate, an identifier of CRED can be the hash of the certificate. In general, P should generate and associate with CRED one corresponding identifier for each type of authentication credential identifier that P supports and that is compatible with CRED.<a href="#section-3-9" class="pilcrow">¶</a></p>
@@ -1713,7 +1713,7 @@ At the RS, the access token is bound to this latest EDHOC session and the newly 
 That is, upon receiving M, the peer P should continue the execution of EDHOC only if both the following conditions hold.<a href="#section-3-12.1.2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-12.1.3.1">
-              <p id="section-3-12.1.3.1.1">P currently stores CRED, as specified by reference or by value in ID_CRED_I/ID_CRED_R or in the value of an EAD item; and<a href="#section-3-12.1.3.1.1" class="pilcrow">¶</a></p>
+              <p id="section-3-12.1.3.1.1">P currently stores CRED, as specified by reference or by value in the ID_CRED_I/ID_CRED_R field of M or in the value of an EAD item of M; and<a href="#section-3-12.1.3.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3-12.1.3.2">
               <p id="section-3-12.1.3.2.1">CRED is still valid, i.e., P believes CRED to not be expired or revoked.<a href="#section-3-12.1.3.2.1" class="pilcrow">¶</a></p>
@@ -1738,7 +1738,7 @@ If the peer P admits such an exception and actually enforces it on an authentica
 That is, upon receiving M, the peer P performs the following steps.<a href="#section-3-12.2.2" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-3-12.2.3">
 <li id="section-3-12.2.3.1">
-              <p id="section-3-12.2.3.1.1">P retrieves CRED, as specified by reference or by value in ID_CRED_I/ID_CRED_R or in the value of an EAD item.<a href="#section-3-12.2.3.1.1" class="pilcrow">¶</a></p>
+              <p id="section-3-12.2.3.1.1">P retrieves CRED, as specified by reference or by value in the ID_CRED_I/ID_CRED_R field of M or in the value of an EAD item of M.<a href="#section-3-12.2.3.1.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-3-12.2.3.2">
               <p id="section-3-12.2.3.2.1">P checks whether CRED is already being stored and if it is still valid. In such a case, P trusts CRED and can continue the EDHOC execution. Otherwise, P moves to Step 3.<a href="#section-3-12.2.3.2.1" class="pilcrow">¶</a></p>
@@ -1756,10 +1756,10 @@ That is, upon receiving M, the peer P performs the following steps.<a href="#sec
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-enforcement-in-the-edhoc-an" class="section-name selfRef">Enforcement in the EDHOC and OSCORE Profile of ACE</a>
         </h3>
 <p id="section-3.1-1">As discussed in <a href="#sec-keys-token-invalid" class="auto internal xref">Section 2.3</a>, two EDHOC peers can be using the ACE framework <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span> and specifically the EDHOC and OSCORE profile of ACE defined in <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">In this case, one of the two EDHOC peers, namely PEER_RS, acts as ACE resource server (RS). Instead, the other EDHOC peer, namely PEER_C, acts as ACE client, and obtains from the ACE authorization server (AS) an access token for accessing protected resources at PEER_RS.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">In this case, one of the two EDHOC peers, namely PEER_RS, acts as ACE resource server (RS). Instead, the other EDHOC peer, namely PEER_C, acts as ACE client and obtains from the ACE authorization server (AS) an access token for accessing protected resources at PEER_RS.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.1-3">Together with other information, the access token specifies (by value or by reference) the public authentication credential AUTH_CRED_C that PEER_C is going to use when running EDHOC with PEER_RS. Note that AUTH_CRED_C will be used as either CRED_I or CRED_R, depending on whether the two peers use the EDHOC forward message flow (i.e., PEER_C is the EDHOC Initiator) or the EDHOC reverse message flow (i.e., PEER_C is the EDHOC Responder), respectively (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.2" class="relref">Appendix A.2</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 <p id="section-3.1-4">When the AS issues the first access token that specifies AUTH_CRED_C and is intended to be uploaded to PEER_RS, it is expected that the access token specifies AUTH_CRED_C by value, and that PEER_RS is not currently storing AUTH_CRED_C, but instead will obtain it upon receiving the access token.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
-<p id="section-3.1-5">While such an access token can be uploaded to PEER_RS before running EDHOC, it is also possible for PEER_C to upload it through a dedicated EAD item, while running EDHOC with PEER_RS. In such a case, PEER_RS has to learn AUTH_CRED_C as a new public authentication credential during an EDHOC session.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.1-5">Typically, the access token is uploaded to PEER_RS by PEER_C through a dedicated EAD item, when running EDHOC with PEER_RS. In such a case, PEER_RS has to learn AUTH_CRED_C as a new public authentication credential during an EDHOC session with PEER_C.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
 <p id="section-3.1-6">At least for its EDHOC resource used for exchanging the EDHOC messages of the EDHOC session in question, this requires PEER_RS to:<a href="#section-3.1-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1-7.1">
@@ -1769,6 +1769,7 @@ That is, upon receiving M, the peer P performs the following steps.<a href="#sec
             <p id="section-3.1-7.2.1">If enforcing the trust policy "NO-LEARNING", additionally enforce an overriding exception when an incoming EDHOC message includes an EAD item conveying (a reference to) an access token, as discussed earlier in this section.<a href="#section-3.1-7.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
+<p id="section-3.1-8">Alternatively, the AS can upload the access token to PEER_RS on behalf of PEER_C, as per the alternative workflow defined in <span>[<a href="#I-D.ietf-ace-workflow-and-params" class="cite xref">I-D.ietf-ace-workflow-and-params</a>]</span>.<a href="#section-3.1-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2152,7 +2153,7 @@ Then, PHASE_1 ends, and the pre-verification side processing moves to the next P
                     <text x="488" y="740">:</text>
                     <text x="68" y="756">used</text>
                     <text x="112" y="756">trust</text>
-                    <text x="160" y="756">model</text>
+                    <text x="164" y="756">policy</text>
                     <text x="320" y="756">:</text>
                     <text x="348" y="756">next</text>
                     <text x="392" y="756">EDHOC</text>
@@ -2923,10 +2924,16 @@ When specifically using the EDHOC + OSCORE request, the considered body is the a
         </h3>
 <ul class="normal">
 <li class="normal" id="appendix-A.1-1.1">
-            <p id="appendix-A.1-1.1.1">Updated reference.<a href="#appendix-A.1-1.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.1-1.1.1">Consistent use of "trust policy" instead of "trust model".<a href="#appendix-A.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-A.1-1.2">
-            <p id="appendix-A.1-1.2.1">Clarifications and editorial improvements.<a href="#appendix-A.1-1.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.1-1.2.1">Alignment with use of EDHOC in the EDHOC and OSCORE profile of ACE.<a href="#appendix-A.1-1.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.1-1.3">
+            <p id="appendix-A.1-1.3.1">Updated reference.<a href="#appendix-A.1-1.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.1-1.4">
+            <p id="appendix-A.1-1.4.1">Clarifications and editorial improvements.<a href="#appendix-A.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
