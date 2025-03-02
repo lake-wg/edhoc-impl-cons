@@ -64,7 +64,7 @@ In order to prevent multiple, independent re-discoveries and assessments of thos
 
 * Handling of completed EDHOC sessions when they become invalid, and of application keys derived from an EDHOC session when those become invalid. This topic is discussed in {{sec-session-handling}}.
 
-* Enforcing of different trust models, with respect to learning new authentication credentials during an execution of EDHOC. This topic is discussed in {{sec-trust-models}}.
+* Enforcement of different trust policies, with respect to learning new authentication credentials during an execution of EDHOC. This topic is discussed in {{sec-trust-models}}.
 
 * Branched-off, side processing of incoming EDHOC messages, with particular reference to: i) fetching and validation of authentication credentials; and ii) processing of External Authorization Data (EAD) items, which in turn might play a role in the fetching and validation of authentication credentials. This topic is discussed in {{sec-message-side-processing}}.
 
@@ -185,11 +185,11 @@ The following considers two peers that use the ACE framework for authentication 
 
 When doing so, one of the two peers acts as ACE resource server (RS) hosting protected resources. The other peer acts as ACE client and requests from an ACE authorization server (AS) an access token, which specifies access rights for accessing protected resources at the RS as well as the public authentication credential of the client, namely AUTH_CRED_C.
 
-After that, C uploads the access token to the RS as part of the ACE workflow. This can occur before running EDHOC with the RS, or by means of an EAD item conveyed within an EDHOC message during the EDHOC execution. Alternatively, the AS can upload the access token to the RS on behalf of the client, as per the alternative workflow defined in {{I-D.ietf-ace-workflow-and-params}}.
+After that, C uploads the access token to the RS, by means of an EAD item included in an EDHOC message during the EDHOC execution (see below). Alternatively, the AS can upload the access token to the RS on behalf of the client, as per the alternative workflow defined in {{I-D.ietf-ace-workflow-and-params}}.
 
 Consistent with the used EDHOC and OSCORE profile of ACE, the two peers run EDHOC in order to specifically derive an OSCORE Security Context as their shared set of application keys (see {{Section A.1 of RFC9528}}). At the RS, the access token is bound to the successfully completed EDHOC session and the established OSCORE Security Context.
 
-After that, the peer acting as ACE client can access the protected resources hosted at the other peer, according to the access rights specified in the access token. The communications between the two peers are protected by means of the established OSCORE Security Context.
+After that, the peer acting as ACE client can access the protected resources hosted at the other peer acting as RS, according to the access rights specified in the access token. The communications between the two peers are protected by means of the established OSCORE Security Context.
 
 Later on, the application at one of the two peers P may have learned that the established OSCORE Security Context CTX is not safe to use anymore, e.g., from the used OSCORE library or from an OSCORE layer that takes part to the communication stack. The reasons that make CTX not safe to use anymore are the same ones discussed in {{sec-keys-invalid}} when considering a set of application keys in general, plus the event where the access token bound to CTX becomes invalid (e.g., it has expired or it has been revoked).
 
@@ -209,7 +209,7 @@ When this happens, the application at the peer P proceeds as follows.
 
    * If the access token is not valid anymore, the peer P deletes all the EDHOC sessions associated with the access token, as well as the OSCORE Security Context derived from each of those sessions.
 
-     Note that, when specifically considering the EDHOC and OSCORE profile of ACE, an access token is associated with at most one EDHOC session (see {{Section 4.4 of I-D.ietf-ace-edhoc-oscore-profile}}).
+     Note that, when specifically considering the EDHOC and OSCORE profile of ACE, an access token is associated with at most one EDHOC session (see {{Section 4.2 of I-D.ietf-ace-edhoc-oscore-profile}}).
 
      If the peer P acted as ACE client, then P obtains from the ACE AS a new access token, which is uploaded to the other peer acting as ACE RS.
 
@@ -225,7 +225,7 @@ When this happens, the application at the peer P proceeds as follows.
 
    At the RS, the access token is bound to this latest EDHOC session and the newly established OSCORE Security Context.
 
-The flowchart in {{fig-flowchart-keys-token-invalid}} shows the handling of an access token or of a set of application keys that have become invalid.
+The flowchart in {{fig-flowchart-keys-token-invalid}} shows the handling of an access token or of a set of application keys that have become invalid, when using the EDHOC and OSCORE profile of the ACE framework.
 
 ~~~~~~~~~~~ aasvg
 Invalid access token
@@ -285,7 +285,7 @@ application keys
 ~~~~~~~~~~~
 {: #fig-flowchart-keys-token-invalid title="Handling of an Access Token or of a Set of Application Keys that Have Become Invalid" artwork-align="center"}
 
-# Trust Models for Learning New Authentication Credentials # {#sec-trust-models}
+# Trust Policies for Learning New Authentication Credentials # {#sec-trust-models}
 
 A peer P relies on authentication credentials of other peers, in order to authenticate those peers when running EDHOC with them.
 
@@ -297,7 +297,7 @@ Also during the EDHOC execution, an External Authorization Data (EAD) field migh
 
 When obtaining a new credential CRED, the peer P has to validate it before storing it. The validation steps to perform depend on the specific type of CRED (e.g., a public key certificate {{RFC5280}}{{I-D.ietf-cose-cbor-encoded-cert}}), and can rely on (the authentication credential of) a trusted third party acting as a trust anchor.
 
-Upon retrieving a new CRED through the processing of a received EDHOC message and following the successful validation of CRED, the peer P stores CRED only if it assesses CRED to be also trusted, and must not store CRED otherwise.
+Upon retrieving a new CRED through the processing of a received EDHOC message and following the successful validation of CRED, the peer P stores CRED only if it assesses CRED to also be trusted, and must not store CRED otherwise.
 
 An exception applies for the two unauthenticated operations described in {{Section D.5 of RFC9528}}, where a trust relationship with an unknown or not-yet-trusted endpoint is established later. That is, CRED is verified out-of-band at a later stage, or an EDHOC session key is bound to an identity out-of-band at a later stage.
 
@@ -313,7 +313,7 @@ When processing a received EDHOC message M that specifies an authentication cred
 
    That is, upon receiving M, the peer P should continue the execution of EDHOC only if both the following conditions hold.
 
-   * P currently stores CRED, as specified by reference or by value in ID_CRED_I/ID_CRED_R or in the value of an EAD item; and
+   * P currently stores CRED, as specified by reference or by value in the ID_CRED_I/ID_CRED_R field of M or in the value of an EAD item of M; and
 
    * CRED is still valid, i.e., P believes CRED to not be expired or revoked.
 
@@ -329,7 +329,7 @@ When processing a received EDHOC message M that specifies an authentication cred
 
    That is, upon receiving M, the peer P performs the following steps.
 
-   1. P retrieves CRED, as specified by reference or by value in ID_CRED_I/ID_CRED_R or in the value of an EAD item.
+   1. P retrieves CRED, as specified by reference or by value in the ID_CRED_I/ID_CRED_R field of M or in the value of an EAD item of M.
 
    2. P checks whether CRED is already being stored and if it is still valid. In such a case, P trusts CRED and can continue the EDHOC execution. Otherwise, P moves to Step 3.
 
@@ -341,19 +341,21 @@ Irrespective of the adopted trust policy, P actually uses CRED only if it is det
 
 As discussed in {{sec-keys-token-invalid}}, two EDHOC peers can be using the ACE framework {{RFC9200}} and specifically the EDHOC and OSCORE profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
 
-In this case, one of the two EDHOC peers, namely PEER_RS, acts as ACE resource server (RS). Instead, the other EDHOC peer, namely PEER_C, acts as ACE client, and obtains from the ACE authorization server (AS) an access token for accessing protected resources at PEER_RS.
+In this case, one of the two EDHOC peers, namely PEER_RS, acts as ACE resource server (RS). Instead, the other EDHOC peer, namely PEER_C, acts as ACE client and obtains from the ACE authorization server (AS) an access token for accessing protected resources at PEER_RS.
 
 Together with other information, the access token specifies (by value or by reference) the public authentication credential AUTH_CRED_C that PEER_C is going to use when running EDHOC with PEER_RS. Note that AUTH_CRED_C will be used as either CRED_I or CRED_R, depending on whether the two peers use the EDHOC forward message flow (i.e., PEER_C is the EDHOC Initiator) or the EDHOC reverse message flow (i.e., PEER_C is the EDHOC Responder), respectively (see {{Section A.2 of RFC9528}}).
 
 When the AS issues the first access token that specifies AUTH_CRED_C and is intended to be uploaded to PEER_RS, it is expected that the access token specifies AUTH_CRED_C by value, and that PEER_RS is not currently storing AUTH_CRED_C, but instead will obtain it upon receiving the access token.
 
-While such an access token can be uploaded to PEER_RS before running EDHOC, it is also possible for PEER_C to upload it through a dedicated EAD item, while running EDHOC with PEER_RS. In such a case, PEER_RS has to learn AUTH_CRED_C as a new public authentication credential during an EDHOC session.
+Typically, the access token is uploaded to PEER_RS by PEER_C through a dedicated EAD item, when running EDHOC with PEER_RS. In such a case, PEER_RS has to learn AUTH_CRED_C as a new public authentication credential during an EDHOC session with PEER_C.
 
 At least for its EDHOC resource used for exchanging the EDHOC messages of the EDHOC session in question, this requires PEER_RS to:
 
 * Enforce the trust policy "LEARNING"; or
 
 * If enforcing the trust policy "NO-LEARNING", additionally enforce an overriding exception when an incoming EDHOC message includes an EAD item conveying (a reference to) an access token, as discussed earlier in this section.
+
+Alternatively, the AS can upload the access token to PEER_RS on behalf of PEER_C, as per the alternative workflow defined in {{I-D.ietf-ace-workflow-and-params}}.
 
 # Side Processing of Incoming EDHOC Messages # {#sec-message-side-processing}
 
@@ -557,7 +559,7 @@ EDHOC message_X
 | | - (a) and (c) might have  |        : EAD items to       :         |
 | |   to occur in parallel    |        : unconditionally    :         |
 | | - (b) depends on the      |        : produce for the    :         |
-| |   used trust model        |        : next EDHOC message :         |
+| |   used trust policy       |        : next EDHOC message :         |
 | +---------------------------+        :....................:         |
 |                                                                     |
 |                                               Side-Processor Object |
@@ -885,6 +887,10 @@ This document has no actions for IANA.
 {:removeinrfc}
 
 ## Version -02 to -03 ## {#sec-02-03}
+
+* Consistent use of "trust policy" instead of "trust model".
+
+* Alignment with use of EDHOC in the EDHOC and OSCORE profile of ACE.
 
 * Updated reference.
 
