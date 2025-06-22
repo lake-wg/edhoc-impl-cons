@@ -897,7 +897,7 @@ Such tools help finding and amending implementation errors especially related to
 
 * Non-conformance with the protocol specification (e.g., unintended deviations in performing the protocol steps), which can be a potential source of security vulnerabilities in addition to performance deficiencies.
 
-* Presence of inappropriate states and state transitions in the modelling of the EDHOC execution, e.g., states that are impossible to reach and traverse or that are not part of the protocol specification (which is a particular case of non-conformance).
+* Presence of inappropriate states and state transitions in the modeling of the EDHOC execution, e.g., states that are impossible to reach and traverse or that are not part of the protocol specification (which is a particular case of non-conformance).
 
   These states and transitions should be amended or removed, in order to reduce the memory footprint and code complexity and to simplify the implementation, thus reducing the risks of bugs and related security vulnerabilities.
 
