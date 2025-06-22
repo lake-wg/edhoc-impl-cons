@@ -42,6 +42,18 @@ informative:
   I-D.ietf-cose-cbor-encoded-cert:
   I-D.ietf-lake-authz:
   I-D.ietf-ace-workflow-and-params:
+  EDHOC-Fuzzer:
+    author:
+      -
+        ins: K. Sagonas
+        name: Konstantinos Sagonas
+      -
+        ins: T. Typaldos
+        name: Thanasis Typaldos
+    title: "EDHOC-Fuzzer: An EDHOC Protocol State Fuzzer"
+    seriesinfo: "ISSTA 2023: Proceedings of the 32nd ACM SIGSOFT International Symposium on Software Testing and Analysis"
+    date: 2023-07-13
+    target: https://dl.acm.org/doi/10.1145/3597926.3604922
 
 entity:
   SELF: "[RFC-XXXX]"
@@ -878,6 +890,18 @@ Therefore, if both the conditions COND8 and COND9 hold, the CoAP client should n
 This document provides considerations for implementations of the EDHOC protocol. The security considerations compiled in {{Section 9 of RFC9528}} and in {{Section 7 of RFC9668}} apply. The compliance requirements for implementations that are listed in {{Section 8 of RFC9528}} also apply.
 
 It is foreseeable that the EDHOC protocol will be extended (e.g., as to new cipher suites, new methods, and new types of authentication credentials) and that external security applications will be integrated into EDHOC by embedding the transport of their data in EDHOC EAD items. For implementations that support such extensions and external applications, the related security considerations and compliance requirements also apply.
+
+## Assessing the Correctness of Implementations
+
+Tools relying on fuzz testing such as EDHOC-Fuzzer {{EDHOC-Fuzzer}} can help assess the correctness of implementations of the EDHOC protocol and of external security applications integrated into EDHOC.
+
+Such tools help finding and amending implementation errors especially related to the following points:
+
+* Non-conformance with the protocol specification (e.g., unintended deviations in performing the protocol steps), which can be a potential source of security vulnerabilities in addition to performance deficiencies.
+
+* Presence of inappropriate states and state transitions in the modelling of the EDHOC execution, e.g., states that are impossible to reach and traverse or that are not part of the protocol specification (which is a particular case of non-conformance).
+
+  These states and transitions should be amended or removed, in order to reduce the memory footprint and code complexity and to simplify the implementation, thus reducing the risks of bugs and related security vulnerabilities.
 
 # IANA Considerations
 
