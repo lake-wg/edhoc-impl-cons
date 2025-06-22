@@ -97,11 +97,13 @@ Table of Contents
    8.  References
      8.1.  Normative References
      8.2.  Informative References
-   Appendix A.  Document Updates
-     A.1.  Version -03 to -04
-     A.2.  Version -02 to -03
-     A.3.  Version -01 to -02
-     A.4.  Version -00 to -01
+   Appendix A.  Foreseen Advanced Processing of Incoming EDHOC
+           message_1
+   Appendix B.  Document Updates
+     B.1.  Version -03 to -04
+     B.2.  Version -02 to -03
+     B.3.  Version -01 to -02
+     B.4.  Version -00 to -01
    Acknowledgments
    Author's Address
 
@@ -859,12 +861,23 @@ Table of Contents
    If the EAD_1 field is present, the SPO processes the EAD items
    included therein.
 
-   Once all such EAD items have been processed the SPO transfers control
-   back to EDHOC.  When doing so, the SPO also provides EDHOC with any
-   produced EAD items to include in the EAD field of the next outgoing
-   EDHOC message.
+   Once all such EAD items have been processed, the SPO transfers
+   control back to EDHOC.  When doing so, the SPO also provides EDHOC
+   with any produced EAD items to include in the EAD field of the next
+   outgoing EDHOC message.
 
    Then, EDHOC resumes its execution and advances its protocol state.
+
+   Future extensions of EDHOC or external security applications
+   integrated into EDHOC might require a processing of EDHOC message_1
+   that is more advanced than the currently expected one.  In
+   particular, an EAD item conveyed in EDHOC message_1 might specify the
+   authentication credential CRED associated with the Initiator (by
+   value or by reference), as wrapped in a cryptographically protected
+   "envelope".  In such a case, the processing of an incoming EDHOC
+   message_1 shares similarities with that of an incoming EDHOC
+   message_2 or message_3 (see Section 4.3), as it is further elaborated
+   in Appendix A.
 
 4.2.  EDHOC message_4
 
@@ -933,21 +946,22 @@ Table of Contents
         In case CRED is determined to be valid, the SPO moves to Step 9.
         Otherwise, the SPO moves to Step 11.
 
-   3.   The SPO attempts to retrieve CRED, and then moves to Step 4.
+   3.   The SPO attempts to retrieve CRED via ID_CRED_X or an EAD item
+        considered at Step 1.  Then, the SPO moves to Step 4.
 
    4.   If the retrieval of CRED has succeeded, the SPO moves to Step 5.
         Otherwise, the SPO moves to Step 11.
 
    5.   If the enforced trust policy for new authentication credentials
         is "NO-LEARNING" and P does not admit any exceptions that are
-        acceptable to enforce for message_X (see Section 3), the SPO
+        acceptable to enforce for message_X (see Section 3.2), the SPO
         moves to Step 11.  Otherwise, the SPO moves to Step 6.
 
    6.   If this step has been reached, the peer P is not already storing
         the retrieved CRED and, at the same time, it enforces either the
         trust policy "LEARNING" or the trust policy "NO-LEARNING" while
         also enforcing an exception acceptable for message_X (see
-        Section 3).
+        Section 3.2).
 
         Consistently, the SPO determines if CRED is currently valid,
         e.g., by verifying that CRED has not expired and has not been
@@ -1198,7 +1212,7 @@ Table of Contents
             |
             v
    +------------------+
-   | Verify message_X | (core EDHOC processing)
+   | Verify message_X | (Core EDHOC processing)
    +------------------+
             |
             |
@@ -1235,11 +1249,11 @@ Table of Contents
             |
             v
    +----------------+
-   | Advance the    | (core EDHOC processing)
+   | Advance the    | (Core EDHOC processing)
    | protocol state |
    +----------------+
 
-       Figure 5: Processing Steps for EDHOC message_2 and message_3
+      Figure 5: Processing Steps for EDHOC message_2 and message_3.
 
 4.4.  Consistency Checks of Authentication Credentials from ID_CRED and
       EAD Items
@@ -1251,9 +1265,9 @@ Table of Contents
 
    In addition to that, there may be cases where an EDHOC peer provides
    the authentication credential also in an EAD item.  In particular,
-   such an EAD item can specify an "envelope" (by value or by
-   reference), which in turn specifies the authentication credential (by
-   value or by reference).
+   such an EAD item can specify a cryptographically protected "envelope"
+   (by value or by reference), which in turn specifies the
+   authentication credential (by value or by reference).
 
    A case in point is the EDHOC and OSCORE profile of the ACE framework
    [I-D.ietf-ace-edhoc-oscore-profile], where the envelope in question
@@ -1657,19 +1671,235 @@ Table of Contents
               (ACE-OAuth)", RFC 9200, DOI 10.17487/RFC9200, August 2022,
               <https://www.rfc-editor.org/rfc/rfc9200>.
 
-Appendix A.  Document Updates
+Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
+
+   As mentioned in Section 4.1, future developments in EDHOC and in
+   related external security applications might rely on an EAD item in
+   EDHOC message_1 that specifies the authentication credential CRED
+   associated with the Initiator (by value or by reference), as wrapped
+   in a cryptographically protected "envelope".
+
+   In order to handle such a case, the processing of an incoming EDHOC
+   message_1 as described in Section 4.1 is extended with additional
+   steps performed by the SPO.
+
+   Such an extended side processing shares similarities with that of an
+   incoming EDHOC message_2 or message_3 (see Section 4.3).  In
+   particular, similarly to what is compiled in Section 4.3.2 and
+   Section 4.3.3, it consists of the following steps.
+
+   *  (0) The SPO checks the presence of an EAD item that specifies the
+      authentication credential CRED associated with the Initiator (by
+      value or by reference).
+
+      If no such EAD item is found, the SPO moves to Step 12.
+      Otherwise, the SPO moves to Step 1.
+
+   *  (1) The SPO determines CRED based on an EAD item retrieved at Step
+      0.
+
+      The EAD item may specify CRED by value or by reference, including
+      a URI or other external reference where CRED can be retrieved
+      from.
+
+      If CRED is already installed, the SPO moves to Step 2.  Otherwise,
+      the SPO moves to Step 3.
+
+   *  (2) The SPO determines if the stored CRED is currently valid,
+      e.g., by verifying that CRED has not expired and has not been
+      revoked.
+
+      Performing such a validation may require the SPO to first process
+      an EAD item included in message_1.
+
+      In case CRED is determined to be valid, the SPO moves to Step 9.
+      Otherwise, the SPO moves to Step 11.
+
+   *  (3) The SPO attempts to retrieve CRED via an EAD item considered
+      at Step 1.  Then, the SPO moves to Step 4.
+
+   *  (4) If the retrieval of CRED has succeeded, the SPO moves to Step
+      5.  Otherwise, the SPO moves to Step 11.
+
+   *  (5) If the enforced trust policy for new authentication
+      credentials is "NO-LEARNING" and P does not admit any exceptions
+      that are acceptable to enforce for message_1 (see Section 3.2),
+      the SPO moves to Step 11.  Otherwise, the SPO moves to Step 6.
+
+   *  (6) If this step has been reached, the peer P is not already
+      storing the retrieved CRED and, at the same time, it enforces
+      either the trust policy "LEARNING" or the trust policy "NO-
+      LEARNING" while also enforcing an exception acceptable for
+      message_1 (see Section 3.2).
+
+      Consistently, the SPO determines if CRED is currently valid, e.g.,
+      by verifying that CRED has not expired and has not been revoked.
+      Then, the SPO moves to Step 7.
+
+      Validating CRED may require the SPO to first process an EAD item
+      included in message_1.
+
+   *  (7) If CRED has been determined valid, the SPO moves to Step 8.
+      Otherwise, the SPO moves to Step 11.
+
+   *  (8) The SPO stores CRED as a valid and trusted authentication
+      credential associated with the other peer, together with
+      corresponding authentication credential identifiers (see
+      Section 3).  Then, the SPO moves to Step 9.
+
+   *  (9) The SPO checks if CRED is fine to use in the context of the
+      ongoing EDHOC session, also depending on the specific identity of
+      the other peer (see Sections 3.5 and D.2 of [RFC9528]).
+
+      If this is the case, the SPO moves to Step 10.  Otherwise, the SPO
+      moves to Step 11.
+
+   *  (10) P uses CRED as authentication credential associated with the
+      other peer in the ongoing EDHOC session.  Then, the SPO moves to
+      Step 12.
+
+   *  (11) The SPO has not found a valid authentication credential
+      associated with the other peer that can be used in the ongoing
+      EDHOC session.  Therefore, the EDHOC session with the other peer
+      is aborted.
+
+   *  (12) The SPO processes any EAD item included in message_1 that has
+      not been already processed.
+
+      Once all such EAD items have been processed, the SPO transfers
+      control back to EDHOC.  When doing so, the SPO also provides EDHOC
+      with any produced EAD items to include in the EAD field of the
+      next outgoing EDHOC message.
+
+   The flowchart in Figure 6 shows the different steps taken for the
+   advanced processing of an incoming EDHOC message_1 defined above.
+
+    Incoming
+    EDHOC message_1
+
+             |
+             |
+             v
+   +-------------------+  ---+
+   | Decode message_1  |     |
+   +-------------------+     |
+             |               |
+             |               +--- (Core EDHOC Processing)
+             v               |
+   +-------------------+     |
+   | Accepted selected |     |
+   | cipher suite      |     |
+   +-------------------+  ---+
+             |
+             |
+
+   Control transferred to
+   the side-processor object
+
+             |
+  +----------|---------------------------------------------------------+
+  |          |                                     Side processing     |
+  |          v                                                         |
+  | +--------------------+                                             |
+  | | 0. Does an EAD     |                                             |
+  | | item specify CRED? |                                             |
+  | +--------------------+                                             |
+  |  |       |                                                         |
+  |  | NO    | YES                                                     |
+  |  |       v                                                         |
+  |  |   +----------------+     +-------------+     +-------------+    |
+  |  |   | 1. Does an EAD | NO  | 3. Retrieve |     | 4. Is the   |    |
+  |  |   | item point to  |---->| CRED via    |---->| retrieval   |    |
+  |  |   | an already     |     | an EAD item |     | of CRED     |    |
+  |  |   | stored CRED?   |     +-------------+     | successful? |    |
+  |  |   +----------------+                         +-------------+    |
+  |  |       |                                         |         |     |
+  |  |       |                                         | NO      | YES |
+  |  |       |                        +----------------+         |     |
+  |  |       |                        |                          |     |
+  |  |       | YES                    |                          |     |
+  |  |       v                        v                          v     |
+  |  |  +-----------------+ NO  +-----------+   YES +----------------+ |
+  |  |  | 2. Is this CRED |---->| 11. Abort |<------| 5. Is the used | |
+  |  |  | still valid?    |     | the EDHOC |       | trust policy   | |
+  |  |  +-----------------+     | session   |       | "NO-LEARNING", | |
+  |  |       |                  |           |       | without any    | |
+  |  |       |                  |           |       | acceptable     | |
+  |  |       |                  |           |       | exceptions?    | |
+  |  |       |                  |           |       +----------------+ |
+  |  |       | YES              |           |                    |     |
+  |  |       v                  |           |    Here the used   | NO  |
+  |  |  +-----------------+ NO  |           |    trust policy is |     |
+  |  |  | 9. Is this CRED |---->|           |    "LEARNING", or  |     |
+  |  |  | good to use in  |     +-----------+    "NO-LEARNING"   |     |
+  |  |  | the context of  |              ^       together with   |     |
+  |  |  | this EDHOC      |<----+        |       an overriding   |     |
+  |  |  | session?        |     |        |       exception       |     |
+  |  |  +-----------------+     |        |                       |     |
+  |  |      |                   |        |                       v     |
+  |  |      |                   |        |             +-------------+ |
+  |  |      |                   |        |             | 6. Validate | |
+  |  |      |                   |        |             | CRED        | |
+  |  |      |                   |        |             +-------------+ |
+  |  |      |                   |        |                       |     |
+  |  |      | YES               |        | NO                    |     |
+  |  |      |                   |        |                       v     |
+  |  |      |                   |     +------------------------------+ |
+  |  |      |                   |     | 7. Is CRED valid?            | |
+  |  |      |                   |     +------------------------------+ |
+  |  |      |                   |        |                             |
+  |  |      |                   |        | YES                         |
+  |  |      v                   |        v                             |
+  |  |  +------------------+    |     +------------------------------+ |
+  |  |  | 10. Continue by  |    |     | 8. Store CRED as valid and   | |
+  |  |  | considering this |    +-----| trusted.                     | |
+  |  |  | CRED as the      |          |                              | |
+  |  |  | authentication   |          | Pair CRED with consistent    | |
+  |  |  | credential       |          | credential identifiers, for  | |
+  |  |  | associated with  |          | each supported type of       | |
+  |  |  | the other peer   |          | credential identifier.       | |
+  |  |  +------------------+          +------------------------------+ |
+  |  |      |                                                          |
+  |  |      |                                                          |
+  |  v      v                                                          |
+  | +------------------------------------------------------------+     |
+  | | 12. Process the EAD items that have not been processed yet |     |
+  | +------------------------------------------------------------+     |
+  |         |                                                          |
+  +---------|----------------------------------------------------------+
+            |
+            |
+            v
+
+   Control transferred back
+   to the core EDHOC processing
+
+            |
+            |
+            v
+   +----------------+
+   | Advance the    | (Core EDHOC processing)
+   | protocol state |
+   +----------------+
+
+             Figure 6: Processing Steps for EDHOC message_1.
+
+Appendix B.  Document Updates
 
    This section is to be removed before publishing as an RFC.
 
-A.1.  Version -03 to -04
+B.1.  Version -03 to -04
 
    *  Clarified and re-positioned exceptions to NO-LEARNING policy.
 
    *  Added security considerations.
 
+   *  Appendix on foreseen advanced processing of incoming EDHOC
+      message_1.
+
    *  Clarifications and editorial improvements.
 
-A.2.  Version -02 to -03
+B.2.  Version -02 to -03
 
    *  Consistent use of "trust policy" instead of "trust model".
 
@@ -1691,7 +1921,7 @@ A.2.  Version -02 to -03
 
    *  Clarifications and editorial improvements.
 
-A.3.  Version -01 to -02
+B.3.  Version -01 to -02
 
    *  Improved content on the EDHOC and OSCORE profile of ACE.
 
@@ -1704,7 +1934,7 @@ A.3.  Version -01 to -02
 
    *  Editorial improvements.
 
-A.4.  Version -00 to -01
+B.4.  Version -00 to -01
 
    *  Added considerations on trust policies when using the EDHOC and
       OSCORE profile of the ACE framework.
