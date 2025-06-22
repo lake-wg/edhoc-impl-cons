@@ -1765,20 +1765,12 @@ At the RS, the access token is bound to this latest EDHOC session and the newly 
             <p id="section-3.2-3.2.1">CRED is still valid, i.e., P believes CRED to not be expired or revoked.<a href="#section-3.2-3.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.2-4">Exceptions may apply and be actually enforced in cases where, during an EDHOC execution, P obtains additional information that allows it to trust and successfully validate CRED, even though CRED is not already stored upon receiving M. Such exceptions typically rely on a trusted party that vouches for CRED, such as in the following cases:<a href="#section-3.2-4" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-3.2-5.1">
-            <p id="section-3.2-5.1.1">In the EDHOC and OSCORE profile of the ACE framework defined in <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>, the EDHOC peer acting as ACE client C can include an EAD item in an EDHOC message sent to the other EDHOC peer acting as ACE resource server (RS). The EAD item transports (a reference to) an access token issued by a trusted ACE authorization server (AS). In turn, the access token specifies CRED as the authentication credential of C, by value or by reference. Through a successful verification of the access token, the RS is able to trust CRED (if found valid), even if not already storing it upon receiving the EDHOC message with the EAD item. This case is further discussed in <a href="#sec-trust-models-ace-prof" class="auto internal xref">Section 3.3.1</a>.<a href="#section-3.2-5.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-3.2-5.2">
-            <p id="section-3.2-5.2.1">In the procedure defined in <span>[<a href="#I-D.ietf-lake-authz" class="cite xref">I-D.ietf-lake-authz</a>]</span>, the EDHOC Initiator U receives an EDHOC message_2 where ID_CRED_R specifies the authentication credential of the EDHOC Responder V by value. In the same EDHOC message_2, an EAD item specifies a voucher issued by a trusted enrollment server W, which conveys authorization information about V and V's authentication credential CRED. Through a successful verification of the voucher, U is able to trust CRED (if found valid), even though it did not already store CRED upon receiving EDHOC message_2. This case is further discussed in <a href="#sec-trust-models-ela" class="auto internal xref">Section 3.3.2</a>.<a href="#section-3.2-5.2.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-3.2-6">Editor's note: consider moving the content in the two bullet points above to the dedicated <a href="#sec-trust-models-ace-prof" class="auto internal xref">Section 3.3.1</a> and <a href="#sec-trust-models-ela" class="auto internal xref">Section 3.3.2</a>.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
-<p id="section-3.2-7">If the peer P admits such an exception and actually enforces it on an authentication credential CRED, then P effectively handles CRED according to the trust policy "LEARNING" specified in <a href="#sec-policy-learning" class="auto internal xref">Section 3.1</a>.<a href="#section-3.2-7" class="pilcrow">¶</a></p>
+<p id="section-3.2-4">Exceptions may apply and be actually enforced in cases where, during an EDHOC execution, P obtains additional information that allows it to trust and successfully validate CRED, even though CRED is not already stored upon receiving M.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.2-5">Such exceptions typically rely on a trusted party that vouches for CRED, e.g., in the cases discussed in <a href="#sec-trust-models-specific" class="auto internal xref">Section 3.3</a>. From the point of view of the peer P, the trusted party might have been involved in the background, so that the vouching information about CRED is conveyed within an EDHOC message received during the EDHOC session (e.g., transported by an EAD item). Alternatively, P might directly interact with the trusted party for retrieving the vouching information about CRED, e.g., after having received M and before continuing the EDHOC execution.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.2-6">If the peer P admits such an exception and actually enforces it on an authentication credential CRED, then P effectively handles CRED according to the trust policy "LEARNING" specified in <a href="#sec-policy-learning" class="auto internal xref">Section 3.1</a>. When doing so, P still attempts to validate CRED and aborts the EDHOC session in case of failed validation.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="enforcement-of-trust-policies-in-specific-scenarios">
+<div id="sec-trust-models-specific">
 <section id="section-3.3">
         <h3 id="name-enforcement-of-trust-polici">
 <a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-enforcement-of-trust-polici" class="section-name selfRef">Enforcement of Trust Policies in Specific Scenarios</a>
@@ -1790,17 +1782,19 @@ At the RS, the access token is bound to this latest EDHOC session and the newly 
 <a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-in-the-edhoc-and-oscore-pro" class="section-name selfRef">In the EDHOC and OSCORE Profile of ACE</a>
           </h4>
 <p id="section-3.3.1-1">As discussed in <a href="#sec-keys-token-invalid" class="auto internal xref">Section 2.3</a>, two EDHOC peers can be using the ACE framework <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span> and specifically the EDHOC and OSCORE profile of ACE defined in <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-2">In this case, one of the two EDHOC peers, namely PEER_RS, acts as ACE resource server (RS). Instead, the other EDHOC peer, namely PEER_C, acts as ACE client and obtains from the ACE authorization server (AS) an access token for accessing protected resources at PEER_RS.<a href="#section-3.3.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-3">Together with other information, the access token specifies (by value or by reference) the public authentication credential AUTH_CRED_C that PEER_C is going to use when running EDHOC with PEER_RS. Note that AUTH_CRED_C will be used as either CRED_I or CRED_R, depending on whether the two peers use the EDHOC forward message flow (i.e., PEER_C is the EDHOC Initiator) or the EDHOC reverse message flow (i.e., PEER_C is the EDHOC Responder), respectively (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.2" class="relref">Appendix A.2</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-3.3.1-3" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-4">When the AS issues the first access token that specifies AUTH_CRED_C and is intended to be uploaded to PEER_RS, it is expected that the access token specifies AUTH_CRED_C by value, and that PEER_RS is not currently storing AUTH_CRED_C, but instead will obtain it and learn it upon receiving the access token.<a href="#section-3.3.1-4" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-5">Although the AS can upload the access token to PEER_RS on behalf of PEER_C as per the alternative SDC workflow defined in <span>[<a href="#I-D.ietf-ace-workflow-and-params" class="cite xref">I-D.ietf-ace-workflow-and-params</a>]</span>, the access token is typically uploaded to PEER_RS by PEER_C through a dedicated EAD item, when running EDHOC with PEER_RS. Consequently, PEER_RS has to learn AUTH_CRED_C as a new public authentication credential during an EDHOC session with PEER_C.<a href="#section-3.3.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-2">In this case, one of the two EDHOC peers, namely PEER_RS, acts as ACE resource server (RS). Instead, the other EDHOC peer, namely PEER_C, acts as ACE client and obtains from an ACE authorization server (AS) an access token for accessing protected resources at PEER_RS. The AS and PEER_RS are in a trust relationship.<a href="#section-3.3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-3">Together with other information, the access token specifies (by value or by reference) the public authentication credential AUTH_CRED_C associated with PEER_C that PEER_C is going to use when running EDHOC with PEER_RS. Note that AUTH_CRED_C will be used as either CRED_I or CRED_R in EDHOC, depending on whether the two peers use the EDHOC forward message flow (i.e., PEER_C is the EDHOC Initiator) or the EDHOC reverse message flow (i.e., PEER_C is the EDHOC Responder), respectively (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.2" class="relref">Appendix A.2</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-3.3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-4">When the AS issues the first access token that specifies AUTH_CRED_C and is intended to be uploaded to PEER_RS, it is expected that the access token specifies AUTH_CRED_C by value and that PEER_RS is not currently storing AUTH_CRED_C, but instead will obtain it and learn it upon receiving the access token.<a href="#section-3.3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-5">Although the AS can upload the access token to PEER_RS on behalf of PEER_C as per the alternative SDC workflow defined in <span>[<a href="#I-D.ietf-ace-workflow-and-params" class="cite xref">I-D.ietf-ace-workflow-and-params</a>]</span>, the access token is typically uploaded to PEER_RS by PEER_C through a dedicated EAD item, when running EDHOC with PEER_RS. Consequently, PEER_RS has to learn AUTH_CRED_C as a new authentication credential during an EDHOC session with PEER_C.<a href="#section-3.3.1-5" class="pilcrow">¶</a></p>
 <p id="section-3.3.1-6">At least for its EDHOC resource used for exchanging the EDHOC messages of the EDHOC session in question, this requires PEER_RS to:<a href="#section-3.3.1-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.3.1-7.1">
               <p id="section-3.3.1-7.1.1">Enforce the trust policy "LEARNING"; or<a href="#section-3.3.1-7.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.3.1-7.2">
-              <p id="section-3.3.1-7.2.1">If enforcing the trust policy "NO-LEARNING", additionally enforce an overriding exception when an incoming EDHOC message includes an EAD item conveying (a reference to) an access token (see <a href="#sec-policy-no-learning" class="auto internal xref">Section 3.2</a>).<a href="#section-3.3.1-7.2.1" class="pilcrow">¶</a></p>
+              <p id="section-3.3.1-7.2.1">If enforcing the trust policy "NO-LEARNING", additionally enforce an overriding exception when an incoming EDHOC message includes an EAD item conveying (a reference to) a valid access token issued by a trusted AS.<a href="#section-3.3.1-7.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-7.2.2">
+That is, through a successful verification of the access token, PEER_RS is able to trust AUTH_CRED_C (if found valid), even though it did not already store AUTH_CRED_C upon receiving the EDHOC message with the EAD item.<a href="#section-3.3.1-7.2.2" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
@@ -1810,7 +1804,10 @@ At the RS, the access token is bound to this latest EDHOC session and the newly 
           <h4 id="name-in-the-lightweight-authoriz">
 <a href="#section-3.3.2" class="section-number selfRef">3.3.2. </a><a href="#name-in-the-lightweight-authoriz" class="section-name selfRef">In the Lightweight Authorization using EDHOC (ELA) Procedure</a>
           </h4>
-<p id="section-3.3.2-1">TBD<a href="#section-3.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-1">When the execution of EDHOC embeds the ELA procedure defined in <span>[<a href="#I-D.ietf-lake-authz" class="cite xref">I-D.ietf-lake-authz</a>]</span>, the EDHOC peer U receives an EDHOC message_2 (message_3) where ID_CRED_R (ID_CRED_I) specifies by value the authentication credential CRED associated with the other peer V.<a href="#section-3.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-2">In the same EDHOC message, an EAD item specifies a voucher issued by a trusted enrollment server W. The voucher is an assertion to U that W has authorized V and has endorsed CRED.<a href="#section-3.3.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-3">Through a successful verification of the voucher, U is able to trust CRED (if found valid), even though it did not already store CRED upon receiving the EDHOC message.<a href="#section-3.3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-4">Therefore, if U enforces the trust policy "NO-LEARNING", it can additionally enforce an overriding exception when an incoming EDHOC message includes an EAD item conveying a valid voucher issued by a trusted enrollment server.<a href="#section-3.3.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2951,10 +2948,13 @@ When specifically using the EDHOC + OSCORE request, the considered body is the a
         </h3>
 <ul class="normal">
 <li class="normal" id="appendix-A.1-1.1">
-            <p id="appendix-A.1-1.1.1">Added security considerations.<a href="#appendix-A.1-1.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.1-1.1.1">Clarified and re-positioned exceptions to NO-LEARNING policy.<a href="#appendix-A.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-A.1-1.2">
-            <p id="appendix-A.1-1.2.1">Clarifications and editorial improvements.<a href="#appendix-A.1-1.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.1-1.2.1">Added security considerations.<a href="#appendix-A.1-1.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.1-1.3">
+            <p id="appendix-A.1-1.3.1">Clarifications and editorial improvements.<a href="#appendix-A.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
