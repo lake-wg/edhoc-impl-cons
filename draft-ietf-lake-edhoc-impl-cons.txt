@@ -85,9 +85,8 @@ Table of Contents
        4.3.3.  PHASE_2
        4.3.4.  Post-Verification Side Processing
        4.3.5.  Flowcharts
-     4.4.  Special Cases of Message Handling
-       4.4.1.  Consistency Checks of Authentication Credentials from
-               ID_CRED and EAD Items
+     4.4.  Consistency Checks of Authentication Credentials from
+           ID_CRED and EAD Items
    5.  Using EDHOC over CoAP with Block-Wise
      5.1.  Notation
      5.2.  Pre-requirements for the EDHOC + OSCORE Request
@@ -830,7 +829,8 @@ Table of Contents
    In the following, Section 4.1 to Section 4.3 describe more in detail
    the actions performed by the SPO on the different incoming EDHOC
    messages.  Then, Section 4.4 describes further special handling of
-   incoming EDHOC messages in particular situations.
+   incoming EDHOC messages, as to consistency checks concerning
+   authentication credentials in particular situations.
 
    After completing the EDHOC execution, control is transferred back to
    the application.  In particular, the application is provided with the
@@ -1241,13 +1241,8 @@ Table of Contents
 
        Figure 5: Processing Steps for EDHOC message_2 and message_3
 
-4.4.  Special Cases of Message Handling
-
-   This section describes methods to perform special handling of
-   incoming EDHOC messages in particular situations.
-
-4.4.1.  Consistency Checks of Authentication Credentials from ID_CRED
-        and EAD Items
+4.4.  Consistency Checks of Authentication Credentials from ID_CRED and
+      EAD Items
 
    Typically, an EDHOC peer specifies its associated authentication
    credential (by value or by reference) only in the ID_CRED field of
