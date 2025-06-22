@@ -442,7 +442,7 @@ The SPO performs the following tasks on an incoming EDHOC message M:
 
    * The execution of instructions that the SPO has received from the application, concerning EAD items to produce irrespective of other EAD items included in M.
 
-In the following, {{sec-message-side-processing-m1}} to {{sec-message-side-processing-m2-m3}} describe more in detail the actions performed by the SPO on the different incoming EDHOC messages. Then, {{sec-message-side-processing-special}} describes further special handling of incoming EDHOC messages in particular situations.
+In the following, {{sec-message-side-processing-m1}} to {{sec-message-side-processing-m2-m3}} describe more in detail the actions performed by the SPO on the different incoming EDHOC messages. Then, {{sec-consistency-checks-auth-creds}} describes further special handling of incoming EDHOC messages, as to consistency checks concerning authentication credentials in particular situations.
 
 After completing the EDHOC execution, control is transferred back to the application. In particular, the application is provided with the overall outcome of the EDHOC execution (i.e., successful completion or failure), together with possible specific results produced by the SPO throughout the EDHOC execution (e.g., due to the processing of EAD items).
 
@@ -759,11 +759,7 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
 ~~~~~~~~~~~
 {: #fig-flowchart-spo-low-level title="Processing Steps for EDHOC message_2 and message_3" artwork-align="center"}
 
-## Special Cases of Message Handling ## {#sec-message-side-processing-special}
-
-This section describes methods to perform special handling of incoming EDHOC messages in particular situations.
-
-### Consistency Checks of Authentication Credentials from ID\_CRED and EAD Items ### {#sec-consistency-checks-auth-creds}
+## Consistency Checks of Authentication Credentials from ID\_CRED and EAD Items ## {#sec-consistency-checks-auth-creds}
 
 Typically, an EDHOC peer specifies its associated authentication credential (by value or by reference) only in the ID_CRED field of EDHOC message_2 (if acting as Responder) or EDHOC message_3 (if acting as Initiator).
 
