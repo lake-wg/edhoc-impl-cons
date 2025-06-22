@@ -93,6 +93,7 @@ Table of Contents
      5.2.  Pre-requirements for the EDHOC + OSCORE Request
      5.3.  Effectively Using Block-Wise
    6.  Security Considerations
+     6.1.  Assessing the Correctness of Implementations
    7.  IANA Considerations
    8.  References
      8.1.  Normative References
@@ -1517,6 +1518,30 @@ Table of Contents
    and external applications, the related security considerations and
    compliance requirements also apply.
 
+6.1.  Assessing the Correctness of Implementations
+
+   Tools relying on fuzz testing such as EDHOC-Fuzzer [EDHOC-Fuzzer] can
+   help assess the correctness of implementations of the EDHOC protocol
+   and of external security applications integrated into EDHOC.
+
+   Such tools help finding and amending implementation errors especially
+   related to the following points:
+
+   *  Non-conformance with the protocol specification (e.g., unintended
+      deviations in performing the protocol steps), which can be a
+      potential source of security vulnerabilities in addition to
+      performance deficiencies.
+
+   *  Presence of inappropriate states and state transitions in the
+      modelling of the EDHOC execution, e.g., states that are impossible
+      to reach and traverse or that are not part of the protocol
+      specification (which is a particular case of non-conformance).
+
+      These states and transitions should be amended or removed, in
+      order to reduce the memory footprint and code complexity and to
+      simplify the implementation, thus reducing the risks of bugs and
+      related security vulnerabilities.
+
 7.  IANA Considerations
 
    This document has no actions for IANA.
@@ -1553,6 +1578,13 @@ Table of Contents
               <https://www.rfc-editor.org/rfc/rfc9668>.
 
 8.2.  Informative References
+
+   [EDHOC-Fuzzer]
+              Sagonas, K. and T. Typaldos, "EDHOC-Fuzzer: An EDHOC
+              Protocol State Fuzzer", ISSTA 2023: Proceedings of the
+              32nd ACM SIGSOFT International Symposium on Software
+              Testing and Analysis , 13 July 2023,
+              <https://dl.acm.org/doi/10.1145/3597926.3604922>.
 
    [I-D.ietf-ace-edhoc-oscore-profile]
               Selander, G., Mattsson, J. P., Tiloca, M., and R. Höglund,
