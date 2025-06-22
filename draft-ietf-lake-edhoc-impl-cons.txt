@@ -1542,7 +1542,7 @@ Table of Contents
       performance deficiencies.
 
    *  Presence of inappropriate states and state transitions in the
-      modelling of the EDHOC execution, e.g., states that are impossible
+      modeling of the EDHOC execution, e.g., states that are impossible
       to reach and traverse or that are not part of the protocol
       specification (which is a particular case of non-conformance).
 
