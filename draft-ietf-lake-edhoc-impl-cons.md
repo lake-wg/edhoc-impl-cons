@@ -873,7 +873,7 @@ Therefore, if both the conditions COND8 and COND9 hold, the CoAP client should n
 
 This document provides considerations for implementations of the EDHOC protocol. The security considerations compiled in {{Section 9 of RFC9528}} and in {{Section 7 of RFC9668}} apply. The compliance requirements for implementations that are listed in {{Section 8 of RFC9528}} also apply.
 
-It is foreseeable that the EDHOC protocol will be extended (e.g., as to new cipher suites, new methods, and new types of authentication credentials) and that external security applications will be integrated into EDHOC by embedding the transport of their data in EDHOC EAD items. Implementations of EDHOC that support such extensions and external applications ought to seriously take into account the related security considerations and meet the related compliance requirements.
+It is foreseeable that the EDHOC protocol will be extended (e.g., as to new cipher suites, new methods, and new types of authentication credentials) and that external security applications will be integrated into EDHOC by embedding the transport of their data in EDHOC EAD items. For implementations that support such extensions and external applications, the related security considerations and compliance requirements also apply.
 
 # IANA Considerations
 
