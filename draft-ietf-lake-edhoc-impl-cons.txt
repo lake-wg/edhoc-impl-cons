@@ -1506,10 +1506,9 @@ Table of Contents
    to new cipher suites, new methods, and new types of authentication
    credentials) and that external security applications will be
    integrated into EDHOC by embedding the transport of their data in
-   EDHOC EAD items.  Implementations of EDHOC that support such
-   extensions and external applications ought to seriously take into
-   account the related security considerations and meet the related
-   compliance requirements.
+   EDHOC EAD items.  For implementations that support such extensions
+   and external applications, the related security considerations and
+   compliance requirements also apply.
 
 7.  IANA Considerations
 
