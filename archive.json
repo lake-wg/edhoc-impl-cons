@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-06T00:40:38.332641+00:00",
+  "timestamp": "2025-11-09T00:43:28.773459+00:00",
   "repo": "lake-wg/edhoc-impl-cons",
   "labels": [
     {
@@ -49,6 +49,31 @@
       "color": "ffffff"
     }
   ],
-  "issues": [],
+  "issues": [
+    {
+      "number": 1,
+      "id": "I_kwDOMENsL87WZiCl",
+      "title": "Describe EAD state machines to detect absence of EAD items",
+      "url": "https://github.com/lake-wg/edhoc-impl-cons/issues/1",
+      "state": "OPEN",
+      "author": "chrysn",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "In the latest authz document, the absence of a voucher is expressed as a bare label (rather than the absence of an EAD item) \"because it makes the EAD item state machine less dependent on looking at other channels\".\n\nI think that this represents a sub-optimal interface between EDHOC library and the EAD implementation, because that interface should be able to express that the next message was received without any EAD item of the numbers to which the EAD mechanism subscribed to.\n\nAligning implementations on that this is valuable information could happen in this document.\n\nCC @geonnave because he probably has input to this too.",
+      "createdAt": "2025-11-06T18:23:46Z",
+      "updatedAt": "2025-11-06T18:24:38Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "chrysn",
+          "authorAssociation": "NONE",
+          "body": "(And *if* there is agreement that a good EAD state machine can do this, the bare voucher label can go out too -- not because I worry about the bytes, but because I worry that early implementation details manifest themselves in extra effort for later implementers).",
+          "createdAt": "2025-11-06T18:24:38Z",
+          "updatedAt": "2025-11-06T18:24:38Z"
+        }
+      ]
+    }
+  ],
   "pulls": []
 }
