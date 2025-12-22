@@ -9,23 +9,22 @@
 <meta content="
        This document provides considerations for guiding the implementation of the authenticated key exchange protocol Ephemeral Diffie-Hellman Over COSE (EDHOC). 
     " name="description">
-<meta content="xml2rfc 3.29.0" name="generator">
+<meta content="xml2rfc 3.31.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-lake-edhoc-impl-cons-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.29.0
-    Python 3.12.11
+  xml2rfc 3.31.0
+    Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
-    lxml 5.3.1
-    platformdirs 4.3.8
+    lxml 6.0.2
+    platformdirs 4.5.1
     pycountry 24.6.1
-    PyYAML 6.0.2
-    requests 2.32.4
-    setuptools 80.9.0
-    wcwidth 0.2.13
+    PyYAML 6.0.3
+    requests 2.32.5
+    wcwidth 0.2.14
 -->
 <link href="draft-ietf-lake-edhoc-impl-cons.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1044,11 +1043,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Implementation Considerations for EDHOC</td>
-<td class="right">June 2025</td>
+<td class="right">December 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tiloca</td>
-<td class="center">Expires 24 December 2025</td>
+<td class="center">Expires 25 June 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1061,12 +1060,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lake-edhoc-impl-cons-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-22" class="published">22 June 2025</time>
+<time datetime="2025-12-22" class="published">22 December 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-24">24 December 2025</time></dd>
+<dd class="expires"><time datetime="2026-06-25">25 June 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1111,7 +1110,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 24 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 25 June 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1200,16 +1199,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.4.2.3.2.1.1"><a href="#section-4.3.1" class="auto internal xref">4.3.1</a>.  <a href="#name-pre-verification-side-proce" class="internal xref">Pre-Verification Side Processing</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3.2.2">
-                    <p id="section-toc.1-1.4.2.3.2.2.1"><a href="#section-4.3.2" class="auto internal xref">4.3.2</a>.  <a href="#name-phase_1" class="internal xref">PHASE_1</a></p>
+                    <p id="section-toc.1-1.4.2.3.2.2.1"><a href="#section-4.3.2" class="auto internal xref">4.3.2</a>.  <a href="#name-post-verification-side-proc" class="internal xref">Post-Verification Side Processing</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3.2.3">
-                    <p id="section-toc.1-1.4.2.3.2.3.1"><a href="#section-4.3.3" class="auto internal xref">4.3.3</a>.  <a href="#name-phase_2" class="internal xref">PHASE_2</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3.2.4">
-                    <p id="section-toc.1-1.4.2.3.2.4.1"><a href="#section-4.3.4" class="auto internal xref">4.3.4</a>.  <a href="#name-post-verification-side-proc" class="internal xref">Post-Verification Side Processing</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3.2.5">
-                    <p id="section-toc.1-1.4.2.3.2.5.1"><a href="#section-4.3.5" class="auto internal xref">4.3.5</a>.  <a href="#name-flowcharts" class="internal xref">Flowcharts</a></p>
+                    <p id="section-toc.1-1.4.2.3.2.3.1"><a href="#section-4.3.3" class="auto internal xref">4.3.3</a>.  <a href="#name-flowcharts" class="internal xref">Flowcharts</a></p>
 </li>
                 </ul>
 </li>
@@ -1261,16 +1254,19 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.10.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-document-updates" class="internal xref">Document Updates</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
-                <p id="section-toc.1-1.10.2.1.1"><a href="#appendix-B.1" class="auto internal xref">B.1</a>.  <a href="#name-version-03-to-04" class="internal xref">Version -03 to -04</a></p>
+                <p id="section-toc.1-1.10.2.1.1"><a href="#appendix-B.1" class="auto internal xref">B.1</a>.  <a href="#name-version-04-to-05" class="internal xref">Version -04 to -05</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
-                <p id="section-toc.1-1.10.2.2.1"><a href="#appendix-B.2" class="auto internal xref">B.2</a>.  <a href="#name-version-02-to-03" class="internal xref">Version -02 to -03</a></p>
+                <p id="section-toc.1-1.10.2.2.1"><a href="#appendix-B.2" class="auto internal xref">B.2</a>.  <a href="#name-version-03-to-04" class="internal xref">Version -03 to -04</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.3">
-                <p id="section-toc.1-1.10.2.3.1"><a href="#appendix-B.3" class="auto internal xref">B.3</a>.  <a href="#name-version-01-to-02" class="internal xref">Version -01 to -02</a></p>
+                <p id="section-toc.1-1.10.2.3.1"><a href="#appendix-B.3" class="auto internal xref">B.3</a>.  <a href="#name-version-02-to-03" class="internal xref">Version -02 to -03</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.4">
-                <p id="section-toc.1-1.10.2.4.1"><a href="#appendix-B.4" class="auto internal xref">B.4</a>.  <a href="#name-version-00-to-01" class="internal xref">Version -00 to -01</a></p>
+                <p id="section-toc.1-1.10.2.4.1"><a href="#appendix-B.4" class="auto internal xref">B.4</a>.  <a href="#name-version-01-to-02" class="internal xref">Version -01 to -02</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.5">
+                <p id="section-toc.1-1.10.2.5.1"><a href="#appendix-B.5" class="auto internal xref">B.5</a>.  <a href="#name-version-00-to-01" class="internal xref">Version -00 to -01</a></p>
 </li>
             </ul>
 </li>
@@ -1291,8 +1287,8 @@ svg :is([fill="white"], [fill^="#fff"]) {
       </h2>
 <p id="section-1-1">Ephemeral Diffie-Hellman Over COSE (EDHOC) <span>[<a href="#RFC9528" class="cite xref">RFC9528</a>]</span> is a lightweight authenticated key exchange protocol, especially intended for use in constrained scenarios.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">During the development of EDHOC, a number of side topics were raised and discussed, as emerging from reviews of the protocol latest design and from implementation activities. These topics were identified as strongly pertaining to the implementation of EDHOC rather than to the protocol in itself. Hence, they are not discussed in <span>[<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>, which rightly focuses on specifying the actual protocol.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">At the same time, implementors of an application using the EDHOC protocol or of an "EDHOC library" enabling its use cannot simply ignore such topics and will have to take them into account throughout their implementation work.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">In order to prevent multiple, independent re-discoveries and assessments of those topics, as well as to facilitate and guide implementation activities, this document collects such topics and discusses them through considerations about the implementation of EDHOC. At a high-level, the topics in question are summarized below.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-3">At the same time, implementers of an application using the EDHOC protocol or of an "EDHOC library" enabling its use cannot simply ignore such topics and will have to take them into account throughout their implementation work.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">In order to prevent multiple, independent re-discoveries and assessments of those topics, as well as to facilitate and guide implementation activities, this document collects such topics and discusses them through considerations about the implementation of EDHOC. At a high-level, the topics in question are summarized below:<a href="#section-1-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1-5.1">
           <p id="section-1-5.1.1">Handling of completed EDHOC sessions when they become invalid and of application keys derived from an EDHOC session when those become invalid. This topic is discussed in <a href="#sec-session-handling" class="auto internal xref">Section 2</a>.<a href="#section-1-5.1.1" class="pilcrow">¶</a></p>
@@ -1332,7 +1328,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
       </ul>
 <p id="section-2-3">Building on the above, the following expands on three relevant cases concerning the handling of EDHOC sessions and application keys, in the event that any of those becomes invalid.<a href="#section-2-3" class="pilcrow">¶</a></p>
-<p id="section-2-4">To provide more concrete guidance, the following also considers the case where "applications keys" stands for the keying material and parameters that compose a Security Context for the security protocol Object Security for Constrained RESTful Environments (OSCORE) <span>[<a href="#RFC8613" class="cite xref">RFC8613</a>]</span>, i.e., when specifically those application keys are derived from an EDHOC session (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.1" class="relref">Appendix A.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-4">To provide more concrete guidance, the following considers the case where "applications keys" stands for the keying material and parameters that compose a Security Context for the security protocol Object Security for Constrained RESTful Environments (OSCORE) <span>[<a href="#RFC8613" class="cite xref">RFC8613</a>]</span>, i.e., when specifically those application keys are derived from an EDHOC session (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.1" class="relref">Appendix A.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-2-4" class="pilcrow">¶</a></p>
 <p id="section-2-5">Nevertheless, the same considerations are applicable if EDHOC is used to derive other application keys, e.g., when used to key different security protocols than OSCORE or to provide the application with secure values that are bound to an EDHOC session.<a href="#section-2-5" class="pilcrow">¶</a></p>
 <div id="sec-session-invalid">
 <section id="section-2.1">
@@ -1346,36 +1342,36 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <figure id="figure-1">
           <div id="section-2.1-4.1">
             <div class="alignCenter art-svg artwork" id="section-2.1-4.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="80" width="552" viewBox="0 0 552 80" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 72,48 L 88,48" fill="none" stroke="black"></path>
-                <path d="M 312,48 L 328,48" fill="none" stroke="black"></path>
-                <path d="M 392,48 L 408,48" fill="none" stroke="black"></path>
-                <polygon class="arrowhead" points="416,48 404,42.4 404,53.6" fill="black" transform="rotate(0,408,48)"></polygon>
-                <polygon class="arrowhead" points="336,48 324,42.4 324,53.6" fill="black" transform="rotate(0,328,48)"></polygon>
-                <polygon class="arrowhead" points="96,48 84,42.4 84,53.6" fill="black" transform="rotate(0,88,48)"></polygon>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="80" width="568" viewBox="0 0 568 80" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 72,48 L 96,48" fill="none" stroke="black"></path>
+                <path d="M 312,48 L 336,48" fill="none" stroke="black"></path>
+                <path d="M 400,48 L 424,48" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="432,48 420,42.4 420,53.6" fill="black" transform="rotate(0,424,48)"></polygon>
+                <polygon class="arrowhead" points="344,48 332,42.4 332,53.6" fill="black" transform="rotate(0,336,48)"></polygon>
+                <polygon class="arrowhead" points="104,48 92,42.4 92,53.6" fill="black" transform="rotate(0,96,48)"></polygon>
                 <g class="text">
                   <text x="32" y="36">Invalid</text>
-                  <text x="124" y="36">Delete</text>
-                  <text x="168" y="36">the</text>
-                  <text x="208" y="36">EDHOC</text>
-                  <text x="264" y="36">session</text>
-                  <text x="360" y="36">Rerun</text>
-                  <text x="444" y="36">Derive</text>
-                  <text x="488" y="36">and</text>
+                  <text x="132" y="36">Delete</text>
+                  <text x="176" y="36">the</text>
+                  <text x="216" y="36">EDHOC</text>
+                  <text x="272" y="36">session</text>
+                  <text x="368" y="36">Rerun</text>
+                  <text x="460" y="36">Derive</text>
+                  <text x="504" y="36">and</text>
                   <text x="24" y="52">EDHOC</text>
-                  <text x="112" y="52">and</text>
-                  <text x="144" y="52">the</text>
-                  <text x="208" y="52">application</text>
-                  <text x="276" y="52">keys</text>
-                  <text x="360" y="52">EDHOC</text>
-                  <text x="448" y="52">install</text>
-                  <text x="496" y="52">new</text>
+                  <text x="120" y="52">and</text>
+                  <text x="152" y="52">the</text>
+                  <text x="216" y="52">application</text>
+                  <text x="284" y="52">keys</text>
+                  <text x="368" y="52">EDHOC</text>
+                  <text x="464" y="52">install</text>
+                  <text x="512" y="52">new</text>
                   <text x="32" y="68">session</text>
-                  <text x="128" y="68">derived</text>
-                  <text x="180" y="68">from</text>
-                  <text x="212" y="68">it</text>
-                  <text x="464" y="68">application</text>
-                  <text x="532" y="68">keys</text>
+                  <text x="136" y="68">derived</text>
+                  <text x="188" y="68">from</text>
+                  <text x="220" y="68">it</text>
+                  <text x="480" y="68">application</text>
+                  <text x="548" y="68">keys</text>
                 </g>
               </svg><a href="#section-2.1-4.1.1" class="pilcrow">¶</a>
 </div>
@@ -1384,7 +1380,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#name-handling-of-an-edhoc-sessio" class="selfRef">Handling of an EDHOC Session that Has Become Invalid.</a>
           </figcaption></figure>
 </div>
-<p id="section-2.1-5">An EDHOC session may have become invalid, for example, because an authentication credential CRED_X may have expired, or because the peer P may have learned from a trusted source that CRED_X has been revoked. This effectively invalidates CRED_X, and therefore also invalidates any EDHOC session where CRED_X was used as authentication credential associated with either peer in the session (i.e., P itself or the other peer). In such a case, the application at P has to additionally delete CRED_X and any stored, corresponding credential identifier.<a href="#section-2.1-5" class="pilcrow">¶</a></p>
+<p id="section-2.1-5">An EDHOC session may have become invalid, for example, because an authentication credential CRED_X has expired, or because the peer P has learned from a trusted source that CRED_X has been revoked. This effectively invalidates CRED_X, and therefore also invalidates any EDHOC session where CRED_X was used as authentication credential associated with either peer in the session (i.e., P itself or the other peer). In such a case, the application at P has to additionally delete CRED_X and any stored, corresponding credential identifier.<a href="#section-2.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-keys-invalid">
@@ -1392,26 +1388,26 @@ svg :is([fill="white"], [fill^="#fff"]) {
         <h3 id="name-application-keys-become-inv">
 <a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-application-keys-become-inv" class="section-name selfRef">Application Keys Become Invalid</a>
         </h3>
-<p id="section-2.2-1">The application at a peer P may have learned that a set of application keys is not safe to use anymore. When such a set is specifically an OSCORE Security Context, the application may have learned that from the used OSCORE library or from an OSCORE layer that takes part to the communication stack.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.2-1">The application at a peer P may have learned that a set of application keys is not safe to use anymore. When such a set is specifically an OSCORE Security Context, the application may have learned that from the used OSCORE library or from an OSCORE layer that takes part in the communication stack.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
 <p id="section-2.2-2">A current set SET of application keys shared with another peer can become unsafe to use, for example, due to the following reasons:<a href="#section-2.2-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2.2-3.1">
             <p id="section-2.2-3.1.1">SET has reached a pre-determined expiration time;<a href="#section-2.2-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-2.2-3.2">
-            <p id="section-2.2-3.2.1">SET has been established to use for a now elapsed amount of time, according to enforced application policies; or<a href="#section-2.2-3.2.1" class="pilcrow">¶</a></p>
+            <p id="section-2.2-3.2.1">SET has been established to use for an amount of time that is now elapsed, according to enforced application policies; or<a href="#section-2.2-3.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-2.2-3.3">
             <p id="section-2.2-3.3.1">Some elements of SET have been used enough times to approach cryptographic limits that should not be passed, e.g., according to the properties of the security algorithms specifically used. With particular reference to an OSCORE Security Context, such limits are discussed in <span>[<a href="#I-D.ietf-core-oscore-key-limits" class="cite xref">I-D.ietf-core-oscore-key-limits</a>]</span>.<a href="#section-2.2-3.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-2.2-4">When this happens, the application at the peer P proceeds as follows.<a href="#section-2.2-4" class="pilcrow">¶</a></p>
+<p id="section-2.2-4">When this happens, the application at the peer P proceeds as follows:<a href="#section-2.2-4" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-2.2-5">
 <li id="section-2.2-5.1">
             <p id="section-2.2-5.1.1">If the following conditions both hold, then the application moves to Step 2. Otherwise, it moves to Step 3.<a href="#section-2.2-5.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2.2-5.1.2.1">
-                <p id="section-2.2-5.1.2.1.1">Let us define S as the EDHOC session from which the peer P has derived SET or the eldest SET's ancestor set of application keys. Then, since the completion of S with the other peer, the application at P has received from the other peer at least one message protected with any set of application keys derived from S. That is, P has persisted S (see <span><a href="https://rfc-editor.org/rfc/rfc9528#section-5.4.2" class="relref">Section 5.4.2</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-2.2-5.1.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-2.2-5.1.2.1.1">Let us define S as the EDHOC session from which the peer P has derived SET or the eldest SET's ancestor set of application keys. Then, since the completion of S with the other peer, the application at P has received from the other peer and successfully verified at least one message protected with any set of application keys derived from S. That is, P has persisted S (see <span><a href="https://rfc-editor.org/rfc/rfc9528#section-5.4.2" class="relref">Section 5.4.2</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-2.2-5.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-2.2-5.1.2.2">
                 <p id="section-2.2-5.1.2.2.1">The peer P supports a key update protocol, as an alternative to performing a new execution of EDHOC with the other peer. When SET is an OSCORE Security Context, the key update protocol supported by the peer P can be KUDOS <span>[<a href="#I-D.ietf-core-oscore-key-update" class="cite xref">I-D.ietf-core-oscore-key-update</a>]</span>.<a href="#section-2.2-5.1.2.2.1" class="pilcrow">¶</a></p>
@@ -1526,11 +1522,11 @@ If the key update protocol terminates successfully, the updated application keys
 <a href="#section-2.3" class="section-number selfRef">2.3. </a><a href="#name-application-keys-or-bound-a" class="section-name selfRef">Application Keys or Bound Access Rights Become Invalid</a>
         </h3>
 <p id="section-2.3-1">The following considers two peers that use the ACE framework for authentication and authorization in constrained environments <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span> and specifically the EDHOC and OSCORE profile of ACE defined in <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>.<a href="#section-2.3-1" class="pilcrow">¶</a></p>
-<p id="section-2.3-2">When doing so, one of the two peers acts as ACE resource server (RS) hosting protected resources. The other peer acts as ACE client and requests an access token from an ACE authorization server (AS) that is in trust relationship with the RS. The access token specifies access rights for accessing protected resources at the RS as well as the public authentication credential of the client, namely AUTH_CRED_C.<a href="#section-2.3-2" class="pilcrow">¶</a></p>
+<p id="section-2.3-2">When doing so, one of the two peers acts as ACE resource server (RS) hosting protected resources. The other peer acts as ACE client and requests an access token from an ACE authorization server (AS) that is in a trust relationship with the RS. The access token specifies access rights for accessing protected resources at the RS as well as the public authentication credential of the client, namely AUTH_CRED_C.<a href="#section-2.3-2" class="pilcrow">¶</a></p>
 <p id="section-2.3-3">After that, C uploads the access token to the RS, by means of an EAD item included in an EDHOC message during the EDHOC execution (see below). Alternatively, the AS can upload the access token to the RS on behalf of the client, as per the alternative Short Distribution Chain (SDC) workflow defined in <span>[<a href="#I-D.ietf-ace-workflow-and-params" class="cite xref">I-D.ietf-ace-workflow-and-params</a>]</span>.<a href="#section-2.3-3" class="pilcrow">¶</a></p>
 <p id="section-2.3-4">Consistent with the EDHOC and OSCORE profile of ACE, the two peers run EDHOC in order to specifically derive an OSCORE Security Context as their shared set of application keys (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.1" class="relref">Appendix A.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>). At the RS, the access token is bound to the successfully completed EDHOC session and to the established OSCORE Security Context.<a href="#section-2.3-4" class="pilcrow">¶</a></p>
 <p id="section-2.3-5">After that, the peer acting as ACE client can access the protected resources hosted at the other peer acting as RS, according to the access rights specified in the access token. The communications between the two peers are protected by means of the established OSCORE Security Context.<a href="#section-2.3-5" class="pilcrow">¶</a></p>
-<p id="section-2.3-6">Later on, the application at one of the two peers P may have learned that the established OSCORE Security Context CTX is not safe to use anymore, e.g., from the used OSCORE library or from an OSCORE layer that takes part to the communication stack. The reasons that make CTX not safe to use anymore are the same ones discussed in <a href="#sec-keys-invalid" class="auto internal xref">Section 2.2</a> when considering a set of application keys in general, plus the event where the access token bound to CTX becomes invalid (e.g., it has expired or it has been revoked).<a href="#section-2.3-6" class="pilcrow">¶</a></p>
+<p id="section-2.3-6">Later on, the application at one of the two peers P may have learned that the established OSCORE Security Context CTX is not safe to use anymore, e.g., from the used OSCORE library or from an OSCORE layer that takes part in the communication stack. The reasons that make CTX not safe to use anymore are the same ones discussed in <a href="#sec-keys-invalid" class="auto internal xref">Section 2.2</a> when considering a set of application keys in general, plus the event that the access token bound to CTX becomes invalid (e.g., it has expired or it has been revoked).<a href="#section-2.3-6" class="pilcrow">¶</a></p>
 <p id="section-2.3-7">When this happens, the application at the peer P proceeds as follows.<a href="#section-2.3-7" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-2.3-8">
 <li id="section-2.3-8.1">
@@ -1540,7 +1536,7 @@ If the key update protocol terminates successfully, the updated application keys
                 <p id="section-2.3-8.1.2.1.1">The access token is still believed to be valid. That is, it has not expired yet and the peer P is not aware that it has been revoked.<a href="#section-2.3-8.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-2.3-8.1.2.2">
-                <p id="section-2.3-8.1.2.2.1">Let us define S as the EDHOC session from which the peer P has derived CTX or the eldest CTX's ancestor OSCORE Security Context. Then, since the completion of S with the other peer, the application at P has received from the other peer at least one message protected with any set of application keys derived from S. That is, P has persisted S (see <span><a href="https://rfc-editor.org/rfc/rfc9528#section-5.4.2" class="relref">Section 5.4.2</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-2.3-8.1.2.2.1" class="pilcrow">¶</a></p>
+                <p id="section-2.3-8.1.2.2.1">Let us define S as the EDHOC session from which the peer P has derived CTX or the eldest CTX's ancestor OSCORE Security Context. Then, since the completion of S with the other peer, the application at P has received from the other peer and successfully verified at least one message protected with any set of application keys derived from S. That is, P has persisted S (see <span><a href="https://rfc-editor.org/rfc/rfc9528#section-5.4.2" class="relref">Section 5.4.2</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-2.3-8.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
@@ -1555,7 +1551,7 @@ If the execution of KUDOS does not terminate successfully or if the peer P does 
 <li class="normal" id="section-2.3-8.3.2.1">
                 <p id="section-2.3-8.3.2.1.1">If the access token is not believed to be valid anymore, the peer P deletes all the EDHOC sessions associated with the access token as well as the OSCORE Security Context derived from each of those sessions.<a href="#section-2.3-8.3.2.1.1" class="pilcrow">¶</a></p>
 <p id="section-2.3-8.3.2.1.2">
-Note that, when specifically considering the EDHOC and OSCORE profile of ACE, an access token is associated with at most one EDHOC session (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-07#section-4.2" class="relref">Section 4.2</a> of [<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>).<a href="#section-2.3-8.3.2.1.2" class="pilcrow">¶</a></p>
+Note that, when specifically considering the EDHOC and OSCORE profile of ACE, an access token is associated with at most one EDHOC session (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-09#section-4.2" class="relref">Section 4.2</a> of [<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>).<a href="#section-2.3-8.3.2.1.2" class="pilcrow">¶</a></p>
 <p id="section-2.3-8.3.2.1.3">
 If the peer P acted as ACE client, then P obtains from the ACE AS a new access token, which is uploaded to the other peer acting as ACE RS.<a href="#section-2.3-8.3.2.1.3" class="pilcrow">¶</a></p>
 <p id="section-2.3-8.3.2.1.4">
@@ -1770,7 +1766,7 @@ At the RS, the access token is bound to this latest EDHOC session and the newly 
         </ul>
 <p id="section-3.2-4">Exceptions may apply and be actually enforced in cases where, during an EDHOC execution, P obtains additional information that allows it to trust and successfully validate CRED, even though CRED is not already stored upon receiving M.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
 <p id="section-3.2-5">Such exceptions typically rely on a trusted party that vouches for CRED, e.g., in the cases discussed in <a href="#sec-trust-models-specific" class="auto internal xref">Section 3.3</a>. From the point of view of the peer P, the trusted party might have been involved in the background, so that the vouching information about CRED is conveyed within an EDHOC message received during the EDHOC session (e.g., transported by an EAD item). Alternatively, P might directly interact with the trusted party for retrieving the vouching information about CRED, e.g., after having received M and before continuing the EDHOC execution.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
-<p id="section-3.2-6">If the peer P admits such an exception and actually enforces it on an authentication credential CRED, then P effectively handles CRED according to the trust policy "LEARNING" specified in <a href="#sec-policy-learning" class="auto internal xref">Section 3.1</a>. When doing so, P still attempts to validate CRED and aborts the EDHOC session in case of failed validation.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
+<p id="section-3.2-6">If the peer P admits such an exception and actually enforces it on an authentication credential CRED, then P effectively handles CRED according to the trust policy "LEARNING" specified in <a href="#sec-policy-learning" class="auto internal xref">Section 3.1</a>. When doing so, P still attempts to validate CRED, and it aborts the EDHOC session if the validation process is not successful.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-trust-models-specific">
@@ -1824,17 +1820,17 @@ That is, through a successful verification of the access token, PEER_RS is able 
       </h2>
 <p id="section-4-1">This section describes an approach that EDHOC peers can use upon receiving EDHOC messages, in order to fetch/validate authentication credentials and to process External Authorization Data (EAD) items.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2">As per <span><a href="https://rfc-editor.org/rfc/rfc9528#section-9.1" class="relref">Section 9.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>, the EDHOC protocol provides a transport mechanism for conveying EAD items, but specifications defining those items have to set the ground for "agreeing on the surrounding context and the meaning of the information passed to and from the application".<a href="#section-4-2" class="pilcrow">¶</a></p>
-<p id="section-4-3">The approach described in this section aims to help implementors navigate the surrounding context mentioned above, irrespective of the specific EAD items conveyed in the EDHOC messages. In particular, the described approach takes into account the following points:<a href="#section-4-3" class="pilcrow">¶</a></p>
+<p id="section-4-3">The approach described in this section aims to help implementers navigate the surrounding context mentioned above, irrespective of the specific EAD items conveyed in the EDHOC messages. In particular, the described approach takes into account the following points:<a href="#section-4-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4-4.1">
           <p id="section-4-4.1.1">The fetching and validation of the authentication credential associated with the other peer relies on ID_CRED_I in EDHOC message_2, or on ID_CRED_R in EDHOC message_3, or on the value of an EAD item. When this occurs upon receiving EDHOC message_2 or message_3, the decryption of the EDHOC message has to be completed first.<a href="#section-4-4.1.1" class="pilcrow">¶</a></p>
 <p id="section-4-4.1.2">
-The validation of the authentication credential might depend on using the value of an EAD item, which in turn has to be validated first. For instance, an EAD item within the EAD_2 field of EDHOC message_2 may contain a voucher to be used for validating the authentication credential associated with the Responder (see <span>[<a href="#I-D.ietf-lake-authz" class="cite xref">I-D.ietf-lake-authz</a>]</span>).<a href="#section-4-4.1.2" class="pilcrow">¶</a></p>
+The validation of the authentication credential might depend on using the value of an EAD item, which in turn has to be validated first. For instance, an EAD item within the EAD_2 field of EDHOC message_2 might contain a voucher to be used for validating the authentication credential associated with the Responder (see <span>[<a href="#I-D.ietf-lake-authz" class="cite xref">I-D.ietf-lake-authz</a>]</span>).<a href="#section-4-4.1.2" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-4-4.2">
-          <p id="section-4-4.2.1">Some EAD items may be processed only after having successfully verified the EDHOC message, i.e., after a successful verification of the Signature_or_MAC field in EDHOC message_2 or message_3.<a href="#section-4-4.2.1" class="pilcrow">¶</a></p>
+          <p id="section-4-4.2.1">It is possible that some EAD items can be processed only after having successfully verified the EDHOC message, i.e., after a successful verification of the Signature_or_MAC field in EDHOC message_2 or message_3.<a href="#section-4-4.2.1" class="pilcrow">¶</a></p>
 <p id="section-4-4.2.2">
-For instance, an EAD item within the EAD_3 field of EDHOC message_3 may contain a Certificate Signing Request (CSR) <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>. Hence, such an EAD item can be processed only once the recipient peer has attained proof that the other peer possesses its private key.<a href="#section-4-4.2.2" class="pilcrow">¶</a></p>
+For instance, an EAD item within the EAD_3 field of EDHOC message_3 might contain a Certificate Signing Request (CSR) <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>. Hence, such an EAD item can be processed only once the recipient peer has attained proof that the other peer possesses its private key.<a href="#section-4-4.2.2" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-4-5">In order to conveniently handle such processing, the application can prepare in advance a "side-processor object" (SPO), which takes care of the operations above during the EDHOC execution.<a href="#section-4-5" class="pilcrow">¶</a></p>
@@ -1930,116 +1926,116 @@ If no such EAD items are found, EDHOC can remove any padding EAD item (see <span
             <p id="section-4.3-3.1.1">Right after message_X has been decrypted and before its verification starts. Following this invocation, the SPO performs the actions described in <a href="#sec-pre-verif" class="auto internal xref">Section 4.3.1</a>.<a href="#section-4.3-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-3.2">
-            <p id="section-4.3-3.2.1">Right after message_X has been successfully verified. Following this invocation, the SPO performs the actions described in <a href="#sec-post-verif" class="auto internal xref">Section 4.3.4</a>.<a href="#section-4.3-3.2.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-3.2.1">Right after message_X has been successfully verified. Following this invocation, the SPO performs the actions described in <a href="#sec-post-verif" class="auto internal xref">Section 4.3.2</a>.<a href="#section-4.3-3.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-4.3-4">The flowcharts in <a href="#sec-m2-m3-flowcharts" class="auto internal xref">Section 4.3.5</a> show the high-level interaction between the core EDHOC processing and the SPO, as well as the different steps taken for processing an incoming message_X.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
+<p id="section-4.3-4">The flowcharts in <a href="#sec-m2-m3-flowcharts" class="auto internal xref">Section 4.3.3</a> show the high-level interaction between the core EDHOC processing and the SPO, as well as the different steps taken for processing an incoming message_X.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
 <div id="sec-pre-verif">
 <section id="section-4.3.1">
           <h4 id="name-pre-verification-side-proce">
 <a href="#section-4.3.1" class="section-number selfRef">4.3.1. </a><a href="#name-pre-verification-side-proce" class="section-name selfRef">Pre-Verification Side Processing</a>
           </h4>
-<p id="section-4.3.1-1">The pre-verification side processing occurs in two sequential phases, namely PHASE_1 (see <a href="#sec-pre-verif-phase-1" class="auto internal xref">Section 4.3.2</a>) and PHASE_2 (see <a href="#sec-pre-verif-phase-2" class="auto internal xref">Section 4.3.3</a>).<a href="#section-4.3.1-1" class="pilcrow">¶</a></p>
-</section>
-</div>
+<p id="section-4.3.1-1">The pre-verification side processing occurs in two sequential phases, namely PHASE_1 (see <a href="#sec-pre-verif-phase-1" class="auto internal xref">Section 4.3.1.1</a>) and PHASE_2 (see <a href="#sec-pre-verif-phase-2" class="auto internal xref">Section 4.3.1.2</a>).<a href="#section-4.3.1-1" class="pilcrow">¶</a></p>
 <div id="sec-pre-verif-phase-1">
-<section id="section-4.3.2">
-          <h4 id="name-phase_1">
-<a href="#section-4.3.2" class="section-number selfRef">4.3.2. </a><a href="#name-phase_1" class="section-name selfRef">PHASE_1</a>
-          </h4>
-<p id="section-4.3.2-1">During PHASE_1, the SPO at the recipient peer P determines CRED, i.e., the authentication credential associated with the other peer to be used in the ongoing EDHOC session. In particular, the SPO performs the following steps.<a href="#section-4.3.2-1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-4.3.2-2">
-<li id="section-4.3.2-2.1">
-              <p id="section-4.3.2-2.1.1">The SPO determines CRED based on ID_CRED_X or on an EAD item in message_X.<a href="#section-4.3.2-2.1.1" class="pilcrow">¶</a></p>
-<p id="section-4.3.2-2.1.2">
-Those may specify CRED by value or by reference, including a URI or other external reference where CRED can be retrieved from.<a href="#section-4.3.2-2.1.2" class="pilcrow">¶</a></p>
-<p id="section-4.3.2-2.1.3">
-If CRED is already installed, the SPO moves to Step 2. Otherwise, the SPO moves to Step 3.<a href="#section-4.3.2-2.1.3" class="pilcrow">¶</a></p>
+<section id="section-4.3.1.1">
+            <h5 id="name-phase_1">
+<a href="#section-4.3.1.1" class="section-number selfRef">4.3.1.1. </a><a href="#name-phase_1" class="section-name selfRef">PHASE_1</a>
+            </h5>
+<p id="section-4.3.1.1-1">During PHASE_1, the SPO at the recipient peer P determines CRED, i.e., the authentication credential associated with the other peer to be used in the ongoing EDHOC session. In particular, the SPO performs the following steps.<a href="#section-4.3.1.1-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-4.3.1.1-2">
+<li id="section-4.3.1.1-2.1">
+                <p id="section-4.3.1.1-2.1.1">The SPO determines CRED based on ID_CRED_X or on an EAD item included in message_X.<a href="#section-4.3.1.1-2.1.1" class="pilcrow">¶</a></p>
+<p id="section-4.3.1.1-2.1.2">
+Those may specify CRED by value or by reference, including a URI or other external reference where CRED can be retrieved from.<a href="#section-4.3.1.1-2.1.2" class="pilcrow">¶</a></p>
+<p id="section-4.3.1.1-2.1.3">
+If CRED is already installed, the SPO moves to Step 2. Otherwise, the SPO moves to Step 3.<a href="#section-4.3.1.1-2.1.3" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-4.3.2-2.2">
-              <p id="section-4.3.2-2.2.1">The SPO determines if the stored CRED is currently valid, e.g., by verifying that CRED has not expired and has not been revoked.<a href="#section-4.3.2-2.2.1" class="pilcrow">¶</a></p>
-<p id="section-4.3.2-2.2.2">
-Performing such a validation may require the SPO to first process an EAD item included in message_X. For example, it can be an EAD item in EDHOC message_2 that confirms or revokes the validity of CRED_R specified by ID_CRED_R, as the result of an OCSP process <span>[<a href="#RFC6960" class="cite xref">RFC6960</a>]</span>.<a href="#section-4.3.2-2.2.2" class="pilcrow">¶</a></p>
-<p id="section-4.3.2-2.2.3">
-In case CRED is determined to be valid, the SPO moves to Step 9. Otherwise, the SPO moves to Step 11.<a href="#section-4.3.2-2.2.3" class="pilcrow">¶</a></p>
+              <li id="section-4.3.1.1-2.2">
+                <p id="section-4.3.1.1-2.2.1">The SPO determines if the stored CRED is currently valid, e.g., by verifying that CRED has not expired and has not been revoked.<a href="#section-4.3.1.1-2.2.1" class="pilcrow">¶</a></p>
+<p id="section-4.3.1.1-2.2.2">
+Performing such a validation might require the SPO to first process an EAD item included in message_X. For example, it can be an EAD item in EDHOC message_2 that confirms or revokes the validity of CRED_R specified by ID_CRED_R, as the result of an OCSP process <span>[<a href="#RFC6960" class="cite xref">RFC6960</a>]</span>.<a href="#section-4.3.1.1-2.2.2" class="pilcrow">¶</a></p>
+<p id="section-4.3.1.1-2.2.3">
+In case CRED is determined to be valid, the SPO moves to Step 9. Otherwise, the SPO moves to Step 11.<a href="#section-4.3.1.1-2.2.3" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-4.3.2-2.3">
-              <p id="section-4.3.2-2.3.1">The SPO attempts to retrieve CRED via ID_CRED_X or an EAD item considered at Step 1. Then, the SPO moves to Step 4.<a href="#section-4.3.2-2.3.1" class="pilcrow">¶</a></p>
+              <li id="section-4.3.1.1-2.3">
+                <p id="section-4.3.1.1-2.3.1">The SPO attempts to retrieve CRED via ID_CRED_X or an EAD item considered at Step 1. Then, the SPO moves to Step 4.<a href="#section-4.3.1.1-2.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-4.3.2-2.4">
-              <p id="section-4.3.2-2.4.1">If the retrieval of CRED has succeeded, the SPO moves to Step 5. Otherwise, the SPO moves to Step 11.<a href="#section-4.3.2-2.4.1" class="pilcrow">¶</a></p>
+              <li id="section-4.3.1.1-2.4">
+                <p id="section-4.3.1.1-2.4.1">If the retrieval of CRED has succeeded, the SPO moves to Step 5. Otherwise, the SPO moves to Step 11.<a href="#section-4.3.1.1-2.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-4.3.2-2.5">
-              <p id="section-4.3.2-2.5.1">If the enforced trust policy for new authentication credentials is "NO-LEARNING" and P does not admit any exceptions that are acceptable to enforce for message_X (see <a href="#sec-policy-no-learning" class="auto internal xref">Section 3.2</a>), the SPO moves to Step 11. Otherwise, the SPO moves to Step 6.<a href="#section-4.3.2-2.5.1" class="pilcrow">¶</a></p>
+              <li id="section-4.3.1.1-2.5">
+                <p id="section-4.3.1.1-2.5.1">If the enforced trust policy for new authentication credentials is "NO-LEARNING" and P does not admit any exceptions that are acceptable to enforce for message_X (see <a href="#sec-policy-no-learning" class="auto internal xref">Section 3.2</a>), the SPO moves to Step 11. Otherwise, the SPO moves to Step 6.<a href="#section-4.3.1.1-2.5.1" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-4.3.2-2.6">
-              <p id="section-4.3.2-2.6.1">If this step has been reached, the peer P is not already storing the retrieved CRED and, at the same time, it enforces either the trust policy "LEARNING" or the trust policy "NO-LEARNING" while also enforcing an exception acceptable for message_X (see <a href="#sec-policy-no-learning" class="auto internal xref">Section 3.2</a>).<a href="#section-4.3.2-2.6.1" class="pilcrow">¶</a></p>
-<p id="section-4.3.2-2.6.2">
-Consistently, the SPO determines if CRED is currently valid, e.g., by verifying that CRED has not expired and has not been revoked. Then, the SPO moves to Step 7.<a href="#section-4.3.2-2.6.2" class="pilcrow">¶</a></p>
-<p id="section-4.3.2-2.6.3">
-Validating CRED may require the SPO to first process an EAD item included in message_X. For example, it can be an EAD item in EDHOC message_2 that: i) specifies a voucher for validating CRED_R as a CWT Claims Set (CCS) <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span> transported by value in ID_CRED_R (see <span>[<a href="#I-D.ietf-lake-authz" class="cite xref">I-D.ietf-lake-authz</a>]</span>); or instead ii) an OCSP response <span>[<a href="#RFC6960" class="cite xref">RFC6960</a>]</span> for validating CRED_R as a public key certificate transported by value or reference in ID_CRED_R.<a href="#section-4.3.2-2.6.3" class="pilcrow">¶</a></p>
+              <li id="section-4.3.1.1-2.6">
+                <p id="section-4.3.1.1-2.6.1">If this step has been reached, the peer P is not already storing the retrieved CRED and, at the same time, it enforces either the trust policy "LEARNING" or the trust policy "NO-LEARNING" while also enforcing an exception acceptable for message_X (see <a href="#sec-policy-no-learning" class="auto internal xref">Section 3.2</a>).<a href="#section-4.3.1.1-2.6.1" class="pilcrow">¶</a></p>
+<p id="section-4.3.1.1-2.6.2">
+Consistently, the SPO determines if CRED is currently valid, e.g., by verifying that CRED has not expired and has not been revoked. Then, the SPO moves to Step 7.<a href="#section-4.3.1.1-2.6.2" class="pilcrow">¶</a></p>
+<p id="section-4.3.1.1-2.6.3">
+Validating CRED might require the SPO to first process an EAD item included in message_X. For example, it can be an EAD item in EDHOC message_2 that: i) specifies a voucher for validating CRED_R as a CWT Claims Set (CCS) <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span> transported by value in ID_CRED_R (see <span>[<a href="#I-D.ietf-lake-authz" class="cite xref">I-D.ietf-lake-authz</a>]</span>); or instead ii) an OCSP response <span>[<a href="#RFC6960" class="cite xref">RFC6960</a>]</span> for validating CRED_R as a public key certificate transported by value or reference in ID_CRED_R.<a href="#section-4.3.1.1-2.6.3" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-4.3.2-2.7">
-              <p id="section-4.3.2-2.7.1">If CRED has been determined valid, the SPO moves to Step 8. Otherwise, the SPO moves to Step 11.<a href="#section-4.3.2-2.7.1" class="pilcrow">¶</a></p>
+              <li id="section-4.3.1.1-2.7">
+                <p id="section-4.3.1.1-2.7.1">If CRED has been determined valid, the SPO moves to Step 8. Otherwise, the SPO moves to Step 11.<a href="#section-4.3.1.1-2.7.1" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-4.3.2-2.8">
-              <p id="section-4.3.2-2.8.1">The SPO stores CRED as a valid and trusted authentication credential associated with the other peer, together with corresponding authentication credential identifiers (see <a href="#sec-trust-models" class="auto internal xref">Section 3</a>). Then, the SPO moves to Step 9.<a href="#section-4.3.2-2.8.1" class="pilcrow">¶</a></p>
+              <li id="section-4.3.1.1-2.8">
+                <p id="section-4.3.1.1-2.8.1">The SPO stores CRED as a valid and trusted authentication credential associated with the other peer, together with corresponding authentication credential identifiers (see <a href="#sec-trust-models" class="auto internal xref">Section 3</a>). Then, the SPO moves to Step 9.<a href="#section-4.3.1.1-2.8.1" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-4.3.2-2.9">
-              <p id="section-4.3.2-2.9.1">The SPO checks if CRED is fine to use in the context of the ongoing EDHOC session, also depending on the specific identity of the other peer (see Sections <a href="https://rfc-editor.org/rfc/rfc9528#section-3.5" class="relref">3.5</a> and <a href="https://rfc-editor.org/rfc/rfc9528#appendix-D.2" class="relref">D.2</a> of <span>[<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-4.3.2-2.9.1" class="pilcrow">¶</a></p>
-<p id="section-4.3.2-2.9.2">
-If this is the case, the SPO moves to Step 10. Otherwise, the SPO moves to Step 11.<a href="#section-4.3.2-2.9.2" class="pilcrow">¶</a></p>
+              <li id="section-4.3.1.1-2.9">
+                <p id="section-4.3.1.1-2.9.1">The SPO checks if CRED is fine to use in the context of the ongoing EDHOC session, also depending on the specific identity of the other peer (see Sections <a href="https://rfc-editor.org/rfc/rfc9528#section-3.5" class="relref">3.5</a> and <a href="https://rfc-editor.org/rfc/rfc9528#appendix-D.2" class="relref">D.2</a> of <span>[<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-4.3.1.1-2.9.1" class="pilcrow">¶</a></p>
+<p id="section-4.3.1.1-2.9.2">
+If this is the case, the SPO moves to Step 10. Otherwise, the SPO moves to Step 11.<a href="#section-4.3.1.1-2.9.2" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-4.3.2-2.10">
-              <p id="section-4.3.2-2.10.1">P uses CRED as authentication credential associated with the other peer in the ongoing EDHOC session.<a href="#section-4.3.2-2.10.1" class="pilcrow">¶</a></p>
-<p id="section-4.3.2-2.10.2">
-Then, PHASE_1 ends and the pre-verification side processing moves to the next PHASE_2 (see <a href="#sec-pre-verif-phase-2" class="auto internal xref">Section 4.3.3</a>).<a href="#section-4.3.2-2.10.2" class="pilcrow">¶</a></p>
+              <li id="section-4.3.1.1-2.10">
+                <p id="section-4.3.1.1-2.10.1">P uses CRED as authentication credential associated with the other peer in the ongoing EDHOC session.<a href="#section-4.3.1.1-2.10.1" class="pilcrow">¶</a></p>
+<p id="section-4.3.1.1-2.10.2">
+Then, PHASE_1 ends and the pre-verification side processing moves to the next PHASE_2 (see <a href="#sec-pre-verif-phase-2" class="auto internal xref">Section 4.3.1.2</a>).<a href="#section-4.3.1.1-2.10.2" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-4.3.2-2.11">
-              <p id="section-4.3.2-2.11.1">The SPO has not found a valid authentication credential associated with the other peer that can be used in the ongoing EDHOC session. Therefore, the EDHOC session with the other peer is aborted.<a href="#section-4.3.2-2.11.1" class="pilcrow">¶</a></p>
+              <li id="section-4.3.1.1-2.11">
+                <p id="section-4.3.1.1-2.11.1">The SPO has not found a valid authentication credential associated with the other peer that can be used in the ongoing EDHOC session. Therefore, the EDHOC session with the other peer is aborted.<a href="#section-4.3.1.1-2.11.1" class="pilcrow">¶</a></p>
 </li>
-          </ol>
+            </ol>
 </section>
 </div>
 <div id="sec-pre-verif-phase-2">
-<section id="section-4.3.3">
-          <h4 id="name-phase_2">
-<a href="#section-4.3.3" class="section-number selfRef">4.3.3. </a><a href="#name-phase_2" class="section-name selfRef">PHASE_2</a>
-          </h4>
-<p id="section-4.3.3-1">During PHASE_2, the SPO processes any EAD item included in message_X such that both the following conditions hold:<a href="#section-4.3.3-1" class="pilcrow">¶</a></p>
+<section id="section-4.3.1.2">
+            <h5 id="name-phase_2">
+<a href="#section-4.3.1.2" class="section-number selfRef">4.3.1.2. </a><a href="#name-phase_2" class="section-name selfRef">PHASE_2</a>
+            </h5>
+<p id="section-4.3.1.2-1">During PHASE_2, the SPO processes any EAD item included in message_X such that both the following conditions hold:<a href="#section-4.3.1.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4.3.3-2.1">
-              <p id="section-4.3.3-2.1.1">The EAD item has <em>not</em> been already processed during PHASE_1.<a href="#section-4.3.3-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.3.1.2-2.1">
+                <p id="section-4.3.1.2-2.1.1">The EAD item has <em>not</em> already been processed during PHASE_1.<a href="#section-4.3.1.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.3.3-2.2">
-              <p id="section-4.3.3-2.2.1">The EAD item can be processed before performing the verification of message_X.<a href="#section-4.3.3-2.2.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-4.3.1.2-2.2">
+                <p id="section-4.3.1.2-2.2.1">The EAD item can be processed before performing the verification of message_X.<a href="#section-4.3.1.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
-          </ul>
-<p id="section-4.3.3-3">Once all such EAD items have been processed, the SPO transfers control back to EDHOC, which either aborts the ongoing EDHOC session or continues the processing of message_X with its corresponding message verification.<a href="#section-4.3.3-3" class="pilcrow">¶</a></p>
+            </ul>
+<p id="section-4.3.1.2-3">Once all such EAD items have been processed, the SPO transfers control back to EDHOC, which either aborts the ongoing EDHOC session or continues the processing of message_X with its corresponding message verification.<a href="#section-4.3.1.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="sec-post-verif">
-<section id="section-4.3.4">
+<section id="section-4.3.2">
           <h4 id="name-post-verification-side-proc">
-<a href="#section-4.3.4" class="section-number selfRef">4.3.4. </a><a href="#name-post-verification-side-proc" class="section-name selfRef">Post-Verification Side Processing</a>
+<a href="#section-4.3.2" class="section-number selfRef">4.3.2. </a><a href="#name-post-verification-side-proc" class="section-name selfRef">Post-Verification Side Processing</a>
           </h4>
-<p id="section-4.3.4-1">During the post-verification side processing, the SPO processes any EAD item included in message_X such that the processing of that EAD item had to wait for completing the successful message verification.<a href="#section-4.3.4-1" class="pilcrow">¶</a></p>
-<p id="section-4.3.4-2">The late processing of such EAD items is typically due to the fact that a pre-requirement has to be fulfilled first.<a href="#section-4.3.4-2" class="pilcrow">¶</a></p>
-<p id="section-4.3.4-3">For example, the recipient peer P has to have first verified that the other peer does possess the private key corresponding to the public key specified by CRED, i.e., the authentication credential associated with the other peer that was determined during the pre-verification side processing (see <a href="#sec-pre-verif" class="auto internal xref">Section 4.3.1</a>). This requirement is fulfilled after a successful verification of message_X.<a href="#section-4.3.4-3" class="pilcrow">¶</a></p>
-<p id="section-4.3.4-4">Once all such EAD items have been processed, the SPO transfers control back to EDHOC. When doing so, the SPO also provides EDHOC with any produced EAD items to include in the EAD field of the next outgoing EDHOC message.<a href="#section-4.3.4-4" class="pilcrow">¶</a></p>
-<p id="section-4.3.4-5">Then, EDHOC resumes its execution and advances its protocol state.<a href="#section-4.3.4-5" class="pilcrow">¶</a></p>
+<p id="section-4.3.2-1">During the post-verification side processing, the SPO processes any EAD item included in message_X such that the processing of that EAD item had to wait for completing the successful message verification.<a href="#section-4.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.3.2-2">The late processing of such EAD items is typically due to the fact that a pre-requirement has to be fulfilled first.<a href="#section-4.3.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.3.2-3">For example, the recipient peer P has to have first verified that the other peer does possess the private key corresponding to the public key specified by CRED, i.e., the authentication credential associated with the other peer that was determined during the pre-verification side processing (see <a href="#sec-pre-verif" class="auto internal xref">Section 4.3.1</a>). This requirement is fulfilled after a successful verification of message_X.<a href="#section-4.3.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.3.2-4">Once all such EAD items have been processed, the SPO transfers control back to EDHOC. When doing so, the SPO also provides EDHOC with any produced EAD items to include in the EAD field of the next outgoing EDHOC message.<a href="#section-4.3.2-4" class="pilcrow">¶</a></p>
+<p id="section-4.3.2-5">Then, EDHOC resumes its execution and advances its protocol state.<a href="#section-4.3.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-m2-m3-flowcharts">
-<section id="section-4.3.5">
+<section id="section-4.3.3">
           <h4 id="name-flowcharts">
-<a href="#section-4.3.5" class="section-number selfRef">4.3.5. </a><a href="#name-flowcharts" class="section-name selfRef">Flowcharts</a>
+<a href="#section-4.3.3" class="section-number selfRef">4.3.3. </a><a href="#name-flowcharts" class="section-name selfRef">Flowcharts</a>
           </h4>
-<p id="section-4.3.5-1">The flowchart in <a href="#fig-flowchart-spo-high-level" class="auto internal xref">Figure 4</a> shows the high-level interaction between the core EDHOC processing and the SPO, with particular reference to an incoming EDHOC message_2 or message_3.<a href="#section-4.3.5-1" class="pilcrow">¶</a></p>
+<p id="section-4.3.3-1">The flowchart in <a href="#fig-flowchart-spo-high-level" class="auto internal xref">Figure 4</a> shows the high-level interaction between the core EDHOC processing and the SPO, with particular reference to an incoming EDHOC message_2 or message_3.<a href="#section-4.3.3-1" class="pilcrow">¶</a></p>
 <span id="name-high-level-interaction-betw"></span><div id="fig-flowchart-spo-high-level">
 <figure id="figure-4">
-            <div id="section-4.3.5-2.1">
-              <div class="alignCenter art-svg artwork" id="section-4.3.5-2.1.1">
+            <div id="section-4.3.3-2.1">
+              <div class="alignCenter art-svg artwork" id="section-4.3.3-2.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="832" width="576" viewBox="0 0 576 832" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                   <path d="M 8,128 L 8,384" fill="none" stroke="black"></path>
                   <path d="M 8,512 L 8,816" fill="none" stroke="black"></path>
@@ -2220,21 +2216,22 @@ Then, PHASE_1 ends and the pre-verification side processing moves to the next PH
                     <text x="448" y="756">message</text>
                     <text x="488" y="756">:</text>
                     <text x="404" y="772">:....................:</text>
-                    <text x="444" y="804">Side-Processor</text>
-                    <text x="532" y="804">Object</text>
+                    <text x="396" y="804">Side-Processor</text>
+                    <text x="484" y="804">Object</text>
+                    <text x="536" y="804">(SPO)</text>
                   </g>
-                </svg><a href="#section-4.3.5-2.1.1" class="pilcrow">¶</a>
+                </svg><a href="#section-4.3.3-2.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
 <a href="#name-high-level-interaction-betw" class="selfRef">High-Level Interaction Between the Core EDHOC Processing and the Side-Processor Object (SPO), for EDHOC message_2 and message_3.</a>
             </figcaption></figure>
 </div>
-<p id="section-4.3.5-3">The flowchart in <a href="#fig-flowchart-spo-low-level" class="auto internal xref">Figure 5</a> shows the different steps taken for processing an incoming EDHOC message_2 and message_3.<a href="#section-4.3.5-3" class="pilcrow">¶</a></p>
+<p id="section-4.3.3-3">The flowchart in <a href="#fig-flowchart-spo-low-level" class="auto internal xref">Figure 5</a> shows the different steps taken for processing an incoming EDHOC message_2 and message_3.<a href="#section-4.3.3-3" class="pilcrow">¶</a></p>
 <span id="name-processing-steps-for-edhoc-"></span><div id="fig-flowchart-spo-low-level">
 <figure id="figure-5">
-            <div id="section-4.3.5-4.1">
-              <div class="alignCenter art-svg artwork" id="section-4.3.5-4.1.1">
+            <div id="section-4.3.3-4.1">
+              <div class="alignCenter art-svg artwork" id="section-4.3.3-4.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2416" width="568" viewBox="0 0 568 2416" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                   <path d="M 8,512 L 8,1408" fill="none" stroke="black"></path>
                   <path d="M 8,1456 L 8,1584" fill="none" stroke="black"></path>
@@ -2643,7 +2640,7 @@ Then, PHASE_1 ends and the pre-verification side processing moves to the next PH
                     <text x="60" y="2388">protocol</text>
                     <text x="120" y="2388">state</text>
                   </g>
-                </svg><a href="#section-4.3.5-4.1.1" class="pilcrow">¶</a>
+                </svg><a href="#section-4.3.3-4.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
@@ -2672,7 +2669,7 @@ Then, PHASE_1 ends and the pre-verification side processing moves to the next PH
 </li>
         </ul>
 <p id="section-4.4-6">As part of the process where P1 validates CRED during the EDHOC session, P1 must check that both ITEM_A and ITEM_B specify the same authentication credential, and it must abort the EDHOC session if such a consistency check fails.<a href="#section-4.4-6" class="pilcrow">¶</a></p>
-<p id="section-4.4-7">The consistency check is successful only if one of the following conditions hold and it fails otherwise:<a href="#section-4.4-7" class="pilcrow">¶</a></p>
+<p id="section-4.4-7">The consistency check is successful only if one of the following conditions holds and it fails otherwise:<a href="#section-4.4-7" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.4-8.1">
             <p id="section-4.4-8.1.1">If both ITEM_A and ITEM_B specify an authentication credential by value, then both ITEM_A and ITEM_B specify the same value.<a href="#section-4.4-8.1.1" class="pilcrow">¶</a></p>
@@ -2907,27 +2904,27 @@ These states and transitions should be amended or removed, in order to reduce th
 <dd class="break"></dd>
 <dt id="I-D.ietf-ace-edhoc-oscore-profile">[I-D.ietf-ace-edhoc-oscore-profile]</dt>
         <dd>
-<span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Tiloca, M.</span>, and <span class="refAuthor">R. Höglund</span>, <span class="refTitle">"Ephemeral Diffie-Hellman Over COSE (EDHOC) and Object Security for Constrained Environments (OSCORE) Profile for Authentication and Authorization for Constrained Environments (ACE)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-edhoc-oscore-profile-07</span>, <time datetime="2025-03-03" class="refDate">3 March 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-07">https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-07</a>&gt;</span>. </dd>
+<span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Tiloca, M.</span>, and <span class="refAuthor">R. Höglund</span>, <span class="refTitle">"Ephemeral Diffie-Hellman Over COSE (EDHOC) and Object Security for Constrained Environments (OSCORE) Profile for Authentication and Authorization for Constrained Environments (ACE)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-edhoc-oscore-profile-09</span>, <time datetime="2025-10-20" class="refDate">20 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-09">https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-09</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-ace-workflow-and-params">[I-D.ietf-ace-workflow-and-params]</dt>
         <dd>
-<span class="refAuthor">Tiloca, M.</span> and <span class="refAuthor">G. Selander</span>, <span class="refTitle">"Short Distribution Chain (SDC) Workflow and New OAuth Parameters for the Authentication and Authorization for Constrained Environments (ACE) Framework"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-workflow-and-params-04</span>, <time datetime="2025-03-03" class="refDate">3 March 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-workflow-and-params-04">https://datatracker.ietf.org/doc/html/draft-ietf-ace-workflow-and-params-04</a>&gt;</span>. </dd>
+<span class="refAuthor">Tiloca, M.</span> and <span class="refAuthor">G. Selander</span>, <span class="refTitle">"Short Distribution Chain (SDC) Workflow and New OAuth Parameters for the Authentication and Authorization for Constrained Environments (ACE) Framework"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-workflow-and-params-06</span>, <time datetime="2025-10-20" class="refDate">20 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-workflow-and-params-06">https://datatracker.ietf.org/doc/html/draft-ietf-ace-workflow-and-params-06</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-core-oscore-key-limits">[I-D.ietf-core-oscore-key-limits]</dt>
         <dd>
-<span class="refAuthor">Höglund, R.</span> and <span class="refAuthor">M. Tiloca</span>, <span class="refTitle">"Key Usage Limits for OSCORE"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-core-oscore-key-limits-04</span>, <time datetime="2025-01-08" class="refDate">8 January 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-limits-04">https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-limits-04</a>&gt;</span>. </dd>
+<span class="refAuthor">Höglund, R.</span> and <span class="refAuthor">M. Tiloca</span>, <span class="refTitle">"Key Usage Limits for OSCORE"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-core-oscore-key-limits-05</span>, <time datetime="2025-07-07" class="refDate">7 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-limits-05">https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-limits-05</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-core-oscore-key-update">[I-D.ietf-core-oscore-key-update]</dt>
         <dd>
-<span class="refAuthor">Höglund, R.</span> and <span class="refAuthor">M. Tiloca</span>, <span class="refTitle">"Key Update for OSCORE (KUDOS)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-core-oscore-key-update-10</span>, <time datetime="2025-03-03" class="refDate">3 March 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-update-10">https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-update-10</a>&gt;</span>. </dd>
+<span class="refAuthor">Höglund, R.</span> and <span class="refAuthor">M. Tiloca</span>, <span class="refTitle">"Key Update for OSCORE (KUDOS)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-core-oscore-key-update-12</span>, <time datetime="2025-10-20" class="refDate">20 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-update-12">https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-update-12</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-cose-cbor-encoded-cert">[I-D.ietf-cose-cbor-encoded-cert]</dt>
         <dd>
-<span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Raza, S.</span>, <span class="refAuthor">Höglund, J.</span>, and <span class="refAuthor">M. Furuhed</span>, <span class="refTitle">"CBOR Encoded X.509 Certificates (C509 Certificates)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cose-cbor-encoded-cert-13</span>, <time datetime="2025-03-03" class="refDate">3 March 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cose-cbor-encoded-cert-13">https://datatracker.ietf.org/doc/html/draft-ietf-cose-cbor-encoded-cert-13</a>&gt;</span>. </dd>
+<span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Raza, S.</span>, <span class="refAuthor">Höglund, J.</span>, and <span class="refAuthor">M. Furuhed</span>, <span class="refTitle">"CBOR Encoded X.509 Certificates (C509 Certificates)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cose-cbor-encoded-cert-15</span>, <time datetime="2025-08-18" class="refDate">18 August 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cose-cbor-encoded-cert-15">https://datatracker.ietf.org/doc/html/draft-ietf-cose-cbor-encoded-cert-15</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-lake-authz">[I-D.ietf-lake-authz]</dt>
         <dd>
-<span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Vučinić, M.</span>, <span class="refAuthor">Fedrecheski, G.</span>, and <span class="refAuthor">M. Richardson</span>, <span class="refTitle">"Lightweight Authorization using Ephemeral Diffie-Hellman Over COSE (ELA)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lake-authz-04</span>, <time datetime="2025-03-03" class="refDate">3 March 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lake-authz-04">https://datatracker.ietf.org/doc/html/draft-ietf-lake-authz-04</a>&gt;</span>. </dd>
+<span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Vučinić, M.</span>, <span class="refAuthor">Fedrecheski, G.</span>, and <span class="refAuthor">M. Richardson</span>, <span class="refTitle">"Lightweight Authorization using Ephemeral Diffie-Hellman Over COSE (ELA)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lake-authz-06</span>, <time datetime="2025-10-20" class="refDate">20 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lake-authz-06">https://datatracker.ietf.org/doc/html/draft-ietf-lake-authz-06</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2986">[RFC2986]</dt>
         <dd>
@@ -2961,7 +2958,7 @@ These states and transitions should be amended or removed, in order to reduce th
       </h2>
 <p id="appendix-A-1">As mentioned in <a href="#sec-message-side-processing-m1" class="auto internal xref">Section 4.1</a>, future developments in EDHOC and in related external security applications might rely on an EAD item in EDHOC message_1 that specifies the authentication credential CRED associated with the Initiator (by value or by reference), as wrapped in a cryptographically protected "envelope".<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <p id="appendix-A-2">In order to handle such a case, the processing of an incoming EDHOC message_1 as described in <a href="#sec-message-side-processing-m1" class="auto internal xref">Section 4.1</a> is extended with additional steps performed by the SPO.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
-<p id="appendix-A-3">Such an extended side processing shares similarities with that of an incoming EDHOC message_2 or message_3 (see <a href="#sec-message-side-processing-m2-m3" class="auto internal xref">Section 4.3</a>). In particular, similarly to what is compiled in <a href="#sec-pre-verif-phase-1" class="auto internal xref">Section 4.3.2</a> and <a href="#sec-pre-verif-phase-2" class="auto internal xref">Section 4.3.3</a>, it consists of the following steps.<a href="#appendix-A-3" class="pilcrow">¶</a></p>
+<p id="appendix-A-3">Such an extended side processing shares similarities with that of an incoming EDHOC message_2 or message_3 (see <a href="#sec-message-side-processing-m2-m3" class="auto internal xref">Section 4.3</a>). In particular, similarly to what is compiled in <a href="#sec-pre-verif-phase-1" class="auto internal xref">Section 4.3.1.1</a> and <a href="#sec-pre-verif-phase-2" class="auto internal xref">Section 4.3.1.2</a>, it consists of the following steps.<a href="#appendix-A-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-A-4.1">
           <p id="appendix-A-4.1.1">(0) The SPO checks the presence of an EAD item that specifies the authentication credential CRED associated with the Initiator (by value or by reference).<a href="#appendix-A-4.1.1" class="pilcrow">¶</a></p>
@@ -2971,14 +2968,14 @@ If no such EAD item is found, the SPO moves to Step 12. Otherwise, the SPO moves
         <li class="normal" id="appendix-A-4.2">
           <p id="appendix-A-4.2.1">(1) The SPO determines CRED based on an EAD item retrieved at Step 0.<a href="#appendix-A-4.2.1" class="pilcrow">¶</a></p>
 <p id="appendix-A-4.2.2">
-The EAD item may specify CRED by value or by reference, including a URI or other external reference where CRED can be retrieved from.<a href="#appendix-A-4.2.2" class="pilcrow">¶</a></p>
+The EAD item can specify CRED by value or by reference, including a URI or other external reference where CRED can be retrieved from.<a href="#appendix-A-4.2.2" class="pilcrow">¶</a></p>
 <p id="appendix-A-4.2.3">
 If CRED is already installed, the SPO moves to Step 2. Otherwise, the SPO moves to Step 3.<a href="#appendix-A-4.2.3" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-4.3">
           <p id="appendix-A-4.3.1">(2) The SPO determines if the stored CRED is currently valid, e.g., by verifying that CRED has not expired and has not been revoked.<a href="#appendix-A-4.3.1" class="pilcrow">¶</a></p>
 <p id="appendix-A-4.3.2">
-Performing such a validation may require the SPO to first process an EAD item included in message_1.<a href="#appendix-A-4.3.2" class="pilcrow">¶</a></p>
+Performing such a validation might require the SPO to first process an EAD item included in message_1.<a href="#appendix-A-4.3.2" class="pilcrow">¶</a></p>
 <p id="appendix-A-4.3.3">
 In case CRED is determined to be valid, the SPO moves to Step 9. Otherwise, the SPO moves to Step 11.<a href="#appendix-A-4.3.3" class="pilcrow">¶</a></p>
 </li>
@@ -2996,7 +2993,7 @@ In case CRED is determined to be valid, the SPO moves to Step 9. Otherwise, the 
 <p id="appendix-A-4.7.2">
 Consistently, the SPO determines if CRED is currently valid, e.g., by verifying that CRED has not expired and has not been revoked. Then, the SPO moves to Step 7.<a href="#appendix-A-4.7.2" class="pilcrow">¶</a></p>
 <p id="appendix-A-4.7.3">
-Validating CRED may require the SPO to first process an EAD item included in message_1.<a href="#appendix-A-4.7.3" class="pilcrow">¶</a></p>
+Validating CRED might require the SPO to first process an EAD item included in message_1.<a href="#appendix-A-4.7.3" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-4.8">
           <p id="appendix-A-4.8.1">(7) If CRED has been determined valid, the SPO moves to Step 8. Otherwise, the SPO moves to Step 11.<a href="#appendix-A-4.8.1" class="pilcrow">¶</a></p>
@@ -3016,7 +3013,7 @@ If this is the case, the SPO moves to Step 10. Otherwise, the SPO moves to Step 
           <p id="appendix-A-4.12.1">(11) The SPO has not found a valid authentication credential associated with the other peer that can be used in the ongoing EDHOC session. Therefore, the EDHOC session with the other peer is aborted.<a href="#appendix-A-4.12.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-4.13">
-          <p id="appendix-A-4.13.1">(12) The SPO processes any EAD item included in message_1 that has not been already processed.<a href="#appendix-A-4.13.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-4.13.1">(12) The SPO processes any EAD item included in message_1 that has not already been processed.<a href="#appendix-A-4.13.1" class="pilcrow">¶</a></p>
 <p id="appendix-A-4.13.2">
 Once all such EAD items have been processed, the SPO transfers control back to EDHOC. When doing so, the SPO also provides EDHOC with any produced EAD items to include in the EAD field of the next outgoing EDHOC message.<a href="#appendix-A-4.13.2" class="pilcrow">¶</a></p>
 </li>
@@ -3353,101 +3350,116 @@ Once all such EAD items have been processed, the SPO transfers control back to E
 <a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-document-updates" class="section-name selfRef">Document Updates</a>
       </h2>
 <p id="appendix-B-1">This section is to be removed before publishing as an RFC.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
-<div id="sec-03-04">
+<div id="sec-04-05">
 <section id="appendix-B.1">
-        <h3 id="name-version-03-to-04">
-<a href="#appendix-B.1" class="section-number selfRef">B.1. </a><a href="#name-version-03-to-04" class="section-name selfRef">Version -03 to -04</a>
+        <h3 id="name-version-04-to-05">
+<a href="#appendix-B.1" class="section-number selfRef">B.1. </a><a href="#name-version-04-to-05" class="section-name selfRef">Version -04 to -05</a>
         </h3>
 <ul class="normal">
 <li class="normal" id="appendix-B.1-1.1">
-            <p id="appendix-B.1-1.1.1">Clarified and re-positioned exceptions to NO-LEARNING policy.<a href="#appendix-B.1-1.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.1-1.1.1">Minor clarifications.<a href="#appendix-B.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-B.1-1.2">
-            <p id="appendix-B.1-1.2.1">Added security considerations.<a href="#appendix-B.1-1.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.1-1.2.1">Editorial fixes and improvements.<a href="#appendix-B.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.1-1.3">
-            <p id="appendix-B.1-1.3.1">Appendix on foreseen advanced processing of incoming EDHOC message_1.<a href="#appendix-B.1-1.3.1" class="pilcrow">¶</a></p>
+        </ul>
+</section>
+</div>
+<div id="sec-03-04">
+<section id="appendix-B.2">
+        <h3 id="name-version-03-to-04">
+<a href="#appendix-B.2" class="section-number selfRef">B.2. </a><a href="#name-version-03-to-04" class="section-name selfRef">Version -03 to -04</a>
+        </h3>
+<ul class="normal">
+<li class="normal" id="appendix-B.2-1.1">
+            <p id="appendix-B.2-1.1.1">Clarified and re-positioned exceptions to NO-LEARNING policy.<a href="#appendix-B.2-1.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.1-1.4">
-            <p id="appendix-B.1-1.4.1">Clarifications and editorial improvements.<a href="#appendix-B.1-1.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.2-1.2">
+            <p id="appendix-B.2-1.2.1">Added security considerations.<a href="#appendix-B.2-1.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-B.2-1.3">
+            <p id="appendix-B.2-1.3.1">Appendix on foreseen advanced processing of incoming EDHOC message_1.<a href="#appendix-B.2-1.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-B.2-1.4">
+            <p id="appendix-B.2-1.4.1">Clarifications and editorial improvements.<a href="#appendix-B.2-1.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
 </div>
 <div id="sec-02-03">
-<section id="appendix-B.2">
+<section id="appendix-B.3">
         <h3 id="name-version-02-to-03">
-<a href="#appendix-B.2" class="section-number selfRef">B.2. </a><a href="#name-version-02-to-03" class="section-name selfRef">Version -02 to -03</a>
+<a href="#appendix-B.3" class="section-number selfRef">B.3. </a><a href="#name-version-02-to-03" class="section-name selfRef">Version -02 to -03</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-B.2-1.1">
-            <p id="appendix-B.2-1.1.1">Consistent use of "trust policy" instead of "trust model".<a href="#appendix-B.2-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-B.3-1.1">
+            <p id="appendix-B.3-1.1.1">Consistent use of "trust policy" instead of "trust model".<a href="#appendix-B.3-1.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.2-1.2">
-            <p id="appendix-B.2-1.2.1">More modular presentation of trust policies and their enforcement.<a href="#appendix-B.2-1.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.3-1.2">
+            <p id="appendix-B.3-1.2.1">More modular presentation of trust policies and their enforcement.<a href="#appendix-B.3-1.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.2-1.3">
-            <p id="appendix-B.2-1.3.1">Alignment with use of EDHOC in the EDHOC and OSCORE profile of ACE.<a href="#appendix-B.2-1.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.3-1.3">
+            <p id="appendix-B.3-1.3.1">Alignment with use of EDHOC in the EDHOC and OSCORE profile of ACE.<a href="#appendix-B.3-1.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.2-1.4">
-            <p id="appendix-B.2-1.4.1">Note on follow-up actions for the application after EDHOC completion.<a href="#appendix-B.2-1.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.3-1.4">
+            <p id="appendix-B.3-1.4.1">Note on follow-up actions for the application after EDHOC completion.<a href="#appendix-B.3-1.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.2-1.5">
-            <p id="appendix-B.2-1.5.1">Removed moot section on special handling when using the EDHOC and OSCORE profile of ACE.<a href="#appendix-B.2-1.5.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.3-1.5">
+            <p id="appendix-B.3-1.5.1">Removed moot section on special handling when using the EDHOC and OSCORE profile of ACE.<a href="#appendix-B.3-1.5.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.2-1.6">
-            <p id="appendix-B.2-1.6.1">Consistency checks of authentication credentials from ID_CRED and EAD items.<a href="#appendix-B.2-1.6.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.3-1.6">
+            <p id="appendix-B.3-1.6.1">Consistency checks of authentication credentials from ID_CRED and EAD items.<a href="#appendix-B.3-1.6.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.2-1.7">
-            <p id="appendix-B.2-1.7.1">Updated reference.<a href="#appendix-B.2-1.7.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.3-1.7">
+            <p id="appendix-B.3-1.7.1">Updated reference.<a href="#appendix-B.3-1.7.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.2-1.8">
-            <p id="appendix-B.2-1.8.1">Clarifications and editorial improvements.<a href="#appendix-B.2-1.8.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.3-1.8">
+            <p id="appendix-B.3-1.8.1">Clarifications and editorial improvements.<a href="#appendix-B.3-1.8.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
 </div>
 <div id="sec-01-02">
-<section id="appendix-B.3">
+<section id="appendix-B.4">
         <h3 id="name-version-01-to-02">
-<a href="#appendix-B.3" class="section-number selfRef">B.3. </a><a href="#name-version-01-to-02" class="section-name selfRef">Version -01 to -02</a>
+<a href="#appendix-B.4" class="section-number selfRef">B.4. </a><a href="#name-version-01-to-02" class="section-name selfRef">Version -01 to -02</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-B.3-1.1">
-            <p id="appendix-B.3-1.1.1">Improved content on the EDHOC and OSCORE profile of ACE.<a href="#appendix-B.3-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-B.4-1.1">
+            <p id="appendix-B.4-1.1.1">Improved content on the EDHOC and OSCORE profile of ACE.<a href="#appendix-B.4-1.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.3-1.2">
-            <p id="appendix-B.3-1.2.1">Admit situation-specific exceptions to the "NO-LEARNING" policy.<a href="#appendix-B.3-1.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.4-1.2">
+            <p id="appendix-B.4-1.2.1">Admit situation-specific exceptions to the "NO-LEARNING" policy.<a href="#appendix-B.4-1.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.3-1.3">
-            <p id="appendix-B.3-1.3.1">Using the EDHOC and OSCORE profile of ACE with the "NO-LEARNING" policy.<a href="#appendix-B.3-1.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.4-1.3">
+            <p id="appendix-B.4-1.3.1">Using the EDHOC and OSCORE profile of ACE with the "NO-LEARNING" policy.<a href="#appendix-B.4-1.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.3-1.4">
-            <p id="appendix-B.3-1.4.1">Revised guidelines on using EDHOC with CoAP and Block-wise.<a href="#appendix-B.3-1.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.4-1.4">
+            <p id="appendix-B.4-1.4.1">Revised guidelines on using EDHOC with CoAP and Block-wise.<a href="#appendix-B.4-1.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.3-1.5">
-            <p id="appendix-B.3-1.5.1">Editorial improvements.<a href="#appendix-B.3-1.5.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.4-1.5">
+            <p id="appendix-B.4-1.5.1">Editorial improvements.<a href="#appendix-B.4-1.5.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
 </div>
 <div id="sec-00-01">
-<section id="appendix-B.4">
+<section id="appendix-B.5">
         <h3 id="name-version-00-to-01">
-<a href="#appendix-B.4" class="section-number selfRef">B.4. </a><a href="#name-version-00-to-01" class="section-name selfRef">Version -00 to -01</a>
+<a href="#appendix-B.5" class="section-number selfRef">B.5. </a><a href="#name-version-00-to-01" class="section-name selfRef">Version -00 to -01</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-B.4-1.1">
-            <p id="appendix-B.4-1.1.1">Added considerations on trust policies when using the EDHOC and OSCORE profile of the ACE framework.<a href="#appendix-B.4-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-B.5-1.1">
+            <p id="appendix-B.5-1.1.1">Added considerations on trust policies when using the EDHOC and OSCORE profile of the ACE framework.<a href="#appendix-B.5-1.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.4-1.2">
-            <p id="appendix-B.4-1.2.1">Placeholder section on special processing when using the EDHOC and OSCORE profile of the ACE framework.<a href="#appendix-B.4-1.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.5-1.2">
+            <p id="appendix-B.5-1.2.1">Placeholder section on special processing when using the EDHOC and OSCORE profile of the ACE framework.<a href="#appendix-B.5-1.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.4-1.3">
-            <p id="appendix-B.4-1.3.1">Added considerations on using EDHOC with CoAP and Block-wise.<a href="#appendix-B.4-1.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.5-1.3">
+            <p id="appendix-B.5-1.3.1">Added considerations on using EDHOC with CoAP and Block-wise.<a href="#appendix-B.5-1.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.4-1.4">
-            <p id="appendix-B.4-1.4.1">Editorial improvements.<a href="#appendix-B.4-1.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.5-1.4">
+            <p id="appendix-B.5-1.4.1">Editorial improvements.<a href="#appendix-B.5-1.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>

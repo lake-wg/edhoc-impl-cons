@@ -4,8 +4,8 @@
 
 LAKE Working Group                                             M. Tiloca
 Internet-Draft                                                   RISE AB
-Intended status: Informational                              22 June 2025
-Expires: 24 December 2025
+Intended status: Informational                          22 December 2025
+Expires: 25 June 2026
 
 
   Implementation Considerations for Ephemeral Diffie-Hellman Over COSE
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 December 2025.
+   This Internet-Draft will expire on 25 June 2026.
 
 Copyright Notice
 
@@ -81,10 +81,8 @@ Table of Contents
      4.2.  EDHOC message_4
      4.3.  EDHOC message_2 and message_3
        4.3.1.  Pre-Verification Side Processing
-       4.3.2.  PHASE_1
-       4.3.3.  PHASE_2
-       4.3.4.  Post-Verification Side Processing
-       4.3.5.  Flowcharts
+       4.3.2.  Post-Verification Side Processing
+       4.3.3.  Flowcharts
      4.4.  Consistency Checks of Authentication Credentials from
            ID_CRED and EAD Items
    5.  Using EDHOC over CoAP with Block-Wise
@@ -100,10 +98,11 @@ Table of Contents
    Appendix A.  Foreseen Advanced Processing of Incoming EDHOC
            message_1
    Appendix B.  Document Updates
-     B.1.  Version -03 to -04
-     B.2.  Version -02 to -03
-     B.3.  Version -01 to -02
-     B.4.  Version -00 to -01
+     B.1.  Version -04 to -05
+     B.2.  Version -03 to -04
+     B.3.  Version -02 to -03
+     B.4.  Version -01 to -02
+     B.5.  Version -00 to -01
    Acknowledgments
    Author's Address
 
@@ -120,7 +119,7 @@ Table of Contents
    protocol in itself.  Hence, they are not discussed in [RFC9528],
    which rightly focuses on specifying the actual protocol.
 
-   At the same time, implementors of an application using the EDHOC
+   At the same time, implementers of an application using the EDHOC
    protocol or of an "EDHOC library" enabling its use cannot simply
    ignore such topics and will have to take them into account throughout
    their implementation work.
@@ -129,7 +128,7 @@ Table of Contents
    assessments of those topics, as well as to facilitate and guide
    implementation activities, this document collects such topics and
    discusses them through considerations about the implementation of
-   EDHOC.  At a high-level, the topics in question are summarized below.
+   EDHOC.  At a high-level, the topics in question are summarized below:
 
    *  Handling of completed EDHOC sessions when they become invalid and
       of application keys derived from an EDHOC session when those
@@ -176,8 +175,8 @@ Table of Contents
    concerning the handling of EDHOC sessions and application keys, in
    the event that any of those becomes invalid.
 
-   To provide more concrete guidance, the following also considers the
-   case where "applications keys" stands for the keying material and
+   To provide more concrete guidance, the following considers the case
+   where "applications keys" stands for the keying material and
    parameters that compose a Security Context for the security protocol
    Object Security for Constrained RESTful Environments (OSCORE)
    [RFC8613], i.e., when specifically those application keys are derived
@@ -203,19 +202,19 @@ Table of Contents
    The flowchart in Figure 1 shows the handling of an EDHOC session that
    has become invalid.
 
-   Invalid     Delete the EDHOC session      Rerun     Derive and
-   EDHOC   --> and the application keys  --> EDHOC --> install new
-   session     derived from it                         application keys
+  Invalid      Delete the EDHOC session      Rerun      Derive and
+  EDHOC   ---> and the application keys ---> EDHOC ---> install new
+  session      derived from it                          application keys
 
-      Figure 1: Handling of an EDHOC Session that Has Become Invalid.
+     Figure 1: Handling of an EDHOC Session that Has Become Invalid.
 
    An EDHOC session may have become invalid, for example, because an
-   authentication credential CRED_X may have expired, or because the
-   peer P may have learned from a trusted source that CRED_X has been
-   revoked.  This effectively invalidates CRED_X, and therefore also
-   invalidates any EDHOC session where CRED_X was used as authentication
-   credential associated with either peer in the session (i.e., P itself
-   or the other peer).  In such a case, the application at P has to
+   authentication credential CRED_X has expired, or because the peer P
+   has learned from a trusted source that CRED_X has been revoked.  This
+   effectively invalidates CRED_X, and therefore also invalidates any
+   EDHOC session where CRED_X was used as authentication credential
+   associated with either peer in the session (i.e., P itself or the
+   other peer).  In such a case, the application at P has to
    additionally delete CRED_X and any stored, corresponding credential
    identifier.
 
@@ -225,15 +224,15 @@ Table of Contents
    application keys is not safe to use anymore.  When such a set is
    specifically an OSCORE Security Context, the application may have
    learned that from the used OSCORE library or from an OSCORE layer
-   that takes part to the communication stack.
+   that takes part in the communication stack.
 
    A current set SET of application keys shared with another peer can
    become unsafe to use, for example, due to the following reasons:
 
    *  SET has reached a pre-determined expiration time;
 
-   *  SET has been established to use for a now elapsed amount of time,
-      according to enforced application policies; or
+   *  SET has been established to use for an amount of time that is now
+      elapsed, according to enforced application policies; or
 
    *  Some elements of SET have been used enough times to approach
       cryptographic limits that should not be passed, e.g., according to
@@ -241,7 +240,7 @@ Table of Contents
       particular reference to an OSCORE Security Context, such limits
       are discussed in [I-D.ietf-core-oscore-key-limits].
 
-   When this happens, the application at the peer P proceeds as follows.
+   When this happens, the application at the peer P proceeds as follows:
 
    1.  If the following conditions both hold, then the application moves
        to Step 2.  Otherwise, it moves to Step 3.
@@ -249,10 +248,10 @@ Table of Contents
        *  Let us define S as the EDHOC session from which the peer P has
           derived SET or the eldest SET's ancestor set of application
           keys.  Then, since the completion of S with the other peer,
-          the application at P has received from the other peer at least
-          one message protected with any set of application keys derived
-          from S.  That is, P has persisted S (see Section 5.4.2 of
-          [RFC9528]).
+          the application at P has received from the other peer and
+          successfully verified at least one message protected with any
+          set of application keys derived from S.  That is, P has
+          persisted S (see Section 5.4.2 of [RFC9528]).
 
        *  The peer P supports a key update protocol, as an alternative
           to performing a new execution of EDHOC with the other peer.
@@ -339,7 +338,7 @@ Table of Contents
    When doing so, one of the two peers acts as ACE resource server (RS)
    hosting protected resources.  The other peer acts as ACE client and
    requests an access token from an ACE authorization server (AS) that
-   is in trust relationship with the RS.  The access token specifies
+   is in a trust relationship with the RS.  The access token specifies
    access rights for accessing protected resources at the RS as well as
    the public authentication credential of the client, namely
    AUTH_CRED_C.
@@ -366,10 +365,10 @@ Table of Contents
    Later on, the application at one of the two peers P may have learned
    that the established OSCORE Security Context CTX is not safe to use
    anymore, e.g., from the used OSCORE library or from an OSCORE layer
-   that takes part to the communication stack.  The reasons that make
+   that takes part in the communication stack.  The reasons that make
    CTX not safe to use anymore are the same ones discussed in
    Section 2.2 when considering a set of application keys in general,
-   plus the event where the access token bound to CTX becomes invalid
+   plus the event that the access token bound to CTX becomes invalid
    (e.g., it has expired or it has been revoked).
 
    When this happens, the application at the peer P proceeds as follows.
@@ -384,10 +383,10 @@ Table of Contents
        *  Let us define S as the EDHOC session from which the peer P has
           derived CTX or the eldest CTX's ancestor OSCORE Security
           Context.  Then, since the completion of S with the other peer,
-          the application at P has received from the other peer at least
-          one message protected with any set of application keys derived
-          from S.  That is, P has persisted S (see Section 5.4.2 of
-          [RFC9528]).
+          the application at P has received from the other peer and
+          successfully verified at least one message protected with any
+          set of application keys derived from S.  That is, P has
+          persisted S (see Section 5.4.2 of [RFC9528]).
 
    2.  If the peer P supports the key update protocol KUDOS
        [I-D.ietf-core-oscore-key-update], then P runs KUDOS with the
@@ -627,8 +626,8 @@ Table of Contents
    If the peer P admits such an exception and actually enforces it on an
    authentication credential CRED, then P effectively handles CRED
    according to the trust policy "LEARNING" specified in Section 3.1.
-   When doing so, P still attempts to validate CRED and aborts the EDHOC
-   session in case of failed validation.
+   When doing so, P still attempts to validate CRED, and it aborts the
+   EDHOC session if the validation process is not successful.
 
 3.3.  Enforcement of Trust Policies in Specific Scenarios
 
@@ -717,7 +716,7 @@ Table of Contents
    surrounding context and the meaning of the information passed to and
    from the application".
 
-   The approach described in this section aims to help implementors
+   The approach described in this section aims to help implementers
    navigate the surrounding context mentioned above, irrespective of the
    specific EAD items conveyed in the EDHOC messages.  In particular,
    the described approach takes into account the following points:
@@ -732,16 +731,17 @@ Table of Contents
       The validation of the authentication credential might depend on
       using the value of an EAD item, which in turn has to be validated
       first.  For instance, an EAD item within the EAD_2 field of EDHOC
-      message_2 may contain a voucher to be used for validating the
+      message_2 might contain a voucher to be used for validating the
       authentication credential associated with the Responder (see
       [I-D.ietf-lake-authz]).
 
-   *  Some EAD items may be processed only after having successfully
-      verified the EDHOC message, i.e., after a successful verification
-      of the Signature_or_MAC field in EDHOC message_2 or message_3.
+   *  It is possible that some EAD items can be processed only after
+      having successfully verified the EDHOC message, i.e., after a
+      successful verification of the Signature_or_MAC field in EDHOC
+      message_2 or message_3.
 
       For instance, an EAD item within the EAD_3 field of EDHOC
-      message_3 may contain a Certificate Signing Request (CSR)
+      message_3 might contain a Certificate Signing Request (CSR)
       [RFC2986].  Hence, such an EAD item can be processed only once the
       recipient peer has attained proof that the other peer possesses
       its private key.
@@ -907,26 +907,27 @@ Table of Contents
 
    *  Right after message_X has been successfully verified.  Following
       this invocation, the SPO performs the actions described in
-      Section 4.3.4.
+      Section 4.3.2.
 
-   The flowcharts in Section 4.3.5 show the high-level interaction
+   The flowcharts in Section 4.3.3 show the high-level interaction
    between the core EDHOC processing and the SPO, as well as the
    different steps taken for processing an incoming message_X.
 
 4.3.1.  Pre-Verification Side Processing
 
    The pre-verification side processing occurs in two sequential phases,
-   namely PHASE_1 (see Section 4.3.2) and PHASE_2 (see Section 4.3.3).
+   namely PHASE_1 (see Section 4.3.1.1) and PHASE_2 (see
+   Section 4.3.1.2).
 
-4.3.2.  PHASE_1
+4.3.1.1.  PHASE_1
 
    During PHASE_1, the SPO at the recipient peer P determines CRED,
    i.e., the authentication credential associated with the other peer to
    be used in the ongoing EDHOC session.  In particular, the SPO
    performs the following steps.
 
-   1.   The SPO determines CRED based on ID_CRED_X or on an EAD item in
-        message_X.
+   1.   The SPO determines CRED based on ID_CRED_X or on an EAD item
+        included in message_X.
 
         Those may specify CRED by value or by reference, including a URI
         or other external reference where CRED can be retrieved from.
@@ -937,7 +938,7 @@ Table of Contents
    2.   The SPO determines if the stored CRED is currently valid, e.g.,
         by verifying that CRED has not expired and has not been revoked.
 
-        Performing such a validation may require the SPO to first
+        Performing such a validation might require the SPO to first
         process an EAD item included in message_X.  For example, it can
         be an EAD item in EDHOC message_2 that confirms or revokes the
         validity of CRED_R specified by ID_CRED_R, as the result of an
@@ -967,9 +968,9 @@ Table of Contents
         e.g., by verifying that CRED has not expired and has not been
         revoked.  Then, the SPO moves to Step 7.
 
-        Validating CRED may require the SPO to first process an EAD item
-        included in message_X.  For example, it can be an EAD item in
-        EDHOC message_2 that: i) specifies a voucher for validating
+        Validating CRED might require the SPO to first process an EAD
+        item included in message_X.  For example, it can be an EAD item
+        in EDHOC message_2 that: i) specifies a voucher for validating
         CRED_R as a CWT Claims Set (CCS) [RFC8392] transported by value
         in ID_CRED_R (see [I-D.ietf-lake-authz]); or instead ii) an OCSP
         response [RFC6960] for validating CRED_R as a public key
@@ -994,19 +995,19 @@ Table of Contents
         other peer in the ongoing EDHOC session.
 
         Then, PHASE_1 ends and the pre-verification side processing
-        moves to the next PHASE_2 (see Section 4.3.3).
+        moves to the next PHASE_2 (see Section 4.3.1.2).
 
    11.  The SPO has not found a valid authentication credential
         associated with the other peer that can be used in the ongoing
         EDHOC session.  Therefore, the EDHOC session with the other peer
         is aborted.
 
-4.3.3.  PHASE_2
+4.3.1.2.  PHASE_2
 
    During PHASE_2, the SPO processes any EAD item included in message_X
    such that both the following conditions hold:
 
-   *  The EAD item has _not_ been already processed during PHASE_1.
+   *  The EAD item has _not_ already been processed during PHASE_1.
 
    *  The EAD item can be processed before performing the verification
       of message_X.
@@ -1016,7 +1017,7 @@ Table of Contents
    or continues the processing of message_X with its corresponding
    message verification.
 
-4.3.4.  Post-Verification Side Processing
+4.3.2.  Post-Verification Side Processing
 
    During the post-verification side processing, the SPO processes any
    EAD item included in message_X such that the processing of that EAD
@@ -1039,7 +1040,7 @@ Table of Contents
 
    Then, EDHOC resumes its execution and advances its protocol state.
 
-4.3.5.  Flowcharts
+4.3.3.  Flowcharts
 
    The flowchart in Figure 4 shows the high-level interaction between
    the core EDHOC processing and the SPO, with particular reference to
@@ -1093,7 +1094,7 @@ Table of Contents
  | |   used trust policy       |        : next EDHOC message :         |
  | +---------------------------+        :....................:         |
  |                                                                     |
- |                                               Side-Processor Object |
+ |                                         Side-Processor Object (SPO) |
  +---------------------------------------------------------------------+
 
         Figure 4: High-Level Interaction Between the Core EDHOC
@@ -1295,7 +1296,7 @@ Table of Contents
    such a consistency check fails.
 
    The consistency check is successful only if one of the following
-   conditions hold and it fails otherwise:
+   conditions holds and it fails otherwise:
 
    *  If both ITEM_A and ITEM_B specify an authentication credential by
       value, then both ITEM_A and ITEM_B specify the same value.
@@ -1601,48 +1602,48 @@ Table of Contents
               Security for Constrained Environments (OSCORE) Profile for
               Authentication and Authorization for Constrained
               Environments (ACE)", Work in Progress, Internet-Draft,
-              draft-ietf-ace-edhoc-oscore-profile-07, 3 March 2025,
+              draft-ietf-ace-edhoc-oscore-profile-09, 20 October 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
-              edhoc-oscore-profile-07>.
+              edhoc-oscore-profile-09>.
 
    [I-D.ietf-ace-workflow-and-params]
               Tiloca, M. and G. Selander, "Short Distribution Chain
               (SDC) Workflow and New OAuth Parameters for the
               Authentication and Authorization for Constrained
               Environments (ACE) Framework", Work in Progress, Internet-
-              Draft, draft-ietf-ace-workflow-and-params-04, 3 March
+              Draft, draft-ietf-ace-workflow-and-params-06, 20 October
               2025, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              ace-workflow-and-params-04>.
+              ace-workflow-and-params-06>.
 
    [I-D.ietf-core-oscore-key-limits]
               Höglund, R. and M. Tiloca, "Key Usage Limits for OSCORE",
               Work in Progress, Internet-Draft, draft-ietf-core-oscore-
-              key-limits-04, 8 January 2025,
+              key-limits-05, 7 July 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-core-
-              oscore-key-limits-04>.
+              oscore-key-limits-05>.
 
    [I-D.ietf-core-oscore-key-update]
               Höglund, R. and M. Tiloca, "Key Update for OSCORE
               (KUDOS)", Work in Progress, Internet-Draft, draft-ietf-
-              core-oscore-key-update-10, 3 March 2025,
+              core-oscore-key-update-12, 20 October 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-core-
-              oscore-key-update-10>.
+              oscore-key-update-12>.
 
    [I-D.ietf-cose-cbor-encoded-cert]
               Mattsson, J. P., Selander, G., Raza, S., Höglund, J., and
               M. Furuhed, "CBOR Encoded X.509 Certificates (C509
               Certificates)", Work in Progress, Internet-Draft, draft-
-              ietf-cose-cbor-encoded-cert-13, 3 March 2025,
+              ietf-cose-cbor-encoded-cert-15, 18 August 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-cose-
-              cbor-encoded-cert-13>.
+              cbor-encoded-cert-15>.
 
    [I-D.ietf-lake-authz]
               Selander, G., Mattsson, J. P., Vučinić, M., Fedrecheski,
               G., and M. Richardson, "Lightweight Authorization using
               Ephemeral Diffie-Hellman Over COSE (ELA)", Work in
-              Progress, Internet-Draft, draft-ietf-lake-authz-04, 3
-              March 2025, <https://datatracker.ietf.org/doc/html/draft-
-              ietf-lake-authz-04>.
+              Progress, Internet-Draft, draft-ietf-lake-authz-06, 20
+              October 2025, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-lake-authz-06>.
 
    [RFC2986]  Nystrom, M. and B. Kaliski, "PKCS #10: Certification
               Request Syntax Specification Version 1.7", RFC 2986,
@@ -1685,8 +1686,8 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
 
    Such an extended side processing shares similarities with that of an
    incoming EDHOC message_2 or message_3 (see Section 4.3).  In
-   particular, similarly to what is compiled in Section 4.3.2 and
-   Section 4.3.3, it consists of the following steps.
+   particular, similarly to what is compiled in Section 4.3.1.1 and
+   Section 4.3.1.2, it consists of the following steps.
 
    *  (0) The SPO checks the presence of an EAD item that specifies the
       authentication credential CRED associated with the Initiator (by
@@ -1698,7 +1699,7 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
    *  (1) The SPO determines CRED based on an EAD item retrieved at Step
       0.
 
-      The EAD item may specify CRED by value or by reference, including
+      The EAD item can specify CRED by value or by reference, including
       a URI or other external reference where CRED can be retrieved
       from.
 
@@ -1709,8 +1710,8 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
       e.g., by verifying that CRED has not expired and has not been
       revoked.
 
-      Performing such a validation may require the SPO to first process
-      an EAD item included in message_1.
+      Performing such a validation might require the SPO to first
+      process an EAD item included in message_1.
 
       In case CRED is determined to be valid, the SPO moves to Step 9.
       Otherwise, the SPO moves to Step 11.
@@ -1736,7 +1737,7 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
       by verifying that CRED has not expired and has not been revoked.
       Then, the SPO moves to Step 7.
 
-      Validating CRED may require the SPO to first process an EAD item
+      Validating CRED might require the SPO to first process an EAD item
       included in message_1.
 
    *  (7) If CRED has been determined valid, the SPO moves to Step 8.
@@ -1764,7 +1765,7 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
       is aborted.
 
    *  (12) The SPO processes any EAD item included in message_1 that has
-      not been already processed.
+      not already been processed.
 
       Once all such EAD items have been processed, the SPO transfers
       control back to EDHOC.  When doing so, the SPO also provides EDHOC
@@ -1888,7 +1889,13 @@ Appendix B.  Document Updates
 
    This section is to be removed before publishing as an RFC.
 
-B.1.  Version -03 to -04
+B.1.  Version -04 to -05
+
+   *  Minor clarifications.
+
+   *  Editorial fixes and improvements.
+
+B.2.  Version -03 to -04
 
    *  Clarified and re-positioned exceptions to NO-LEARNING policy.
 
@@ -1899,7 +1906,7 @@ B.1.  Version -03 to -04
 
    *  Clarifications and editorial improvements.
 
-B.2.  Version -02 to -03
+B.3.  Version -02 to -03
 
    *  Consistent use of "trust policy" instead of "trust model".
 
@@ -1921,7 +1928,7 @@ B.2.  Version -02 to -03
 
    *  Clarifications and editorial improvements.
 
-B.3.  Version -01 to -02
+B.4.  Version -01 to -02
 
    *  Improved content on the EDHOC and OSCORE profile of ACE.
 
@@ -1934,7 +1941,7 @@ B.3.  Version -01 to -02
 
    *  Editorial improvements.
 
-B.4.  Version -00 to -01
+B.5.  Version -00 to -01
 
    *  Added considerations on trust policies when using the EDHOC and
       OSCORE profile of the ACE framework.
