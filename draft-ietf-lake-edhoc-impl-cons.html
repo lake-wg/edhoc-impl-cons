@@ -17,14 +17,14 @@
     Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
-    intervaltree 3.1.0
+    intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.0.2
     platformdirs 4.5.1
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.32.5
-    wcwidth 0.2.14
+    wcwidth 0.3.0
 -->
 <link href="draft-ietf-lake-edhoc-impl-cons.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -565,6 +565,7 @@ aside, blockquote {
 }
 blockquote {
   margin: 1em 0;
+  border-left: 2px var(--pilcrow-strong) solid;
 }
 cite {
   display: block;
@@ -635,7 +636,7 @@ a.pilcrow {
   }
 }
 @media not print {
-  :hover > a.pilcrow {
+  :hover > a.pilcrow, a.pilcrow:focus {
     opacity: 1;
   }
   a.pilcrow[href]:hover {
@@ -1043,11 +1044,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Implementation Considerations for EDHOC</td>
-<td class="right">December 2025</td>
+<td class="right">February 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tiloca</td>
-<td class="center">Expires 25 June 2026</td>
+<td class="center">Expires 11 August 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1060,12 +1061,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lake-edhoc-impl-cons-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-12-22" class="published">22 December 2025</time>
+<time datetime="2026-02-07" class="published">7 February 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-06-25">25 June 2026</time></dd>
+<dd class="expires"><time datetime="2026-08-11">11 August 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1110,7 +1111,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 25 June 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 11 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1119,7 +1120,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2025 IETF Trust and the persons identified as the
+            Copyright (c) 2026 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1254,19 +1255,22 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.10.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-document-updates" class="internal xref">Document Updates</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
-                <p id="section-toc.1-1.10.2.1.1"><a href="#appendix-B.1" class="auto internal xref">B.1</a>.  <a href="#name-version-04-to-05" class="internal xref">Version -04 to -05</a></p>
+                <p id="section-toc.1-1.10.2.1.1"><a href="#appendix-B.1" class="auto internal xref">B.1</a>.  <a href="#name-version-05-to-06" class="internal xref">Version -05 to -06</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
-                <p id="section-toc.1-1.10.2.2.1"><a href="#appendix-B.2" class="auto internal xref">B.2</a>.  <a href="#name-version-03-to-04" class="internal xref">Version -03 to -04</a></p>
+                <p id="section-toc.1-1.10.2.2.1"><a href="#appendix-B.2" class="auto internal xref">B.2</a>.  <a href="#name-version-04-to-05" class="internal xref">Version -04 to -05</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.3">
-                <p id="section-toc.1-1.10.2.3.1"><a href="#appendix-B.3" class="auto internal xref">B.3</a>.  <a href="#name-version-02-to-03" class="internal xref">Version -02 to -03</a></p>
+                <p id="section-toc.1-1.10.2.3.1"><a href="#appendix-B.3" class="auto internal xref">B.3</a>.  <a href="#name-version-03-to-04" class="internal xref">Version -03 to -04</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.4">
-                <p id="section-toc.1-1.10.2.4.1"><a href="#appendix-B.4" class="auto internal xref">B.4</a>.  <a href="#name-version-01-to-02" class="internal xref">Version -01 to -02</a></p>
+                <p id="section-toc.1-1.10.2.4.1"><a href="#appendix-B.4" class="auto internal xref">B.4</a>.  <a href="#name-version-02-to-03" class="internal xref">Version -02 to -03</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.5">
-                <p id="section-toc.1-1.10.2.5.1"><a href="#appendix-B.5" class="auto internal xref">B.5</a>.  <a href="#name-version-00-to-01" class="internal xref">Version -00 to -01</a></p>
+                <p id="section-toc.1-1.10.2.5.1"><a href="#appendix-B.5" class="auto internal xref">B.5</a>.  <a href="#name-version-01-to-02" class="internal xref">Version -01 to -02</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.6">
+                <p id="section-toc.1-1.10.2.6.1"><a href="#appendix-B.6" class="auto internal xref">B.6</a>.  <a href="#name-version-00-to-01" class="internal xref">Version -00 to -01</a></p>
 </li>
             </ul>
 </li>
@@ -1388,7 +1392,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         <h3 id="name-application-keys-become-inv">
 <a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-application-keys-become-inv" class="section-name selfRef">Application Keys Become Invalid</a>
         </h3>
-<p id="section-2.2-1">The application at a peer P may have learned that a set of application keys is not safe to use anymore. When such a set is specifically an OSCORE Security Context, the application may have learned that from the used OSCORE library or from an OSCORE layer that takes part in the communication stack.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.2-1">The application at a peer P may have learned that a set of application keys is not safe to use anymore. When such a set is specifically an OSCORE Security Context, the application may have learned that from the OSCORE library used or from an OSCORE layer that takes part in the communication stack.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
 <p id="section-2.2-2">A current set SET of application keys shared with another peer can become unsafe to use, for example, due to the following reasons:<a href="#section-2.2-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2.2-3.1">
@@ -1526,7 +1530,7 @@ If the key update protocol terminates successfully, the updated application keys
 <p id="section-2.3-3">After that, C uploads the access token to the RS, by means of an EAD item included in an EDHOC message during the EDHOC execution (see below). Alternatively, the AS can upload the access token to the RS on behalf of the client, as per the alternative Short Distribution Chain (SDC) workflow defined in <span>[<a href="#I-D.ietf-ace-workflow-and-params" class="cite xref">I-D.ietf-ace-workflow-and-params</a>]</span>.<a href="#section-2.3-3" class="pilcrow">¶</a></p>
 <p id="section-2.3-4">Consistent with the EDHOC and OSCORE profile of ACE, the two peers run EDHOC in order to specifically derive an OSCORE Security Context as their shared set of application keys (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.1" class="relref">Appendix A.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>). At the RS, the access token is bound to the successfully completed EDHOC session and to the established OSCORE Security Context.<a href="#section-2.3-4" class="pilcrow">¶</a></p>
 <p id="section-2.3-5">After that, the peer acting as ACE client can access the protected resources hosted at the other peer acting as RS, according to the access rights specified in the access token. The communications between the two peers are protected by means of the established OSCORE Security Context.<a href="#section-2.3-5" class="pilcrow">¶</a></p>
-<p id="section-2.3-6">Later on, the application at one of the two peers P may have learned that the established OSCORE Security Context CTX is not safe to use anymore, e.g., from the used OSCORE library or from an OSCORE layer that takes part in the communication stack. The reasons that make CTX not safe to use anymore are the same ones discussed in <a href="#sec-keys-invalid" class="auto internal xref">Section 2.2</a> when considering a set of application keys in general, plus the event that the access token bound to CTX becomes invalid (e.g., it has expired or it has been revoked).<a href="#section-2.3-6" class="pilcrow">¶</a></p>
+<p id="section-2.3-6">Later on, the application at one of the two peers P may have learned that the established OSCORE Security Context CTX is not safe to use anymore, e.g., from the OSCORE library used or from an OSCORE layer that takes part in the communication stack. The reasons that make CTX not safe to use anymore are the same ones discussed in <a href="#sec-keys-invalid" class="auto internal xref">Section 2.2</a> when considering a set of application keys in general, plus the event that the access token bound to CTX becomes invalid (e.g., it has expired or it has been revoked).<a href="#section-2.3-6" class="pilcrow">¶</a></p>
 <p id="section-2.3-7">When this happens, the application at the peer P proceeds as follows.<a href="#section-2.3-7" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-2.3-8">
 <li id="section-2.3-8.1">
@@ -1830,12 +1834,12 @@ The validation of the authentication credential might depend on using the value 
         <li class="normal" id="section-4-4.2">
           <p id="section-4-4.2.1">It is possible that some EAD items can be processed only after having successfully verified the EDHOC message, i.e., after a successful verification of the Signature_or_MAC field in EDHOC message_2 or message_3.<a href="#section-4-4.2.1" class="pilcrow">¶</a></p>
 <p id="section-4-4.2.2">
-For instance, an EAD item within the EAD_3 field of EDHOC message_3 might contain a Certificate Signing Request (CSR) <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>. Hence, such an EAD item can be processed only once the recipient peer has attained proof that the other peer possesses its private key.<a href="#section-4-4.2.2" class="pilcrow">¶</a></p>
+For instance, an EAD item within the EAD_3 field of EDHOC message_3 might contain a Certificate Signing Request (CSR) <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>. Hence, such an EAD item can be processed only once the recipient peer has attained proof that the other peer possesses its own private key.<a href="#section-4-4.2.2" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-4-5">In order to conveniently handle such processing, the application can prepare in advance a "side-processor object" (SPO), which takes care of the operations above during the EDHOC execution.<a href="#section-4-5" class="pilcrow">¶</a></p>
 <p id="section-4-6">In particular, the application provides EDHOC with the SPO before starting an EDHOC execution, during which EDHOC will temporarily transfer control to the SPO at the right point in time, in order to perform the required side-processing of an incoming EDHOC message.<a href="#section-4-6" class="pilcrow">¶</a></p>
-<p id="section-4-7">Furthermore, the application has to instruct the SPO about how to prepare any EAD item such that: it has to be included in an outgoing EDHOC message; and it is independent of the processing of other EAD items included in incoming EDHOC messages. This includes, for instance, the preparation of padding EAD items.<a href="#section-4-7" class="pilcrow">¶</a></p>
+<p id="section-4-7">Furthermore, the application has to instruct the SPO about how to prepare any EAD item such that: it has to be included in an outgoing EDHOC message; and it is independent of the processing of other EAD items included in incoming EDHOC messages. This includes, for instance, the preparation of padding EAD items (see <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.8.1" class="relref">Section 3.8.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-4-7" class="pilcrow">¶</a></p>
 <p id="section-4-8">At the right point in time during the processing of an incoming EDHOC message M at the peer P, EDHOC invokes the SPO and provides it with the following input:<a href="#section-4-8" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4-9.1">
@@ -2207,9 +2211,9 @@ Then, PHASE_1 ends and the pre-verification side processing moves to the next PH
                     <text x="408" y="740">for</text>
                     <text x="440" y="740">the</text>
                     <text x="488" y="740">:</text>
-                    <text x="68" y="756">used</text>
-                    <text x="112" y="756">trust</text>
-                    <text x="164" y="756">policy</text>
+                    <text x="72" y="756">trust</text>
+                    <text x="124" y="756">policy</text>
+                    <text x="172" y="756">used</text>
                     <text x="320" y="756">:</text>
                     <text x="348" y="756">next</text>
                     <text x="392" y="756">EDHOC</text>
@@ -2232,7 +2236,7 @@ Then, PHASE_1 ends and the pre-verification side processing moves to the next PH
 <figure id="figure-5">
             <div id="section-4.3.3-4.1">
               <div class="alignCenter art-svg artwork" id="section-4.3.3-4.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2416" width="568" viewBox="0 0 568 2416" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2416" width="576" viewBox="0 0 576 2416" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                   <path d="M 8,512 L 8,1408" fill="none" stroke="black"></path>
                   <path d="M 8,1456 L 8,1584" fill="none" stroke="black"></path>
                   <path d="M 8,1936 L 8,2176" fill="none" stroke="black"></path>
@@ -2290,18 +2294,18 @@ Then, PHASE_1 ends and the pre-verification side processing moves to the next PH
                   <path d="M 416,560 L 416,640" fill="none" stroke="black"></path>
                   <path d="M 416,1936 L 416,2176" fill="none" stroke="black"></path>
                   <path d="M 432,648 L 432,688" fill="none" stroke="black"></path>
-                  <path d="M 432,1040 L 432,1088" fill="none" stroke="black"></path>
+                  <path d="M 440,1040 L 440,1088" fill="none" stroke="black"></path>
                   <path d="M 480,1504 L 480,1552" fill="none" stroke="black"></path>
                   <path d="M 512,648 L 512,744" fill="none" stroke="black"></path>
                   <path d="M 512,872 L 512,1032" fill="none" stroke="black"></path>
-                  <path d="M 512,1096 L 512,1144" fill="none" stroke="black"></path>
+                  <path d="M 520,1096 L 520,1144" fill="none" stroke="black"></path>
                   <path d="M 528,560 L 528,640" fill="none" stroke="black"></path>
-                  <path d="M 544,752 L 544,864" fill="none" stroke="black"></path>
-                  <path d="M 544,1040 L 544,1088" fill="none" stroke="black"></path>
-                  <path d="M 544,1152 L 544,1184" fill="none" stroke="black"></path>
-                  <path d="M 544,1248 L 544,1376" fill="none" stroke="black"></path>
-                  <path d="M 560,512 L 560,1408" fill="none" stroke="black"></path>
-                  <path d="M 560,1456 L 560,1584" fill="none" stroke="black"></path>
+                  <path d="M 552,752 L 552,864" fill="none" stroke="black"></path>
+                  <path d="M 552,1040 L 552,1088" fill="none" stroke="black"></path>
+                  <path d="M 552,1152 L 552,1184" fill="none" stroke="black"></path>
+                  <path d="M 552,1248 L 552,1376" fill="none" stroke="black"></path>
+                  <path d="M 568,512 L 568,1408" fill="none" stroke="black"></path>
+                  <path d="M 568,1456 L 568,1584" fill="none" stroke="black"></path>
                   <path d="M 16,144 L 176,144" fill="none" stroke="black"></path>
                   <path d="M 200,144 L 224,144" fill="none" stroke="black"></path>
                   <path d="M 16,176 L 176,176" fill="none" stroke="black"></path>
@@ -2312,7 +2316,7 @@ Then, PHASE_1 ends and the pre-verification side processing moves to the next PH
                   <path d="M 16,384 L 176,384" fill="none" stroke="black"></path>
                   <path d="M 200,384 L 224,384" fill="none" stroke="black"></path>
                   <path d="M 8,512 L 80,512" fill="none" stroke="black"></path>
-                  <path d="M 96,512 L 560,512" fill="none" stroke="black"></path>
+                  <path d="M 96,512 L 568,512" fill="none" stroke="black"></path>
                   <path d="M 24,560 L 200,560" fill="none" stroke="black"></path>
                   <path d="M 248,560 L 368,560" fill="none" stroke="black"></path>
                   <path d="M 416,560 L 528,560" fill="none" stroke="black"></path>
@@ -2324,33 +2328,33 @@ Then, PHASE_1 ends and the pre-verification side processing moves to the next PH
                   <path d="M 296,688 L 432,688" fill="none" stroke="black"></path>
                   <path d="M 24,752 L 168,752" fill="none" stroke="black"></path>
                   <path d="M 248,752 L 344,752" fill="none" stroke="black"></path>
-                  <path d="M 408,752 L 544,752" fill="none" stroke="black"></path>
+                  <path d="M 408,752 L 552,752" fill="none" stroke="black"></path>
                   <path d="M 176,768 L 240,768" fill="none" stroke="black"></path>
                   <path d="M 352,768 L 400,768" fill="none" stroke="black"></path>
                   <path d="M 24,800 L 168,800" fill="none" stroke="black"></path>
-                  <path d="M 408,864 L 544,864" fill="none" stroke="black"></path>
+                  <path d="M 408,864 L 552,864" fill="none" stroke="black"></path>
                   <path d="M 24,912 L 192,912" fill="none" stroke="black"></path>
                   <path d="M 200,928 L 240,928" fill="none" stroke="black"></path>
                   <path d="M 248,944 L 344,944" fill="none" stroke="black"></path>
                   <path d="M 200,976 L 248,976" fill="none" stroke="black"></path>
                   <path d="M 24,992 L 192,992" fill="none" stroke="black"></path>
-                  <path d="M 432,1040 L 544,1040" fill="none" stroke="black"></path>
-                  <path d="M 432,1088 L 544,1088" fill="none" stroke="black"></path>
-                  <path d="M 296,1152 L 544,1152" fill="none" stroke="black"></path>
-                  <path d="M 296,1184 L 544,1184" fill="none" stroke="black"></path>
+                  <path d="M 440,1040 L 552,1040" fill="none" stroke="black"></path>
+                  <path d="M 440,1088 L 552,1088" fill="none" stroke="black"></path>
+                  <path d="M 296,1152 L 552,1152" fill="none" stroke="black"></path>
+                  <path d="M 296,1184 L 552,1184" fill="none" stroke="black"></path>
                   <path d="M 24,1248 L 176,1248" fill="none" stroke="black"></path>
-                  <path d="M 296,1248 L 544,1248" fill="none" stroke="black"></path>
+                  <path d="M 296,1248 L 552,1248" fill="none" stroke="black"></path>
                   <path d="M 248,1280 L 288,1280" fill="none" stroke="black"></path>
                   <path d="M 24,1376 L 176,1376" fill="none" stroke="black"></path>
-                  <path d="M 296,1376 L 544,1376" fill="none" stroke="black"></path>
+                  <path d="M 296,1376 L 552,1376" fill="none" stroke="black"></path>
                   <path d="M 8,1408 L 80,1408" fill="none" stroke="black"></path>
-                  <path d="M 96,1408 L 560,1408" fill="none" stroke="black"></path>
+                  <path d="M 96,1408 L 568,1408" fill="none" stroke="black"></path>
                   <path d="M 8,1456 L 80,1456" fill="none" stroke="black"></path>
-                  <path d="M 96,1456 L 560,1456" fill="none" stroke="black"></path>
+                  <path d="M 96,1456 L 568,1456" fill="none" stroke="black"></path>
                   <path d="M 24,1504 L 480,1504" fill="none" stroke="black"></path>
                   <path d="M 24,1552 L 480,1552" fill="none" stroke="black"></path>
                   <path d="M 8,1584 L 80,1584" fill="none" stroke="black"></path>
-                  <path d="M 96,1584 L 560,1584" fill="none" stroke="black"></path>
+                  <path d="M 96,1584 L 568,1584" fill="none" stroke="black"></path>
                   <path d="M 16,1760 L 168,1760" fill="none" stroke="black"></path>
                   <path d="M 16,1792 L 168,1792" fill="none" stroke="black"></path>
                   <path d="M 8,1936 L 80,1936" fill="none" stroke="black"></path>
@@ -2363,7 +2367,7 @@ Then, PHASE_1 ends and the pre-verification side processing moves to the next PH
                   <path d="M 96,2176 L 416,2176" fill="none" stroke="black"></path>
                   <path d="M 16,2352 L 152,2352" fill="none" stroke="black"></path>
                   <path d="M 16,2400 L 152,2400" fill="none" stroke="black"></path>
-                  <polygon class="arrowhead" points="520,1144 508,1138.4 508,1149.6" fill="black" transform="rotate(90,512,1144)"></polygon>
+                  <polygon class="arrowhead" points="528,1144 516,1138.4 516,1149.6" fill="black" transform="rotate(90,520,1144)"></polygon>
                   <polygon class="arrowhead" points="520,1032 508,1026.4 508,1037.6" fill="black" transform="rotate(90,512,1032)"></polygon>
                   <polygon class="arrowhead" points="520,744 508,738.4 508,749.6" fill="black" transform="rotate(90,512,744)"></polygon>
                   <polygon class="arrowhead" points="416,592 404,586.4 404,597.6" fill="black" transform="rotate(0,408,592)"></polygon>
@@ -2416,10 +2420,10 @@ Then, PHASE_1 ends and the pre-verification side processing moves to the next PH
                     <text x="24" y="468">the</text>
                     <text x="100" y="468">side-processor</text>
                     <text x="188" y="468">object</text>
-                    <text x="252" y="532">Pre-verification</text>
-                    <text x="340" y="532">side</text>
-                    <text x="404" y="532">processing</text>
-                    <text x="488" y="532">(PHASE_1)</text>
+                    <text x="260" y="532">Pre-verification</text>
+                    <text x="348" y="532">side</text>
+                    <text x="412" y="532">processing</text>
+                    <text x="496" y="532">(PHASE_1)</text>
                     <text x="44" y="580">1.</text>
                     <text x="76" y="580">Does</text>
                     <text x="136" y="580">ID_CRED_X</text>
@@ -2464,13 +2468,13 @@ Then, PHASE_1 ends and the pre-verification side processing moves to the next PH
                     <text x="428" y="772">5.</text>
                     <text x="452" y="772">Is</text>
                     <text x="480" y="772">the</text>
-                    <text x="516" y="772">used</text>
+                    <text x="520" y="772">trust</text>
                     <text x="56" y="788">still</text>
                     <text x="108" y="788">valid?</text>
                     <text x="272" y="788">the</text>
                     <text x="312" y="788">EDHOC</text>
-                    <text x="440" y="788">trust</text>
-                    <text x="492" y="788">policy</text>
+                    <text x="444" y="788">policy</text>
+                    <text x="492" y="788">used</text>
                     <text x="288" y="804">session</text>
                     <text x="476" y="804">"NO-LEARNING",</text>
                     <text x="448" y="820">without</text>
@@ -2478,39 +2482,39 @@ Then, PHASE_1 ends and the pre-verification side processing moves to the next PH
                     <text x="460" y="836">acceptable</text>
                     <text x="464" y="852">exceptions?</text>
                     <text x="112" y="884">YES</text>
-                    <text x="396" y="900">Here</text>
-                    <text x="432" y="900">the</text>
-                    <text x="468" y="900">used</text>
+                    <text x="404" y="900">Here</text>
+                    <text x="440" y="900">the</text>
+                    <text x="480" y="900">trust</text>
                     <text x="532" y="900">NO</text>
                     <text x="212" y="916">NO</text>
-                    <text x="400" y="916">trust</text>
-                    <text x="452" y="916">policy</text>
+                    <text x="412" y="916">policy</text>
+                    <text x="460" y="916">used</text>
                     <text x="492" y="916">is</text>
                     <text x="44" y="932">9.</text>
                     <text x="68" y="932">Is</text>
                     <text x="100" y="932">this</text>
                     <text x="140" y="932">CRED</text>
-                    <text x="424" y="932">"LEARNING",</text>
-                    <text x="484" y="932">or</text>
+                    <text x="432" y="932">"LEARNING",</text>
+                    <text x="492" y="932">or</text>
                     <text x="52" y="948">good</text>
                     <text x="84" y="948">to</text>
                     <text x="112" y="948">use</text>
                     <text x="140" y="948">in</text>
                     <text x="168" y="948">the</text>
-                    <text x="432" y="948">"NO-LEARNING"</text>
+                    <text x="440" y="948">"NO-LEARNING"</text>
                     <text x="64" y="964">context</text>
                     <text x="108" y="964">of</text>
                     <text x="140" y="964">this</text>
-                    <text x="412" y="964">together</text>
-                    <text x="468" y="964">with</text>
+                    <text x="420" y="964">together</text>
+                    <text x="476" y="964">with</text>
                     <text x="56" y="980">EDHOC</text>
                     <text x="116" y="980">session?</text>
-                    <text x="388" y="980">an</text>
-                    <text x="444" y="980">overriding</text>
-                    <text x="416" y="996">exception</text>
-                    <text x="452" y="1060">6.</text>
-                    <text x="500" y="1060">Validate</text>
-                    <text x="460" y="1076">CRED</text>
+                    <text x="396" y="980">an</text>
+                    <text x="452" y="980">overriding</text>
+                    <text x="424" y="996">exception</text>
+                    <text x="460" y="1060">6.</text>
+                    <text x="508" y="1060">Validate</text>
+                    <text x="468" y="1076">CRED</text>
                     <text x="112" y="1124">YES</text>
                     <text x="340" y="1124">NO</text>
                     <text x="316" y="1172">7.</text>
@@ -2669,7 +2673,7 @@ Then, PHASE_1 ends and the pre-verification side processing moves to the next PH
 </li>
         </ul>
 <p id="section-4.4-6">As part of the process where P1 validates CRED during the EDHOC session, P1 must check that both ITEM_A and ITEM_B specify the same authentication credential, and it must abort the EDHOC session if such a consistency check fails.<a href="#section-4.4-6" class="pilcrow">¶</a></p>
-<p id="section-4.4-7">The consistency check is successful only if one of the following conditions holds and it fails otherwise:<a href="#section-4.4-7" class="pilcrow">¶</a></p>
+<p id="section-4.4-7">The consistency check is successful only if one of the following conditions holds, and it fails otherwise:<a href="#section-4.4-7" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.4-8.1">
             <p id="section-4.4-8.1.1">If both ITEM_A and ITEM_B specify an authentication credential by value, then both ITEM_A and ITEM_B specify the same value.<a href="#section-4.4-8.1.1" class="pilcrow">¶</a></p>
@@ -2691,7 +2695,7 @@ Then, PHASE_1 ends and the pre-verification side processing moves to the next PH
       <h2 id="name-using-edhoc-over-coap-with-">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-using-edhoc-over-coap-with-" class="section-name selfRef">Using EDHOC over CoAP with Block-Wise</a>
       </h2>
-<p id="section-5-1"><span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.2" class="relref">Appendix A.2</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span> specifies how to transfer EDHOC over CoAP <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>. In such a case, the EDHOC messages (possibly prepended by an EDHOC connection identifier) are transported in the payload of CoAP requests and responses, according to the EDHOC forward message flow or the EDHOC reverse message flow. Furthermore, <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.1" class="relref">Appendix A.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span> specifies how to derive an OSCORE Security Context <span>[<a href="#RFC8613" class="cite xref">RFC8613</a>]</span> from an EDHOC session.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-1"><span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.2" class="relref">Appendix A.2</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span> specifies how to transfer EDHOC over CoAP <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>. In such a case, EDHOC messages (possibly prepended by an EDHOC connection identifier) are transported in the payload of CoAP requests and responses, according to the EDHOC forward message flow or the EDHOC reverse message flow. Furthermore, <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.1" class="relref">Appendix A.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span> specifies how to derive an OSCORE Security Context <span>[<a href="#RFC8613" class="cite xref">RFC8613</a>]</span> from an EDHOC session.<a href="#section-5-1" class="pilcrow">¶</a></p>
 <p id="section-5-2">Building on that, <span>[<a href="#RFC9668" class="cite xref">RFC9668</a>]</span> further details the use of EDHOC with CoAP and OSCORE. In particular, it specifies an optimization approach for the EDHOC forward message flow that combines the EDHOC execution with the first subsequent OSCORE transaction. This is achieved by means of an "EDHOC + OSCORE request", i.e., a single CoAP request message that conveys both EDHOC message_3 of the ongoing EDHOC session and the OSCORE-protected application data, where the latter is protected with the OSCORE Security Context derived from that EDHOC session.<a href="#section-5-2" class="pilcrow">¶</a></p>
 <p id="section-5-3">This section provides guidelines and recommendations for CoAP endpoints supporting Block-wise transfers for CoAP <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span> and specifically for CoAP clients supporting the EDHOC + OSCORE request defined in <span>[<a href="#RFC9668" class="cite xref">RFC9668</a>]</span>. The use of Block-wise transfers can be desirable, e.g., for EDHOC messages that include a large ID_CRED_I or ID_CRED_R, or that include a large EAD field.<a href="#section-5-3" class="pilcrow">¶</a></p>
 <p id="section-5-4">The following especially considers a CoAP endpoint that may perform only "inner" Block-wise, but not "outer" Block-wise operations (see <span><a href="https://rfc-editor.org/rfc/rfc8613#section-4.1.3.4" class="relref">Section 4.1.3.4</a> of [<a href="#RFC8613" class="cite xref">RFC8613</a>]</span>). That is, the considered CoAP endpoint does not (further) split an OSCORE-protected message like an intermediary (e.g., a proxy) might do. This is the typical case for CoAP endpoints using OSCORE (see <span><a href="https://rfc-editor.org/rfc/rfc8613#section-4.1.3.4" class="relref">Section 4.1.3.4</a> of [<a href="#RFC8613" class="cite xref">RFC8613</a>]</span>).<a href="#section-5-4" class="pilcrow">¶</a></p>
@@ -2705,7 +2709,7 @@ Then, PHASE_1 ends and the pre-verification side processing moves to the next PH
 <li class="normal" id="section-5.1-2.1">
             <p id="section-5.1-2.1.1">SIZE_BODY: the size in bytes of the data to be transmitted with CoAP. When Block-wise is used, such data is referred to as the "body" to be fragmented into blocks, each of which to be transmitted in one CoAP message.<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
 <p id="section-5.1-2.1.2">
-With the exception of EDHOC message_3, the considered body can also be an EDHOC message, possibly prepended by an EDHOC connection identifier encoded as per <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>.<a href="#section-5.1-2.1.2" class="pilcrow">¶</a></p>
+With the exception pertaining to EDHOC message_3 described in the following paragraph, the considered body can in general be an EDHOC message, possibly prepended by an EDHOC connection identifier encoded as per <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>.<a href="#section-5.1-2.1.2" class="pilcrow">¶</a></p>
 <p id="section-5.1-2.1.3">
 When specifically using the EDHOC + OSCORE request, the considered body is the application data to be protected with OSCORE, (whose first block is) to be sent together with EDHOC message_3 as part of the EDHOC + OSCORE request.<a href="#section-5.1-2.1.3" class="pilcrow">¶</a></p>
 </li>
@@ -2828,7 +2832,7 @@ When specifically using the EDHOC + OSCORE request, the considered body is the a
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
 <p id="section-6-1">This document provides considerations for implementations of the EDHOC protocol. The security considerations compiled in <span><a href="https://rfc-editor.org/rfc/rfc9528#section-9" class="relref">Section 9</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span> and in <span><a href="https://rfc-editor.org/rfc/rfc9668#section-7" class="relref">Section 7</a> of [<a href="#RFC9668" class="cite xref">RFC9668</a>]</span> apply. The compliance requirements for implementations that are listed in <span><a href="https://rfc-editor.org/rfc/rfc9528#section-8" class="relref">Section 8</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span> also apply.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">It is foreseeable that the EDHOC protocol will be extended (e.g., as to new cipher suites, new methods, and new types of authentication credentials) and that external security applications will be integrated into EDHOC by embedding the transport of their data in EDHOC EAD items. For implementations that support such extensions and external applications, the related security considerations and compliance requirements also apply.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-2">It is foreseeable that the EDHOC protocol will be extended (e.g., in terms of new cipher suites, new methods, and new types of authentication credentials) and that external security applications will be integrated into EDHOC by embedding the transport of their data in EDHOC EAD items. For implementations that support such extensions and external applications, the related security considerations and compliance requirements also apply.<a href="#section-6-2" class="pilcrow">¶</a></p>
 <div id="assessing-the-correctness-of-implementations">
 <section id="section-6.1">
         <h3 id="name-assessing-the-correctness-o">
@@ -2912,7 +2916,7 @@ These states and transitions should be amended or removed, in order to reduce th
 <dd class="break"></dd>
 <dt id="I-D.ietf-core-oscore-key-limits">[I-D.ietf-core-oscore-key-limits]</dt>
         <dd>
-<span class="refAuthor">Höglund, R.</span> and <span class="refAuthor">M. Tiloca</span>, <span class="refTitle">"Key Usage Limits for OSCORE"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-core-oscore-key-limits-05</span>, <time datetime="2025-07-07" class="refDate">7 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-limits-05">https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-limits-05</a>&gt;</span>. </dd>
+<span class="refAuthor">Höglund, R.</span> and <span class="refAuthor">M. Tiloca</span>, <span class="refTitle">"Key Usage Limits for OSCORE"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-core-oscore-key-limits-06</span>, <time datetime="2026-01-07" class="refDate">7 January 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-limits-06">https://datatracker.ietf.org/doc/html/draft-ietf-core-oscore-key-limits-06</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-core-oscore-key-update">[I-D.ietf-core-oscore-key-update]</dt>
         <dd>
@@ -2920,7 +2924,7 @@ These states and transitions should be amended or removed, in order to reduce th
 <dd class="break"></dd>
 <dt id="I-D.ietf-cose-cbor-encoded-cert">[I-D.ietf-cose-cbor-encoded-cert]</dt>
         <dd>
-<span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Raza, S.</span>, <span class="refAuthor">Höglund, J.</span>, and <span class="refAuthor">M. Furuhed</span>, <span class="refTitle">"CBOR Encoded X.509 Certificates (C509 Certificates)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cose-cbor-encoded-cert-15</span>, <time datetime="2025-08-18" class="refDate">18 August 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cose-cbor-encoded-cert-15">https://datatracker.ietf.org/doc/html/draft-ietf-cose-cbor-encoded-cert-15</a>&gt;</span>. </dd>
+<span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Raza, S.</span>, <span class="refAuthor">Höglund, J.</span>, and <span class="refAuthor">M. Furuhed</span>, <span class="refTitle">"CBOR Encoded X.509 Certificates (C509 Certificates)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cose-cbor-encoded-cert-16</span>, <time datetime="2026-01-25" class="refDate">25 January 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cose-cbor-encoded-cert-16">https://datatracker.ietf.org/doc/html/draft-ietf-cose-cbor-encoded-cert-16</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-lake-authz">[I-D.ietf-lake-authz]</dt>
         <dd>
@@ -3023,7 +3027,7 @@ Once all such EAD items have been processed, the SPO transfers control back to E
 <figure id="figure-6">
         <div id="appendix-A-6.1">
           <div class="alignCenter art-svg artwork" id="appendix-A-6.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="1744" width="568" viewBox="0 0 568 1744" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="1744" width="576" viewBox="0 0 576 1744" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
               <path d="M 8,400 L 8,1504" fill="none" stroke="black"></path>
               <path d="M 16,128 L 16,160" fill="none" stroke="black"></path>
               <path d="M 16,224 L 16,272" fill="none" stroke="black"></path>
@@ -3068,17 +3072,17 @@ Once all such EAD items have been processed, the SPO transfers control back to E
               <path d="M 408,560 L 408,640" fill="none" stroke="black"></path>
               <path d="M 408,752 L 408,864" fill="none" stroke="black"></path>
               <path d="M 432,648 L 432,688" fill="none" stroke="black"></path>
-              <path d="M 432,1040 L 432,1088" fill="none" stroke="black"></path>
+              <path d="M 440,1040 L 440,1088" fill="none" stroke="black"></path>
               <path d="M 512,648 L 512,744" fill="none" stroke="black"></path>
               <path d="M 512,872 L 512,1032" fill="none" stroke="black"></path>
-              <path d="M 512,1096 L 512,1144" fill="none" stroke="black"></path>
               <path d="M 512,1440 L 512,1472" fill="none" stroke="black"></path>
               <path d="M 520,560 L 520,640" fill="none" stroke="black"></path>
-              <path d="M 544,752 L 544,864" fill="none" stroke="black"></path>
-              <path d="M 544,1040 L 544,1088" fill="none" stroke="black"></path>
-              <path d="M 544,1152 L 544,1184" fill="none" stroke="black"></path>
-              <path d="M 544,1248 L 544,1376" fill="none" stroke="black"></path>
-              <path d="M 560,400 L 560,1504" fill="none" stroke="black"></path>
+              <path d="M 520,1096 L 520,1144" fill="none" stroke="black"></path>
+              <path d="M 552,752 L 552,864" fill="none" stroke="black"></path>
+              <path d="M 552,1040 L 552,1088" fill="none" stroke="black"></path>
+              <path d="M 552,1152 L 552,1184" fill="none" stroke="black"></path>
+              <path d="M 552,1248 L 552,1376" fill="none" stroke="black"></path>
+              <path d="M 568,400 L 568,1504" fill="none" stroke="black"></path>
               <path d="M 16,128 L 176,128" fill="none" stroke="black"></path>
               <path d="M 200,128 L 224,128" fill="none" stroke="black"></path>
               <path d="M 16,160 L 176,160" fill="none" stroke="black"></path>
@@ -3087,7 +3091,7 @@ Once all such EAD items have been processed, the SPO transfers control back to E
               <path d="M 16,272 L 176,272" fill="none" stroke="black"></path>
               <path d="M 200,272 L 224,272" fill="none" stroke="black"></path>
               <path d="M 8,400 L 88,400" fill="none" stroke="black"></path>
-              <path d="M 104,400 L 560,400" fill="none" stroke="black"></path>
+              <path d="M 104,400 L 568,400" fill="none" stroke="black"></path>
               <path d="M 24,448 L 192,448" fill="none" stroke="black"></path>
               <path d="M 24,496 L 192,496" fill="none" stroke="black"></path>
               <path d="M 64,560 L 200,560" fill="none" stroke="black"></path>
@@ -3101,32 +3105,32 @@ Once all such EAD items have been processed, the SPO transfers control back to E
               <path d="M 296,688 L 432,688" fill="none" stroke="black"></path>
               <path d="M 56,752 L 200,752" fill="none" stroke="black"></path>
               <path d="M 248,752 L 344,752" fill="none" stroke="black"></path>
-              <path d="M 408,752 L 544,752" fill="none" stroke="black"></path>
+              <path d="M 408,752 L 552,752" fill="none" stroke="black"></path>
               <path d="M 208,768 L 240,768" fill="none" stroke="black"></path>
               <path d="M 352,768 L 400,768" fill="none" stroke="black"></path>
               <path d="M 56,800 L 200,800" fill="none" stroke="black"></path>
-              <path d="M 408,864 L 544,864" fill="none" stroke="black"></path>
+              <path d="M 408,864 L 552,864" fill="none" stroke="black"></path>
               <path d="M 56,912 L 200,912" fill="none" stroke="black"></path>
               <path d="M 208,928 L 240,928" fill="none" stroke="black"></path>
               <path d="M 248,944 L 344,944" fill="none" stroke="black"></path>
               <path d="M 208,976 L 248,976" fill="none" stroke="black"></path>
               <path d="M 56,1008 L 200,1008" fill="none" stroke="black"></path>
-              <path d="M 432,1040 L 544,1040" fill="none" stroke="black"></path>
-              <path d="M 432,1088 L 544,1088" fill="none" stroke="black"></path>
-              <path d="M 296,1152 L 544,1152" fill="none" stroke="black"></path>
-              <path d="M 296,1184 L 544,1184" fill="none" stroke="black"></path>
+              <path d="M 440,1040 L 552,1040" fill="none" stroke="black"></path>
+              <path d="M 440,1088 L 552,1088" fill="none" stroke="black"></path>
+              <path d="M 296,1152 L 552,1152" fill="none" stroke="black"></path>
+              <path d="M 296,1184 L 552,1184" fill="none" stroke="black"></path>
               <path d="M 56,1248 L 208,1248" fill="none" stroke="black"></path>
-              <path d="M 296,1248 L 544,1248" fill="none" stroke="black"></path>
+              <path d="M 296,1248 L 552,1248" fill="none" stroke="black"></path>
               <path d="M 248,1280 L 288,1280" fill="none" stroke="black"></path>
               <path d="M 56,1376 L 208,1376" fill="none" stroke="black"></path>
-              <path d="M 296,1376 L 544,1376" fill="none" stroke="black"></path>
+              <path d="M 296,1376 L 552,1376" fill="none" stroke="black"></path>
               <path d="M 24,1440 L 512,1440" fill="none" stroke="black"></path>
               <path d="M 24,1472 L 512,1472" fill="none" stroke="black"></path>
               <path d="M 8,1504 L 80,1504" fill="none" stroke="black"></path>
-              <path d="M 96,1504 L 560,1504" fill="none" stroke="black"></path>
+              <path d="M 96,1504 L 568,1504" fill="none" stroke="black"></path>
               <path d="M 16,1680 L 152,1680" fill="none" stroke="black"></path>
               <path d="M 16,1728 L 152,1728" fill="none" stroke="black"></path>
-              <polygon class="arrowhead" points="520,1144 508,1138.4 508,1149.6" fill="black" transform="rotate(90,512,1144)"></polygon>
+              <polygon class="arrowhead" points="528,1144 516,1138.4 516,1149.6" fill="black" transform="rotate(90,520,1144)"></polygon>
               <polygon class="arrowhead" points="520,1032 508,1026.4 508,1037.6" fill="black" transform="rotate(90,512,1032)"></polygon>
               <polygon class="arrowhead" points="520,744 508,738.4 508,749.6" fill="black" transform="rotate(90,512,744)"></polygon>
               <polygon class="arrowhead" points="408,592 396,586.4 396,597.6" fill="black" transform="rotate(0,400,592)"></polygon>
@@ -3168,8 +3172,8 @@ Once all such EAD items have been processed, the SPO transfers control back to E
                 <text x="24" y="356">the</text>
                 <text x="100" y="356">side-processor</text>
                 <text x="188" y="356">object</text>
-                <text x="412" y="420">Side</text>
-                <text x="476" y="420">processing</text>
+                <text x="420" y="420">Side</text>
+                <text x="484" y="420">processing</text>
                 <text x="44" y="468">0.</text>
                 <text x="76" y="468">Does</text>
                 <text x="108" y="468">an</text>
@@ -3219,13 +3223,13 @@ Once all such EAD items have been processed, the SPO transfers control back to E
                 <text x="428" y="772">5.</text>
                 <text x="452" y="772">Is</text>
                 <text x="480" y="772">the</text>
-                <text x="516" y="772">used</text>
+                <text x="520" y="772">trust</text>
                 <text x="88" y="788">still</text>
                 <text x="140" y="788">valid?</text>
                 <text x="272" y="788">the</text>
                 <text x="312" y="788">EDHOC</text>
-                <text x="440" y="788">trust</text>
-                <text x="492" y="788">policy</text>
+                <text x="444" y="788">policy</text>
+                <text x="492" y="788">used</text>
                 <text x="288" y="804">session</text>
                 <text x="476" y="804">"NO-LEARNING",</text>
                 <text x="448" y="820">without</text>
@@ -3235,12 +3239,12 @@ Once all such EAD items have been processed, the SPO transfers control back to E
                 <text x="120" y="884">YES</text>
                 <text x="396" y="900">Here</text>
                 <text x="432" y="900">the</text>
-                <text x="468" y="900">used</text>
+                <text x="472" y="900">trust</text>
                 <text x="532" y="900">NO</text>
                 <text x="220" y="916">NO</text>
-                <text x="400" y="916">trust</text>
-                <text x="452" y="916">policy</text>
-                <text x="492" y="916">is</text>
+                <text x="404" y="916">policy</text>
+                <text x="452" y="916">used</text>
+                <text x="484" y="916">is</text>
                 <text x="76" y="932">9.</text>
                 <text x="100" y="932">Is</text>
                 <text x="132" y="932">this</text>
@@ -3263,9 +3267,9 @@ Once all such EAD items have been processed, the SPO transfers control back to E
                 <text x="444" y="980">overriding</text>
                 <text x="100" y="996">session?</text>
                 <text x="416" y="996">exception</text>
-                <text x="452" y="1060">6.</text>
-                <text x="500" y="1060">Validate</text>
-                <text x="460" y="1076">CRED</text>
+                <text x="460" y="1060">6.</text>
+                <text x="508" y="1060">Validate</text>
+                <text x="468" y="1076">CRED</text>
                 <text x="112" y="1124">YES</text>
                 <text x="340" y="1124">NO</text>
                 <text x="316" y="1172">7.</text>
@@ -3350,116 +3354,128 @@ Once all such EAD items have been processed, the SPO transfers control back to E
 <a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-document-updates" class="section-name selfRef">Document Updates</a>
       </h2>
 <p id="appendix-B-1">This section is to be removed before publishing as an RFC.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
-<div id="sec-04-05">
+<div id="sec-05-06">
 <section id="appendix-B.1">
-        <h3 id="name-version-04-to-05">
-<a href="#appendix-B.1" class="section-number selfRef">B.1. </a><a href="#name-version-04-to-05" class="section-name selfRef">Version -04 to -05</a>
+        <h3 id="name-version-05-to-06">
+<a href="#appendix-B.1" class="section-number selfRef">B.1. </a><a href="#name-version-05-to-06" class="section-name selfRef">Version -05 to -06</a>
         </h3>
 <ul class="normal">
 <li class="normal" id="appendix-B.1-1.1">
-            <p id="appendix-B.1-1.1.1">Minor clarifications.<a href="#appendix-B.1-1.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.1-1.1.1">Editorial fixes and improvements.<a href="#appendix-B.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.1-1.2">
-            <p id="appendix-B.1-1.2.1">Editorial fixes and improvements.<a href="#appendix-B.1-1.2.1" class="pilcrow">¶</a></p>
+        </ul>
+</section>
+</div>
+<div id="sec-04-05">
+<section id="appendix-B.2">
+        <h3 id="name-version-04-to-05">
+<a href="#appendix-B.2" class="section-number selfRef">B.2. </a><a href="#name-version-04-to-05" class="section-name selfRef">Version -04 to -05</a>
+        </h3>
+<ul class="normal">
+<li class="normal" id="appendix-B.2-1.1">
+            <p id="appendix-B.2-1.1.1">Minor clarifications.<a href="#appendix-B.2-1.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-B.2-1.2">
+            <p id="appendix-B.2-1.2.1">Editorial fixes and improvements.<a href="#appendix-B.2-1.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
 </div>
 <div id="sec-03-04">
-<section id="appendix-B.2">
+<section id="appendix-B.3">
         <h3 id="name-version-03-to-04">
-<a href="#appendix-B.2" class="section-number selfRef">B.2. </a><a href="#name-version-03-to-04" class="section-name selfRef">Version -03 to -04</a>
+<a href="#appendix-B.3" class="section-number selfRef">B.3. </a><a href="#name-version-03-to-04" class="section-name selfRef">Version -03 to -04</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-B.2-1.1">
-            <p id="appendix-B.2-1.1.1">Clarified and re-positioned exceptions to NO-LEARNING policy.<a href="#appendix-B.2-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-B.3-1.1">
+            <p id="appendix-B.3-1.1.1">Clarified and re-positioned exceptions to NO-LEARNING policy.<a href="#appendix-B.3-1.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.2-1.2">
-            <p id="appendix-B.2-1.2.1">Added security considerations.<a href="#appendix-B.2-1.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.3-1.2">
+            <p id="appendix-B.3-1.2.1">Added security considerations.<a href="#appendix-B.3-1.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.2-1.3">
-            <p id="appendix-B.2-1.3.1">Appendix on foreseen advanced processing of incoming EDHOC message_1.<a href="#appendix-B.2-1.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.3-1.3">
+            <p id="appendix-B.3-1.3.1">Appendix on foreseen advanced processing of incoming EDHOC message_1.<a href="#appendix-B.3-1.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.2-1.4">
-            <p id="appendix-B.2-1.4.1">Clarifications and editorial improvements.<a href="#appendix-B.2-1.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.3-1.4">
+            <p id="appendix-B.3-1.4.1">Clarifications and editorial improvements.<a href="#appendix-B.3-1.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
 </div>
 <div id="sec-02-03">
-<section id="appendix-B.3">
+<section id="appendix-B.4">
         <h3 id="name-version-02-to-03">
-<a href="#appendix-B.3" class="section-number selfRef">B.3. </a><a href="#name-version-02-to-03" class="section-name selfRef">Version -02 to -03</a>
+<a href="#appendix-B.4" class="section-number selfRef">B.4. </a><a href="#name-version-02-to-03" class="section-name selfRef">Version -02 to -03</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-B.3-1.1">
-            <p id="appendix-B.3-1.1.1">Consistent use of "trust policy" instead of "trust model".<a href="#appendix-B.3-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-B.4-1.1">
+            <p id="appendix-B.4-1.1.1">Consistent use of "trust policy" instead of "trust model".<a href="#appendix-B.4-1.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.3-1.2">
-            <p id="appendix-B.3-1.2.1">More modular presentation of trust policies and their enforcement.<a href="#appendix-B.3-1.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.4-1.2">
+            <p id="appendix-B.4-1.2.1">More modular presentation of trust policies and their enforcement.<a href="#appendix-B.4-1.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.3-1.3">
-            <p id="appendix-B.3-1.3.1">Alignment with use of EDHOC in the EDHOC and OSCORE profile of ACE.<a href="#appendix-B.3-1.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.4-1.3">
+            <p id="appendix-B.4-1.3.1">Alignment with use of EDHOC in the EDHOC and OSCORE profile of ACE.<a href="#appendix-B.4-1.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.3-1.4">
-            <p id="appendix-B.3-1.4.1">Note on follow-up actions for the application after EDHOC completion.<a href="#appendix-B.3-1.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.4-1.4">
+            <p id="appendix-B.4-1.4.1">Note on follow-up actions for the application after EDHOC completion.<a href="#appendix-B.4-1.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.3-1.5">
-            <p id="appendix-B.3-1.5.1">Removed moot section on special handling when using the EDHOC and OSCORE profile of ACE.<a href="#appendix-B.3-1.5.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.4-1.5">
+            <p id="appendix-B.4-1.5.1">Removed moot section on special handling when using the EDHOC and OSCORE profile of ACE.<a href="#appendix-B.4-1.5.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.3-1.6">
-            <p id="appendix-B.3-1.6.1">Consistency checks of authentication credentials from ID_CRED and EAD items.<a href="#appendix-B.3-1.6.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.4-1.6">
+            <p id="appendix-B.4-1.6.1">Consistency checks of authentication credentials from ID_CRED and EAD items.<a href="#appendix-B.4-1.6.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.3-1.7">
-            <p id="appendix-B.3-1.7.1">Updated reference.<a href="#appendix-B.3-1.7.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.4-1.7">
+            <p id="appendix-B.4-1.7.1">Updated reference.<a href="#appendix-B.4-1.7.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.3-1.8">
-            <p id="appendix-B.3-1.8.1">Clarifications and editorial improvements.<a href="#appendix-B.3-1.8.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.4-1.8">
+            <p id="appendix-B.4-1.8.1">Clarifications and editorial improvements.<a href="#appendix-B.4-1.8.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
 </div>
 <div id="sec-01-02">
-<section id="appendix-B.4">
+<section id="appendix-B.5">
         <h3 id="name-version-01-to-02">
-<a href="#appendix-B.4" class="section-number selfRef">B.4. </a><a href="#name-version-01-to-02" class="section-name selfRef">Version -01 to -02</a>
+<a href="#appendix-B.5" class="section-number selfRef">B.5. </a><a href="#name-version-01-to-02" class="section-name selfRef">Version -01 to -02</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-B.4-1.1">
-            <p id="appendix-B.4-1.1.1">Improved content on the EDHOC and OSCORE profile of ACE.<a href="#appendix-B.4-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-B.5-1.1">
+            <p id="appendix-B.5-1.1.1">Improved content on the EDHOC and OSCORE profile of ACE.<a href="#appendix-B.5-1.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.4-1.2">
-            <p id="appendix-B.4-1.2.1">Admit situation-specific exceptions to the "NO-LEARNING" policy.<a href="#appendix-B.4-1.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.5-1.2">
+            <p id="appendix-B.5-1.2.1">Admit situation-specific exceptions to the "NO-LEARNING" policy.<a href="#appendix-B.5-1.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.4-1.3">
-            <p id="appendix-B.4-1.3.1">Using the EDHOC and OSCORE profile of ACE with the "NO-LEARNING" policy.<a href="#appendix-B.4-1.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.5-1.3">
+            <p id="appendix-B.5-1.3.1">Using the EDHOC and OSCORE profile of ACE with the "NO-LEARNING" policy.<a href="#appendix-B.5-1.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.4-1.4">
-            <p id="appendix-B.4-1.4.1">Revised guidelines on using EDHOC with CoAP and Block-wise.<a href="#appendix-B.4-1.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.5-1.4">
+            <p id="appendix-B.5-1.4.1">Revised guidelines on using EDHOC with CoAP and Block-wise.<a href="#appendix-B.5-1.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.4-1.5">
-            <p id="appendix-B.4-1.5.1">Editorial improvements.<a href="#appendix-B.4-1.5.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.5-1.5">
+            <p id="appendix-B.5-1.5.1">Editorial improvements.<a href="#appendix-B.5-1.5.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
 </div>
 <div id="sec-00-01">
-<section id="appendix-B.5">
+<section id="appendix-B.6">
         <h3 id="name-version-00-to-01">
-<a href="#appendix-B.5" class="section-number selfRef">B.5. </a><a href="#name-version-00-to-01" class="section-name selfRef">Version -00 to -01</a>
+<a href="#appendix-B.6" class="section-number selfRef">B.6. </a><a href="#name-version-00-to-01" class="section-name selfRef">Version -00 to -01</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-B.5-1.1">
-            <p id="appendix-B.5-1.1.1">Added considerations on trust policies when using the EDHOC and OSCORE profile of the ACE framework.<a href="#appendix-B.5-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-B.6-1.1">
+            <p id="appendix-B.6-1.1.1">Added considerations on trust policies when using the EDHOC and OSCORE profile of the ACE framework.<a href="#appendix-B.6-1.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.5-1.2">
-            <p id="appendix-B.5-1.2.1">Placeholder section on special processing when using the EDHOC and OSCORE profile of the ACE framework.<a href="#appendix-B.5-1.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.6-1.2">
+            <p id="appendix-B.6-1.2.1">Placeholder section on special processing when using the EDHOC and OSCORE profile of the ACE framework.<a href="#appendix-B.6-1.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.5-1.3">
-            <p id="appendix-B.5-1.3.1">Added considerations on using EDHOC with CoAP and Block-wise.<a href="#appendix-B.5-1.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.6-1.3">
+            <p id="appendix-B.6-1.3.1">Added considerations on using EDHOC with CoAP and Block-wise.<a href="#appendix-B.6-1.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.5-1.4">
-            <p id="appendix-B.5-1.4.1">Editorial improvements.<a href="#appendix-B.5-1.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.6-1.4">
+            <p id="appendix-B.6-1.4.1">Editorial improvements.<a href="#appendix-B.6-1.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
