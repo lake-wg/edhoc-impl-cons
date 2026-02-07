@@ -119,7 +119,7 @@ An EDHOC session may have become invalid, for example, because an authentication
 
 ## Application Keys Become Invalid ## {#sec-keys-invalid}
 
-The application at a peer P may have learned that a set of application keys is not safe to use anymore. When such a set is specifically an OSCORE Security Context, the application may have learned that from the used OSCORE library or from an OSCORE layer that takes part in the communication stack.
+The application at a peer P may have learned that a set of application keys is not safe to use anymore. When such a set is specifically an OSCORE Security Context, the application may have learned that from the OSCORE library used or from an OSCORE layer that takes part in the communication stack.
 
 A current set SET of application keys shared with another peer can become unsafe to use, for example, due to the following reasons:
 
@@ -203,7 +203,7 @@ Consistent with the EDHOC and OSCORE profile of ACE, the two peers run EDHOC in 
 
 After that, the peer acting as ACE client can access the protected resources hosted at the other peer acting as RS, according to the access rights specified in the access token. The communications between the two peers are protected by means of the established OSCORE Security Context.
 
-Later on, the application at one of the two peers P may have learned that the established OSCORE Security Context CTX is not safe to use anymore, e.g., from the used OSCORE library or from an OSCORE layer that takes part in the communication stack. The reasons that make CTX not safe to use anymore are the same ones discussed in {{sec-keys-invalid}} when considering a set of application keys in general, plus the event that the access token bound to CTX becomes invalid (e.g., it has expired or it has been revoked).
+Later on, the application at one of the two peers P may have learned that the established OSCORE Security Context CTX is not safe to use anymore, e.g., from the OSCORE library used or from an OSCORE layer that takes part in the communication stack. The reasons that make CTX not safe to use anymore are the same ones discussed in {{sec-keys-invalid}} when considering a set of application keys in general, plus the event that the access token bound to CTX becomes invalid (e.g., it has expired or it has been revoked).
 
 When this happens, the application at the peer P proceeds as follows.
 
@@ -400,13 +400,13 @@ The approach described in this section aims to help implementers navigate the su
 
 * It is possible that some EAD items can be processed only after having successfully verified the EDHOC message, i.e., after a successful verification of the Signature_or_MAC field in EDHOC message_2 or message_3.
 
-   For instance, an EAD item within the EAD_3 field of EDHOC message_3 might contain a Certificate Signing Request (CSR) {{RFC2986}}. Hence, such an EAD item can be processed only once the recipient peer has attained proof that the other peer possesses its private key.
+   For instance, an EAD item within the EAD_3 field of EDHOC message_3 might contain a Certificate Signing Request (CSR) {{RFC2986}}. Hence, such an EAD item can be processed only once the recipient peer has attained proof that the other peer possesses its own private key.
 
 In order to conveniently handle such processing, the application can prepare in advance a "side-processor object" (SPO), which takes care of the operations above during the EDHOC execution.
 
 In particular, the application provides EDHOC with the SPO before starting an EDHOC execution, during which EDHOC will temporarily transfer control to the SPO at the right point in time, in order to perform the required side-processing of an incoming EDHOC message.
 
-Furthermore, the application has to instruct the SPO about how to prepare any EAD item such that: it has to be included in an outgoing EDHOC message; and it is independent of the processing of other EAD items included in incoming EDHOC messages. This includes, for instance, the preparation of padding EAD items.
+Furthermore, the application has to instruct the SPO about how to prepare any EAD item such that: it has to be included in an outgoing EDHOC message; and it is independent of the processing of other EAD items included in incoming EDHOC messages. This includes, for instance, the preparation of padding EAD items (see {{Section 3.8.1 of RFC9528}}).
 
 At the right point in time during the processing of an incoming EDHOC message M at the peer P, EDHOC invokes the SPO and provides it with the following input:
 
@@ -598,7 +598,7 @@ EDHOC message_X
 | | - (a) and (c) might have  |        : EAD items to       :         |
 | |   to occur in parallel    |        : unconditionally    :         |
 | | - (b) depends on the      |        : produce for the    :         |
-| |   used trust policy       |        : next EDHOC message :         |
+| |   trust policy used       |        : next EDHOC message :         |
 | +---------------------------+        :....................:         |
 |                                                                     |
 |                                         Side-Processor Object (SPO) |
@@ -639,74 +639,74 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
  the side-processor object
 
           |
-+---------|----------------------------------------------------------+
-|         |            Pre-verification side processing (PHASE_1)    |
-|         v                                                          |
-| +---------------------+     +--------------+     +-------------+   |
-| | 1. Does ID_CRED_X   | NO  | 3. Retrieve  |     | 4. Is the   |   |
-| | or an EAD item      |---->| CRED via     |---->| retrieval   |   |
-| | point to an already |     | ID_CRED_X or |     | of CRED     |   |
-| | stored CRED?        |     | an EAD item  |     | successful? |   |
-| +---------------------+     +--------------+     +-------------+   |
-|         |                                          |         |     |
-|         |                                          | NO      | YES |
-|         |                         +----------------+         |     |
-|         |                         |                          |     |
-|         | YES                     |                          |     |
-|         v                         v                          v     |
-| +-----------------+ NO      +-----------+   YES +----------------+ |
-| | 2. Is this CRED |-------->| 11. Abort |<------| 5. Is the used | |
-| | still valid?    |         | the EDHOC |       | trust policy   | |
-| +-----------------+         | session   |       | "NO-LEARNING", | |
-|         |                   |           |       | without any    | |
-|         |                   |           |       | acceptable     | |
-|         |                   |           |       | exceptions?    | |
-|         |                   |           |       +----------------+ |
-|         | YES               |           |                    |     |
-|         v                   |           |    Here the used   | NO  |
-| +--------------------+ NO   |           |    trust policy is |     |
-| | 9. Is this CRED    |----->|           |    "LEARNING", or  |     |
-| | good to use in the |      +-----------+    "NO-LEARNING"   |     |
-| | context of this    |               ^       together with   |     |
-| | EDHOC session?     |<-----+        |       an overriding   |     |
-| +--------------------+      |        |       exception       |     |
-|         |                   |        |                       |     |
-|         |                   |        |                       v     |
-|         |                   |        |             +-------------+ |
-|         |                   |        |             | 6. Validate | |
-|         |                   |        |             | CRED        | |
-|         |                   |        |             +-------------+ |
-|         |                   |        |                       |     |
-|         | YES               |        | NO                    |     |
-|         |                   |        |                       v     |
-|         |                   |     +------------------------------+ |
-|         |                   |     | 7. Is CRED valid?            | |
-|         |                   |     +------------------------------+ |
-|         |                   |        |                             |
-|         |                   |        | YES                         |
-|         v                   |        v                             |
-| +------------------+        |     +------------------------------+ |
-| | 10. Continue by  |        |     | 8. Store CRED as valid and   | |
-| | considering this |        +-----| trusted.                     | |
-| | CRED as the      |              |                              | |
-| | authentication   |              | Pair CRED with consistent    | |
-| | credential       |              | credential identifiers, for  | |
-| | associated with  |              | each supported type of       | |
-| | the other peer   |              | credential identifier.       | |
-| +------------------+              +------------------------------+ |
-|         |                                                          |
-+---------|----------------------------------------------------------+
++---------|-----------------------------------------------------------+
+|         |             Pre-verification side processing (PHASE_1)    |
+|         v                                                           |
+| +---------------------+     +--------------+     +-------------+    |
+| | 1. Does ID_CRED_X   | NO  | 3. Retrieve  |     | 4. Is the   |    |
+| | or an EAD item      |---->| CRED via     |---->| retrieval   |    |
+| | point to an already |     | ID_CRED_X or |     | of CRED     |    |
+| | stored CRED?        |     | an EAD item  |     | successful? |    |
+| +---------------------+     +--------------+     +-------------+    |
+|         |                                          |         |      |
+|         |                                          | NO      | YES  |
+|         |                         +----------------+         |      |
+|         |                         |                          |      |
+|         | YES                     |                          |      |
+|         v                         v                          v      |
+| +-----------------+ NO      +-----------+   YES +-----------------+ |
+| | 2. Is this CRED |-------->| 11. Abort |<------| 5. Is the trust | |
+| | still valid?    |         | the EDHOC |       | policy used     | |
+| +-----------------+         | session   |       | "NO-LEARNING",  | |
+|         |                   |           |       | without any     | |
+|         |                   |           |       | acceptable      | |
+|         |                   |           |       | exceptions?     | |
+|         |                   |           |       +-----------------+ |
+|         | YES               |           |                    |      |
+|         v                   |           |     Here the trust | NO   |
+| +--------------------+ NO   |           |     policy used is |      |
+| | 9. Is this CRED    |----->|           |     "LEARNING", or |      |
+| | good to use in the |      +-----------+     "NO-LEARNING"  |      |
+| | context of this    |               ^        together with  |      |
+| | EDHOC session?     |<-----+        |        an overriding  |      |
+| +--------------------+      |        |        exception      |      |
+|         |                   |        |                       |      |
+|         |                   |        |                       v      |
+|         |                   |        |              +-------------+ |
+|         |                   |        |              | 6. Validate | |
+|         |                   |        |              | CRED        | |
+|         |                   |        |              +-------------+ |
+|         |                   |        |                        |     |
+|         | YES               |        | NO                     |     |
+|         |                   |        |                        v     |
+|         |                   |     +-------------------------------+ |
+|         |                   |     | 7. Is CRED valid?             | |
+|         |                   |     +-------------------------------+ |
+|         |                   |        |                              |
+|         |                   |        | YES                          |
+|         v                   |        v                              |
+| +------------------+        |     +-------------------------------+ |
+| | 10. Continue by  |        |     | 8. Store CRED as valid and    | |
+| | considering this |        +-----| trusted.                      | |
+| | CRED as the      |              |                               | |
+| | authentication   |              | Pair CRED with consistent     | |
+| | credential       |              | credential identifiers, for   | |
+| | associated with  |              | each supported type of        | |
+| | the other peer   |              | credential identifier.        | |
+| +------------------+              +-------------------------------+ |
+|         |                                                           |
++---------|-----------------------------------------------------------+
           |
           |
-+---------|----------------------------------------------------------+
-|         |            Pre-verification side processing (PHASE_2)    |
-|         v                                                          |
-| +--------------------------------------------------------+         |
-| | Process the EAD items that have not been processed yet |         |
-| | and that can be processed before message verification  |         |
-| +--------------------------------------------------------+         |
-|         |                                                          |
-+---------|----------------------------------------------------------+
++---------|-----------------------------------------------------------+
+|         |            Pre-verification side processing (PHASE_2)     |
+|         v                                                           |
+| +--------------------------------------------------------+          |
+| | Process the EAD items that have not been processed yet |          |
+| | and that can be processed before message verification  |          |
+| +--------------------------------------------------------+          |
+|         |                                                           |
++---------|-----------------------------------------------------------+
           |
           |
           v
@@ -777,7 +777,7 @@ During an EDHOC session, an EDHOC peer P1 might therefore receive the authentica
 
 As part of the process where P1 validates CRED during the EDHOC session, P1 must check that both ITEM_A and ITEM_B specify the same authentication credential, and it must abort the EDHOC session if such a consistency check fails.
 
-The consistency check is successful only if one of the following conditions holds and it fails otherwise:
+The consistency check is successful only if one of the following conditions holds, and it fails otherwise:
 
 * If both ITEM_A and ITEM_B specify an authentication credential by value, then both ITEM_A and ITEM_B specify the same value.
 
@@ -789,7 +789,7 @@ The peer P1 performs the consistency check above as soon as it has both ITEM_A a
 
 # Using EDHOC over CoAP with Block-Wise # {#sec-block-wise}
 
-{{Section A.2 of RFC9528}} specifies how to transfer EDHOC over CoAP {{RFC7252}}. In such a case, the EDHOC messages (possibly prepended by an EDHOC connection identifier) are transported in the payload of CoAP requests and responses, according to the EDHOC forward message flow or the EDHOC reverse message flow. Furthermore, {{Section A.1 of RFC9528}} specifies how to derive an OSCORE Security Context {{RFC8613}} from an EDHOC session.
+{{Section A.2 of RFC9528}} specifies how to transfer EDHOC over CoAP {{RFC7252}}. In such a case, EDHOC messages (possibly prepended by an EDHOC connection identifier) are transported in the payload of CoAP requests and responses, according to the EDHOC forward message flow or the EDHOC reverse message flow. Furthermore, {{Section A.1 of RFC9528}} specifies how to derive an OSCORE Security Context {{RFC8613}} from an EDHOC session.
 
 Building on that, {{RFC9668}} further details the use of EDHOC with CoAP and OSCORE. In particular, it specifies an optimization approach for the EDHOC forward message flow that combines the EDHOC execution with the first subsequent OSCORE transaction. This is achieved by means of an "EDHOC + OSCORE request", i.e., a single CoAP request message that conveys both EDHOC message_3 of the ongoing EDHOC session and the OSCORE-protected application data, where the latter is protected with the OSCORE Security Context derived from that EDHOC session.
 
@@ -803,7 +803,7 @@ The rest of this section refers to the following notation:
 
 * SIZE_BODY: the size in bytes of the data to be transmitted with CoAP. When Block-wise is used, such data is referred to as the "body" to be fragmented into blocks, each of which to be transmitted in one CoAP message.
 
-  With the exception of EDHOC message_3, the considered body can also be an EDHOC message, possibly prepended by an EDHOC connection identifier encoded as per {{Section 3.3 of RFC9528}}.
+  With the exception pertaining to EDHOC message_3 described in the following paragraph, the considered body can in general be an EDHOC message, possibly prepended by an EDHOC connection identifier encoded as per {{Section 3.3 of RFC9528}}.
 
   When specifically using the EDHOC + OSCORE request, the considered body is the application data to be protected with OSCORE, (whose first block is) to be sent together with EDHOC message_3 as part of the EDHOC + OSCORE request.
 
@@ -887,7 +887,7 @@ Therefore, if both the conditions COND8 and COND9 hold, the CoAP client should n
 
 This document provides considerations for implementations of the EDHOC protocol. The security considerations compiled in {{Section 9 of RFC9528}} and in {{Section 7 of RFC9668}} apply. The compliance requirements for implementations that are listed in {{Section 8 of RFC9528}} also apply.
 
-It is foreseeable that the EDHOC protocol will be extended (e.g., as to new cipher suites, new methods, and new types of authentication credentials) and that external security applications will be integrated into EDHOC by embedding the transport of their data in EDHOC EAD items. For implementations that support such extensions and external applications, the related security considerations and compliance requirements also apply.
+It is foreseeable that the EDHOC protocol will be extended (e.g., in terms of new cipher suites, new methods, and new types of authentication credentials) and that external security applications will be integrated into EDHOC by embedding the transport of their data in EDHOC EAD items. For implementations that support such extensions and external applications, the related security considerations and compliance requirements also apply.
 
 ## Assessing the Correctness of Implementations
 
@@ -985,76 +985,76 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
  the side-processor object
 
            |
-+----------|---------------------------------------------------------+
-|          |                                     Side processing     |
-|          v                                                         |
-| +--------------------+                                             |
-| | 0. Does an EAD     |                                             |
-| | item specify CRED? |                                             |
-| +--------------------+                                             |
-|  |       |                                                         |
-|  | NO    | YES                                                     |
-|  |       v                                                         |
-|  |   +----------------+     +-------------+     +-------------+    |
-|  |   | 1. Does an EAD | NO  | 3. Retrieve |     | 4. Is the   |    |
-|  |   | item point to  |---->| CRED via    |---->| retrieval   |    |
-|  |   | an already     |     | an EAD item |     | of CRED     |    |
-|  |   | stored CRED?   |     +-------------+     | successful? |    |
-|  |   +----------------+                         +-------------+    |
-|  |       |                                         |         |     |
-|  |       |                                         | NO      | YES |
-|  |       |                        +----------------+         |     |
-|  |       |                        |                          |     |
-|  |       | YES                    |                          |     |
-|  |       v                        v                          v     |
-|  |  +-----------------+ NO  +-----------+   YES +----------------+ |
-|  |  | 2. Is this CRED |---->| 11. Abort |<------| 5. Is the used | |
-|  |  | still valid?    |     | the EDHOC |       | trust policy   | |
-|  |  +-----------------+     | session   |       | "NO-LEARNING", | |
-|  |       |                  |           |       | without any    | |
-|  |       |                  |           |       | acceptable     | |
-|  |       |                  |           |       | exceptions?    | |
-|  |       |                  |           |       +----------------+ |
-|  |       | YES              |           |                    |     |
-|  |       v                  |           |    Here the used   | NO  |
-|  |  +-----------------+ NO  |           |    trust policy is |     |
-|  |  | 9. Is this CRED |---->|           |    "LEARNING", or  |     |
-|  |  | good to use in  |     +-----------+    "NO-LEARNING"   |     |
-|  |  | the context of  |              ^       together with   |     |
-|  |  | this EDHOC      |<----+        |       an overriding   |     |
-|  |  | session?        |     |        |       exception       |     |
-|  |  +-----------------+     |        |                       |     |
-|  |      |                   |        |                       v     |
-|  |      |                   |        |             +-------------+ |
-|  |      |                   |        |             | 6. Validate | |
-|  |      |                   |        |             | CRED        | |
-|  |      |                   |        |             +-------------+ |
-|  |      |                   |        |                       |     |
-|  |      | YES               |        | NO                    |     |
-|  |      |                   |        |                       v     |
-|  |      |                   |     +------------------------------+ |
-|  |      |                   |     | 7. Is CRED valid?            | |
-|  |      |                   |     +------------------------------+ |
-|  |      |                   |        |                             |
-|  |      |                   |        | YES                         |
-|  |      v                   |        v                             |
-|  |  +------------------+    |     +------------------------------+ |
-|  |  | 10. Continue by  |    |     | 8. Store CRED as valid and   | |
-|  |  | considering this |    +-----| trusted.                     | |
-|  |  | CRED as the      |          |                              | |
-|  |  | authentication   |          | Pair CRED with consistent    | |
-|  |  | credential       |          | credential identifiers, for  | |
-|  |  | associated with  |          | each supported type of       | |
-|  |  | the other peer   |          | credential identifier.       | |
-|  |  +------------------+          +------------------------------+ |
-|  |      |                                                          |
-|  |      |                                                          |
-|  v      v                                                          |
-| +------------------------------------------------------------+     |
-| | 12. Process the EAD items that have not been processed yet |     |
-| +------------------------------------------------------------+     |
-|         |                                                          |
-+---------|----------------------------------------------------------+
++----------|----------------------------------------------------------+
+|          |                                      Side processing     |
+|          v                                                          |
+| +--------------------+                                              |
+| | 0. Does an EAD     |                                              |
+| | item specify CRED? |                                              |
+| +--------------------+                                              |
+|  |       |                                                          |
+|  | NO    | YES                                                      |
+|  |       v                                                          |
+|  |   +----------------+     +-------------+     +-------------+     |
+|  |   | 1. Does an EAD | NO  | 3. Retrieve |     | 4. Is the   |     |
+|  |   | item point to  |---->| CRED via    |---->| retrieval   |     |
+|  |   | an already     |     | an EAD item |     | of CRED     |     |
+|  |   | stored CRED?   |     +-------------+     | successful? |     |
+|  |   +----------------+                         +-------------+     |
+|  |       |                                         |         |      |
+|  |       |                                         | NO      | YES  |
+|  |       |                        +----------------+         |      |
+|  |       |                        |                          |      |
+|  |       | YES                    |                          |      |
+|  |       v                        v                          v      |
+|  |  +-----------------+ NO  +-----------+   YES +-----------------+ |
+|  |  | 2. Is this CRED |---->| 11. Abort |<------| 5. Is the trust | |
+|  |  | still valid?    |     | the EDHOC |       | policy used     | |
+|  |  +-----------------+     | session   |       | "NO-LEARNING",  | |
+|  |       |                  |           |       | without any     | |
+|  |       |                  |           |       | acceptable      | |
+|  |       |                  |           |       | exceptions?     | |
+|  |       |                  |           |       +-----------------+ |
+|  |       | YES              |           |                    |      |
+|  |       v                  |           |    Here the trust  | NO   |
+|  |  +-----------------+ NO  |           |    policy used is  |      |
+|  |  | 9. Is this CRED |---->|           |    "LEARNING", or  |      |
+|  |  | good to use in  |     +-----------+    "NO-LEARNING"   |      |
+|  |  | the context of  |              ^       together with   |      |
+|  |  | this EDHOC      |<----+        |       an overriding   |      |
+|  |  | session?        |     |        |       exception       |      |
+|  |  +-----------------+     |        |                       |      |
+|  |      |                   |        |                       v      |
+|  |      |                   |        |              +-------------+ |
+|  |      |                   |        |              | 6. Validate | |
+|  |      |                   |        |              | CRED        | |
+|  |      |                   |        |              +-------------+ |
+|  |      |                   |        |                        |     |
+|  |      | YES               |        | NO                     |     |
+|  |      |                   |        |                        v     |
+|  |      |                   |     +-------------------------------+ |
+|  |      |                   |     | 7. Is CRED valid?             | |
+|  |      |                   |     +-------------------------------+ |
+|  |      |                   |        |                              |
+|  |      |                   |        | YES                          |
+|  |      v                   |        v                              |
+|  |  +------------------+    |     +-------------------------------+ |
+|  |  | 10. Continue by  |    |     | 8. Store CRED as valid and    | |
+|  |  | considering this |    +-----| trusted.                      | |
+|  |  | CRED as the      |          |                               | |
+|  |  | authentication   |          | Pair CRED with consistent     | |
+|  |  | credential       |          | credential identifiers, for   | |
+|  |  | associated with  |          | each supported type of        | |
+|  |  | the other peer   |          | credential identifier.        | |
+|  |  +------------------+          +-------------------------------+ |
+|  |      |                                                           |
+|  |      |                                                           |
+|  v      v                                                           |
+| +------------------------------------------------------------+      |
+| | 12. Process the EAD items that have not been processed yet |      |
+| +------------------------------------------------------------+      |
+|         |                                                           |
++---------|-----------------------------------------------------------+
           |
           |
           v
@@ -1074,6 +1074,10 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 
 # Document Updates # {#sec-document-updates}
 {:removeinrfc}
+
+## Version -05 to -06 ## {#sec-05-06}
+
+* Editorial fixes and improvements.
 
 ## Version -04 to -05 ## {#sec-04-05}
 
