@@ -34,7 +34,6 @@ informative:
   RFC2986:
   RFC5280:
   RFC6960:
-  RFC8392:
   RFC9200:
   I-D.ietf-ace-edhoc-oscore-profile:
   I-D.ietf-core-oscore-key-update:
