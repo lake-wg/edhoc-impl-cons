@@ -1092,9 +1092,12 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 |  |      |                                                           |
 |  |      |                                                           |
 |  v      v                                                           |
-| +------------------------------------------------------------+      |
-| | 12. Process the EAD items that have not been processed yet |      |
-| +------------------------------------------------------------+      |
+| +-------------------------------------------------------------+     |
+| | 12. Process the EAD items that have not been processed yet. |     |
+| |                                                             |     |
+| | Make all the results of the EAD processing available to     |     |
+| | build the next EDHOC message.                               |     |
+| +-------------------------------------------------------------+     |
 |         |                                                           |
 +---------|-----------------------------------------------------------+
           |
