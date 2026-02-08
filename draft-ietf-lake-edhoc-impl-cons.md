@@ -428,7 +428,13 @@ In order to conveniently handle such processing, the application can prepare in 
 
 In particular, the application provides EDHOC with the SPO before starting an EDHOC execution, during which EDHOC will temporarily transfer control to the SPO at the right point in time, in order to perform the required side-processing of an incoming EDHOC message.
 
-Furthermore, the application has to instruct the SPO about how to prepare any EAD item such that: it has to be included in an outgoing EDHOC message; and it is independent of the processing of other EAD items included in incoming EDHOC messages. This includes, for instance, the preparation of padding EAD items (see {{Section 3.8.1 of RFC9528}}).
+Furthermore, the application has to instruct the SPO about:
+
+* How to prepare any EAD item such that: it has to be included in an outgoing EDHOC message; and it is independent of the processing of other EAD items included in incoming EDHOC messages. This includes, for instance, the preparation of padding EAD items (see {{Section 3.8.1 of RFC9528}}).
+
+* The list of EAD items that are expected to be present in specific, incoming EDHOC messages during the EDHOC session. This takes into account, for instance, external security applications that will be integrated in the EDHOC session (e.g., see {{I-D.ietf-lake-authz}}).
+
+  Throughout the EDHOC session, the SPO keeps such a list of expected EAD items up-to-date. This takes into account, for instance, external security applications that have been run integrated in the EDHOC session, the current status of the session, as well as the EDHOC messages that have been exchanged during the session and the outcome of their processing.
 
 At the right point in time during the processing of an incoming EDHOC message M at the peer P, EDHOC invokes the SPO and provides it with the following input:
 
@@ -451,6 +457,10 @@ At the right point in time during the processing of an incoming EDHOC message M 
    - Note that, after having processed the EAD items, the SPO might actually need to store them throughout the whole EDHOC execution, e.g., in order to refer to them also when processing later EDHOC messages in the current EDHOC session.
 
 The SPO performs the following tasks on an incoming EDHOC message M:
+
+* The SPO checks whether M does not include an EAD item whose presence was expected, based on the related list maintained throughout the EDHOC session. If such an EAD item is absent, the SPO can come to an early determination about whether and how to proceed with the processing of M.
+
+  In particular, if an EAD item is absent although its presence was strictly required, then the SPO can early abort the EDHOC session, thereby avoiding potentially costly operations (e.g., the retrieval and validation of the authentication credential associated with the other peer).
 
 * The SPO fetches and/or validates the authentication credential CRED associated with the other peer, based on a dedicated EAD item of M or on the ID_CRED field of M (for EDHOC message_2 or message_3).
 
@@ -508,7 +518,7 @@ The pre-verification side processing occurs in two sequential phases, namely PHA
 
 #### PHASE\_1 # {#sec-pre-verif-phase-1}
 
-During PHASE_1, the SPO at the recipient peer P determines CRED, i.e., the authentication credential associated with the other peer to be used in the ongoing EDHOC session. In particular, the SPO performs the following steps.
+During PHASE_1, the SPO at the recipient peer P determines CRED, i.e., the authentication credential associated with the other peer to be used in the ongoing EDHOC session. In particular, the SPO first checks whether expected EAD items are absent in message_X (see {{sec-message-side-processing}}), and then performs the following steps.
 
 1. The SPO determines CRED based on ID_CRED_X or on an EAD item included in message_X.
 
@@ -619,20 +629,21 @@ EDHOC message_X
 |                |           |           |         |                  |
 |                v           |           v         |                  |
 | +---------------------------+     +-----------------------------+   |
-| | a) Retrieval and          |     | Processing of               |   |
-| |    validation of CRED_X;  |     | post-verification EAD items |   |
-| | b) Trust assessment       |     +-----------------------o-----+   |
-| |    of CRED_X;             |                             |         |
-| | c) Processing of          o-------- Shared state -------o         |
-| |    pre-verification       |                                       |
-| |    EAD items              |        ......................         |
-| |                           |        : Instructions about :         |
-| | - (a) and (c) might have  |        : EAD items to       :         |
-| |   to occur in parallel    |        : unconditionally    :         |
-| | - (b) depends on the      |        : produce for the    :         |
-| |   trust policy used       |        : next EDHOC message :         |
-| +---------------------------+        :....................:         |
-|                                                                     |
+| | a) Check whether expected |     | Processing of               |   |
+| |    EAD items are absent   |     | post-verification EAD items |   |
+| | b) Retrieval and          |     +-----------------------o-----+   |
+| |    validation of CRED_X;  |                             |         |
+| | c) Trust assessment       o-------- Shared state -------o         |
+| |    of CRED_X;             |                                       |
+| | d) Processing of          |        ......................         |
+| |    pre-verification       |        : Instructions about :         |
+| |    EAD items              |        : EAD items to       :         |
+| |                           |        : unconditionally    :         |
+| | - (b) and (d) might have  |        : produce for the    :         |
+| |   to occur in parallel    |        : next EDHOC message :         |
+| | - (c) depends on the      |        :....................:         |
+| |   trust policy used       |                                       |
+| +---------------------------+                                       |
 |                                         Side-Processor Object (SPO) |
 +---------------------------------------------------------------------+
 ~~~~~~~~~~~
@@ -673,6 +684,13 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
           |
 +---------|-----------------------------------------------------------+
 |         |             Pre-verification side processing (PHASE_1)    |
+|         |                                                           |
+| +------------------------+                                          |
+| | Check whether expected |                                          |
+| | EAD items are absent   |                                          |
+| +------------------------+                                          |
+|         |                                                           |
+|         |                                                           |
 |         v                                                           |
 | +---------------------+     +--------------+     +-------------+    |
 | | 1. Does ID_CRED_X   | NO  | 3. Retrieve  |     | 4. Is the   |    |
@@ -947,7 +965,7 @@ As mentioned in {{sec-message-side-processing-m1}}, future developments in EDHOC
 
 In order to handle such a case, the processing of an incoming EDHOC message_1 as described in {{sec-message-side-processing-m1}} is extended with additional steps performed by the SPO.
 
-Such an extended side processing shares similarities with that of an incoming EDHOC message_2 or message_3 (see {{sec-message-side-processing-m2-m3}}). In particular, similarly to what is compiled in {{sec-pre-verif-phase-1}} and {{sec-pre-verif-phase-2}}, it consists of the following steps.
+Such an extended side processing shares similarities with that of an incoming EDHOC message_2 or message_3 (see {{sec-message-side-processing-m2-m3}}). In particular, similarly to what is compiled in {{sec-pre-verif-phase-1}} and {{sec-pre-verif-phase-2}}, the SPO first checks whether expected EAD items are absent in message_X (see {{sec-message-side-processing}}), and then performs the following steps.
 
 * (0) The SPO checks the presence of an EAD item that specifies the authentication credential CRED associated with the Initiator (by value or by reference).
 
@@ -1027,6 +1045,13 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
            |
 +----------|----------------------------------------------------------+
 |          |                                      Side processing     |
+|          |                                                          |
+| +------------------------+                                          |
+| | Check whether expected |                                          |
+| | EAD items are absent   |                                          |
+| +------------------------+                                          |
+|          |                                                          |
+|          |                                                          |
 |          v                                                          |
 | +--------------------+                                              |
 | | 0. Does an EAD     |                                              |
@@ -1125,6 +1150,8 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 * Generalized trust assessment of authentication credentials.
 
 * Revised discussion on the ELA procedure, based on upcoming updates expected in version -07 of draft-ietf-lake-authz.
+
+* Added side-processing check about the absence of expected EAD items in incoming EDHOC messages.
 
 * Editorial fixes and improvements.
 
