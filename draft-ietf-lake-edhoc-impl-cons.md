@@ -310,7 +310,7 @@ Also during the EDHOC execution, an External Authorization Data (EAD) field migh
 
 When obtaining a new credential CRED, the peer P has to validate it before storing it. The validation steps to perform depend on the specific type of CRED (e.g., a public key certificate {{RFC5280}}{{I-D.ietf-cose-cbor-encoded-cert}}) and can rely on (the authentication credential associated with) a trusted third party acting as a trust anchor.
 
-Upon retrieving a new CRED through the processing of a received EDHOC message and following the successful validation of CRED, the peer P stores CRED only if it assesses CRED to also be trusted, while it must not store CRED otherwise.
+Upon retrieving a new CRED through the processing of a received EDHOC message and following the successful validation of CRED, the peer P stores CRED only if it assesses CRED to also be (provisionally) trusted, while it must not store CRED otherwise.
 
 An exception applies for the two unauthenticated operations described in {{Section D.5 of RFC9528}}, where a trust relationship with an unknown or not-yet-trusted endpoint is established later. In such a case, CRED is verified out-of-band at a later stage, or an EDHOC session key is bound to an identity out-of-band at a later stage.
 
@@ -318,7 +318,13 @@ When processing a received EDHOC message M that specifies an authentication cred
 
 Irrespective of the adopted trust policy, P actually uses CRED only if it is determined to be fine to use in the context of the ongoing EDHOC session, also depending on the specific identity of the other peer (see {{Sections 3.5 and D.2 of RFC9528}}). If this is not the case, P aborts the EDHOC session with the other peer.
 
-If P stores CRED, then P will consider CRED as valid and trusted until CRED possibly becomes invalid, e.g., because it expires or because P gains knowledge that it has been revoked.
+If P stores CRED, then P will consider CRED as valid and trusted until:
+
+* CRED possibly becomes invalid, e.g., because it expires or because P gains knowledge that it has been revoked; or
+
+* CRED becomes non-trusted, e.g., because P originally assessed CRED to be provisionally trusted, and later on failed to obtain an expected final confirmation of trust.
+
+P must delete CRED from its local storage if CRED becomes invalid or non-trusted.
 
 When storing CRED, the peer P should generate the authentication credential identifier(s) corresponding to CRED and store them as associated with CRED. For example, if CRED is a public key certificate, an identifier of CRED can be the hash of the certificate. In general, P should generate and associate with CRED one corresponding identifier for each type of authentication credential identifier that P supports and that is compatible with CRED.
 
@@ -332,7 +338,7 @@ That is, upon receiving M, the peer P performs the following steps.
 
 1. P retrieves CRED, as specified by reference or by value in the ID_CRED_I/ID_CRED_R field of M or in the value of an EAD item of M.
 
-2. P checks whether CRED is already being stored and if it is still valid. In such a case, P trusts CRED and can continue the EDHOC execution. Otherwise, P moves to Step 3.
+2. P checks whether CRED is already being stored and if it is still valid and trusted. In such a case, P trusts CRED and can continue the EDHOC execution. Otherwise, P moves to Step 3.
 
 3. P attempts to validate CRED. If the validation process is not successful, P aborts the EDHOC session with the other peer. Otherwise, P trusts and stores CRED, and can continue the EDHOC execution.
 
@@ -344,7 +350,7 @@ That is, upon receiving M, the peer P continues the execution of EDHOC only if b
 
 * P currently stores CRED, as specified by reference or by value in the ID_CRED_I/ID_CRED_R field of M or in the value of an EAD item of M; and
 
-* CRED is still valid, i.e., P believes CRED to not be expired or revoked.
+* CRED is still valid (i.e., P believes CRED to not be expired or revoked) and trusted.
 
 Exceptions may apply and be actually enforced in cases where, during an EDHOC execution, P obtains additional information that allows it to trust and successfully validate CRED, even though CRED is not already stored upon receiving M.
 
@@ -378,13 +384,29 @@ At least for its EDHOC resource used for exchanging the EDHOC messages of the ED
 
 ### In the Lightweight Authorization using EDHOC (ELA) Procedure # {#sec-trust-models-ela}
 
+Editor's note: the text in this section reflects an upcoming update in draft-ietf-lake-authz, which is expected to appear in version -07 of that document.
+
 When the execution of EDHOC embeds the ELA procedure defined in {{I-D.ietf-lake-authz}}, the EDHOC peer U receives an EDHOC message_2 (message_3) where ID_CRED_R (ID_CRED_I) specifies by value the authentication credential CRED associated with the other peer V.
 
-In the same EDHOC message, an EAD item specifies a voucher issued by a trusted enrollment server W. The voucher is an assertion to U that W has authorized V and has endorsed CRED.
+Furthermore, an EDHOC message sent to U includes an EAD item, which specifies a voucher issued by a trusted enrollment server W. The voucher is an assertion to U that W has authorized V and has endorsed CRED.
 
-Through a successful verification of the voucher, U is able to trust CRED (if found valid), even though it did not already store CRED upon receiving the EDHOC message.
+The specific EDHOC message that includes the EAD item conveying the voucher depends on whether U and V use the EDHOC forward message flow (i.e., U is the EDHOC Initiator) or the EDHOC reverse message flow (i.e., U is the EDHOC Responder). In particular:
 
-Therefore, if U enforces the trust policy "NO-LEARNING", it can additionally enforce an overriding exception when an incoming EDHOC message includes an EAD item conveying a valid voucher issued by a trusted enrollment server.
+* When using the EDHOC forward message flow, the EAD item is included in EDHOC message_4, thereby endorsing CRED that was specified by ID_CRED_R in the previous EDHOC message_2.
+
+  Since it is indeed expected that U does not already store CRED upon receiving EDHOC message_2, U can at best provisionally trust CRED (if found valid) when retrieving it from EDHOC message_2.
+
+* When using the EDHOC reverse message flow, the EAD item is included in EDHOC message_3, thereby endorsing CRED that is specified by ID_CRED_I in the same EDHOC message.
+
+In either case, through a successful verification of the voucher, U is able to ultimately trust CRED (if found valid), even though U did not already store CRED upon receiving the EDHOC message specifying CRED.
+
+Therefore, if U enforces the trust policy "NO-LEARNING", it can additionally enforce an overriding exception as below:
+
+* When using the EDHOC forward message flow, the exception is enforced when processing an EDHOC message_2, and it is raised by the intention of using the ELA procedure. That is, U intends to proceed with sending a consistent EDHOC message_3 that indicates the wish to obtain a voucher issued by W.
+
+  At that point in time, the authentication credential CRED is only provisionally trusted (if found valid), with the expectation to receive an EDHOC message_4 in the same EDHOC session, conveying a valid voucher issued by W and thus confirming that CRED can be ultimately trusted.
+
+* When using the EDHOC reverse message flow, the exception is enforced when processing an EDHOC message_3, and it is raised by the EDHOC message_3 including an EAD item that conveys a valid voucher issued by W, thus confirming that CRED can be ultimately trusted.
 
 # Side Processing of Incoming EDHOC Messages # {#sec-message-side-processing}
 
@@ -396,11 +418,11 @@ The approach described in this section aims to help implementers navigate the su
 
 * The fetching and validation of the authentication credential associated with the other peer relies on ID_CRED_I in EDHOC message_2, or on ID_CRED_R in EDHOC message_3, or on the value of an EAD item. When this occurs upon receiving EDHOC message_2 or message_3, the decryption of the EDHOC message has to be completed first.
 
-   The validation of the authentication credential might depend on using the value of an EAD item, which in turn has to be validated first. For instance, an EAD item within the EAD_2 field of EDHOC message_2 might contain a voucher to be used for validating the authentication credential associated with the Responder (see {{I-D.ietf-lake-authz}}).
+  Validating the authentication credential or assessing whether it is trusted might depend on using the value of an EAD item, which in turn has to be validated first.
 
 * It is possible that some EAD items can be processed only after having successfully verified the EDHOC message, i.e., after a successful verification of the Signature_or_MAC field in EDHOC message_2 or message_3.
 
-   For instance, an EAD item within the EAD_3 field of EDHOC message_3 might contain a Certificate Signing Request (CSR) {{RFC2986}}. Hence, such an EAD item can be processed only once the recipient peer has attained proof that the other peer possesses its own private key.
+  For instance, an EAD item within the EAD_3 field of EDHOC message_3 might contain a Certificate Signing Request (CSR) {{RFC2986}}. Hence, such an EAD item can be processed only once the recipient peer has attained proof that the other peer possesses its own private key.
 
 In order to conveniently handle such processing, the application can prepare in advance a "side-processor object" (SPO), which takes care of the operations above during the EDHOC execution.
 
@@ -494,7 +516,7 @@ During PHASE_1, the SPO at the recipient peer P determines CRED, i.e., the authe
 
    If CRED is already installed, the SPO moves to Step 2. Otherwise, the SPO moves to Step 3.
 
-2. The SPO determines if the stored CRED is currently valid, e.g., by verifying that CRED has not expired and has not been revoked.
+2. The SPO determines if the stored CRED is currently trusted and valid, e.g., by verifying that CRED has not expired and has not been revoked.
 
    Performing such a validation might require the SPO to first process an EAD item included in message_X. For example, it can be an EAD item in EDHOC message_2 that confirms or revokes the validity of CRED_R specified by ID_CRED_R, as the result of an OCSP process {{RFC6960}}.
 
@@ -508,13 +530,23 @@ During PHASE_1, the SPO at the recipient peer P determines CRED, i.e., the authe
 
 6. If this step has been reached, the peer P is not already storing the retrieved CRED and, at the same time, it enforces either the trust policy "LEARNING" or the trust policy "NO-LEARNING" while also enforcing an exception acceptable for message_X (see {{sec-policy-no-learning}}).
 
-   Consistently, the SPO determines if CRED is currently valid, e.g., by verifying that CRED has not expired and has not been revoked. Then, the SPO moves to Step 7.
+   Consistently, the SPO determines if CRED is currently valid, e.g., by verifying that CRED has not expired and has not been revoked.
 
-   Validating CRED might require the SPO to first process an EAD item included in message_X. For example, it can be an EAD item in EDHOC message_2 that: i) specifies a voucher for validating CRED_R as a CWT Claims Set (CCS) {{RFC8392}} transported by value in ID_CRED_R (see {{I-D.ietf-lake-authz}}); or instead ii) an OCSP response {{RFC6960}} for validating CRED_R as a public key certificate transported by value or reference in ID_CRED_R.
+   Validating CRED might require the SPO to first process an EAD item included in message_X. For example, it can be an OCSP response {{RFC6960}} for validating CRED_R as a public key certificate transported by value or reference in ID_CRED_R.
 
-7. If CRED has been determined valid, the SPO moves to Step 8. Otherwise, the SPO moves to Step 11.
+   After successfully validating CRED, the peer P can typically consider CRED as ultimately trusted as well. However, there can be cases where P requires to obtain additional information before doing so.
 
-8. The SPO stores CRED as a valid and trusted authentication credential associated with the other peer, together with corresponding authentication credential identifiers (see {{sec-trust-models}}). Then, the SPO moves to Step 9.
+   If such additional information can be retrieved from message_X (e.g., from an EAD item included therein), then P uses it to assess if CRED is trusted. Otherwise, if such additional information is expected later on during the EDHOC session, it can be acceptable for P to consider CRED as provisionally trusted.
+
+   {{sec-trust-models-ela}} discusses the ELA procedure defined in {{I-D.ietf-lake-authz}}, as a case in point where additional information required by the peer P to trust CRED could not be included in the same message that specifies CRED.
+
+   Editor's note: the previous paragraph reflects an upcoming update in draft-ietf-lake-authz, which is expected to appear in version -07 of that document.
+
+   After completing the validation and trust assessment of CRED, the SPO moves to Step 7.
+
+7. If CRED has been determined valid and (provisionally) trusted, the SPO moves to Step 8. Otherwise, the SPO moves to Step 11.
+
+8. The SPO stores CRED as a valid and (provisionally) trusted authentication credential associated with the other peer, together with corresponding authentication credential identifiers (see {{sec-trust-models}}). Then, the SPO moves to Step 9.
 
 9. The SPO checks if CRED is fine to use in the context of the ongoing EDHOC session, also depending on the specific identity of the other peer (see {{Sections 3.5 and D.2 of RFC9528}}).
 
@@ -524,7 +556,7 @@ During PHASE_1, the SPO at the recipient peer P determines CRED, i.e., the authe
 
     Then, PHASE_1 ends and the pre-verification side processing moves to the next PHASE_2 (see {{sec-pre-verif-phase-2}}).
 
-11. The SPO has not found a valid authentication credential associated with the other peer that can be used in the ongoing EDHOC session. Therefore, the EDHOC session with the other peer is aborted.
+11. The SPO has not found a valid and (provisionally) trusted authentication credential associated with the other peer that can be used in the ongoing EDHOC session. Therefore, the EDHOC session with the other peer is aborted.
 
 #### PHASE\_2 # {#sec-pre-verif-phase-2}
 
@@ -656,9 +688,9 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
 |         v                         v                          v      |
 | +-----------------+ NO      +-----------+   YES +-----------------+ |
 | | 2. Is this CRED |-------->| 11. Abort |<------| 5. Is the trust | |
-| | still valid?    |         | the EDHOC |       | policy used     | |
-| +-----------------+         | session   |       | "NO-LEARNING",  | |
-|         |                   |           |       | without any     | |
+| | still valid and |         | the EDHOC |       | policy used     | |
+| | trusted?        |         | session   |       | "NO-LEARNING",  | |
+| +-----------------+         |           |       | without any     | |
 |         |                   |           |       | acceptable      | |
 |         |                   |           |       | exceptions?     | |
 |         |                   |           |       +-----------------+ |
@@ -672,22 +704,24 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
 | +--------------------+      |        |        exception      |      |
 |         |                   |        |                       |      |
 |         |                   |        |                       v      |
-|         |                   |        |              +-------------+ |
-|         |                   |        |              | 6. Validate | |
-|         |                   |        |              | CRED        | |
-|         |                   |        |              +-------------+ |
-|         |                   |        |                        |     |
-|         | YES               |        | NO                     |     |
-|         |                   |        |                        v     |
+|         |                   |        |           +---------------+  |
+|         |                   |        |           | 6. Assess if  |  |
+|         |                   |        |           | CRED is valid |  |
+|         |                   |        |           | and trusted   |  |
+|         |                   |        |           +---------------+  |
+|         |                   |        |                       |      |
+|         | YES               |        | NO                    |      |
+|         |                   |        |                       v      |
 |         |                   |     +-------------------------------+ |
-|         |                   |     | 7. Is CRED valid?             | |
+|         |                   |     | 7. Is CRED valid and          | |
+|         |                   |     | (provisionally) trusted?      | |
 |         |                   |     +-------------------------------+ |
 |         |                   |        |                              |
 |         |                   |        | YES                          |
 |         v                   |        v                              |
 | +------------------+        |     +-------------------------------+ |
 | | 10. Continue by  |        |     | 8. Store CRED as valid and    | |
-| | considering this |        +-----| trusted.                      | |
+| | considering this |        +-----| (provisionally) trusted.      | |
 | | CRED as the      |              |                               | |
 | | authentication   |              | Pair CRED with consistent     | |
 | | credential       |              | credential identifiers, for   | |
@@ -925,7 +959,7 @@ Such an extended side processing shares similarities with that of an incoming ED
 
   If CRED is already installed, the SPO moves to Step 2. Otherwise, the SPO moves to Step 3.
 
-* (2) The SPO determines if the stored CRED is currently valid, e.g., by verifying that CRED has not expired and has not been revoked.
+* (2) The SPO determines if the stored CRED is currently trusted and valid, e.g., by verifying that CRED has not expired and has not been revoked.
 
   Performing such a validation might require the SPO to first process an EAD item included in message_1.
 
@@ -939,13 +973,19 @@ Such an extended side processing shares similarities with that of an incoming ED
 
 * (6) If this step has been reached, the peer P is not already storing the retrieved CRED and, at the same time, it enforces either the trust policy "LEARNING" or the trust policy "NO-LEARNING" while also enforcing an exception acceptable for message_1 (see {{sec-policy-no-learning}}).
 
-  Consistently, the SPO determines if CRED is currently valid, e.g., by verifying that CRED has not expired and has not been revoked. Then, the SPO moves to Step 7.
+  Consistently, the SPO determines if CRED is currently valid, e.g., by verifying that CRED has not expired and has not been revoked.
 
   Validating CRED might require the SPO to first process an EAD item included in message_1.
 
-* (7) If CRED has been determined valid, the SPO moves to Step 8. Otherwise, the SPO moves to Step 11.
+  After successfully validating CRED, the peer P can typically consider CRED as ultimately trusted as well. However, there can be cases where P requires to obtain additional information before doing so.
 
-* (8) The SPO stores CRED as a valid and trusted authentication credential associated with the other peer, together with corresponding authentication credential identifiers (see {{sec-trust-models}}). Then, the SPO moves to Step 9.
+  If such additional information can be retrieved from message_1 (e.g., from an EAD item included therein), then P uses it to assess if CRED is trusted. Otherwise, if such additional information is expected later on during the EDHOC session, it can be acceptable for P to consider CRED as provisionally trusted.
+
+  After completing the validation and trust assessment of CRED, the SPO moves to Step 7.
+
+* (7) If CRED has been determined valid and (provisionally) trusted, the SPO moves to Step 8. Otherwise, the SPO moves to Step 11.
+
+* (8) The SPO stores CRED as a valid and (provisionally) trusted authentication credential associated with the other peer, together with corresponding authentication credential identifiers (see {{sec-trust-models}}). Then, the SPO moves to Step 9.
 
 * (9) The SPO checks if CRED is fine to use in the context of the ongoing EDHOC session, also depending on the specific identity of the other peer (see {{Sections 3.5 and D.2 of RFC9528}}).
 
@@ -953,7 +993,7 @@ Such an extended side processing shares similarities with that of an incoming ED
 
 * (10) P uses CRED as authentication credential associated with the other peer in the ongoing EDHOC session. Then, the SPO moves to Step 12.
 
-* (11) The SPO has not found a valid authentication credential associated with the other peer that can be used in the ongoing EDHOC session. Therefore, the EDHOC session with the other peer is aborted.
+* (11) The SPO has not found a valid and (provisionally) trusted authentication credential associated with the other peer that can be used in the ongoing EDHOC session. Therefore, the EDHOC session with the other peer is aborted.
 
 * (12) The SPO processes any EAD item included in message_1 that has not already been processed.
 
@@ -995,12 +1035,12 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 |  |       |                                                          |
 |  | NO    | YES                                                      |
 |  |       v                                                          |
-|  |   +----------------+     +-------------+     +-------------+     |
-|  |   | 1. Does an EAD | NO  | 3. Retrieve |     | 4. Is the   |     |
-|  |   | item point to  |---->| CRED via    |---->| retrieval   |     |
-|  |   | an already     |     | an EAD item |     | of CRED     |     |
-|  |   | stored CRED?   |     +-------------+     | successful? |     |
-|  |   +----------------+                         +-------------+     |
+|  |   +----------------+     +-------------+      +-------------+    |
+|  |   | 1. Does an EAD | NO  | 3. Retrieve |      | 4. Is the   |    |
+|  |   | item point to  |---->| CRED via    |----->| retrieval   |    |
+|  |   | an already     |     | an EAD item |      | of CRED     |    |
+|  |   | stored CRED?   |     +-------------+      | successful? |    |
+|  |   +----------------+                          +-------------+    |
 |  |       |                                         |         |      |
 |  |       |                                         | NO      | YES  |
 |  |       |                        +----------------+         |      |
@@ -1009,38 +1049,40 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 |  |       v                        v                          v      |
 |  |  +-----------------+ NO  +-----------+   YES +-----------------+ |
 |  |  | 2. Is this CRED |---->| 11. Abort |<------| 5. Is the trust | |
-|  |  | still valid?    |     | the EDHOC |       | policy used     | |
-|  |  +-----------------+     | session   |       | "NO-LEARNING",  | |
-|  |       |                  |           |       | without any     | |
+|  |  | still valid and |     | the EDHOC |       | policy used     | |
+|  |  | trusted?        |     | session   |       | "NO-LEARNING",  | |
+|  |  +-----------------+     |           |       | without any     | |
 |  |       |                  |           |       | acceptable      | |
 |  |       |                  |           |       | exceptions?     | |
 |  |       |                  |           |       +-----------------+ |
 |  |       | YES              |           |                    |      |
-|  |       v                  |           |    Here the trust  | NO   |
-|  |  +-----------------+ NO  |           |    policy used is  |      |
-|  |  | 9. Is this CRED |---->|           |    "LEARNING", or  |      |
-|  |  | good to use in  |     +-----------+    "NO-LEARNING"   |      |
-|  |  | the context of  |              ^       together with   |      |
-|  |  | this EDHOC      |<----+        |       an overriding   |      |
-|  |  | session?        |     |        |       exception       |      |
+|  |       v                  |           |     Here the trust | NO   |
+|  |  +-----------------+ NO  |           |     policy used is |      |
+|  |  | 9. Is this CRED |---->|           |     "LEARNING", or |      |
+|  |  | good to use in  |     +-----------+     "NO-LEARNING"  |      |
+|  |  | the context of  |              ^        together with  |      |
+|  |  | this EDHOC      |<----+        |        an overriding  |      |
+|  |  | session?        |     |        |        exception      |      |
 |  |  +-----------------+     |        |                       |      |
 |  |      |                   |        |                       v      |
-|  |      |                   |        |              +-------------+ |
-|  |      |                   |        |              | 6. Validate | |
-|  |      |                   |        |              | CRED        | |
-|  |      |                   |        |              +-------------+ |
-|  |      |                   |        |                        |     |
-|  |      | YES               |        | NO                     |     |
-|  |      |                   |        |                        v     |
+|  |      |                   |        |            +---------------+ |
+|  |      |                   |        |            | 6. Assess if  | |
+|  |      |                   |        |            | CRED is valid | |
+|  |      |                   |        |            | and trusted   | |
+|  |      |                   |        |            +---------------+ |
+|  |      |                   |        |                       |      |
+|  |      | YES               |        | NO                    |      |
+|  |      |                   |        |                       v      |
 |  |      |                   |     +-------------------------------+ |
-|  |      |                   |     | 7. Is CRED valid?             | |
+|  |      |                   |     | 7. Is CRED valid and          | |
+|  |      |                   |     | (provisionally) trusted?      | |
 |  |      |                   |     +-------------------------------+ |
 |  |      |                   |        |                              |
 |  |      |                   |        | YES                          |
 |  |      v                   |        v                              |
 |  |  +------------------+    |     +-------------------------------+ |
 |  |  | 10. Continue by  |    |     | 8. Store CRED as valid and    | |
-|  |  | considering this |    +-----| trusted.                      | |
+|  |  | considering this |    +-----| (provisionally) trusted.      | |
 |  |  | CRED as the      |          |                               | |
 |  |  | authentication   |          | Pair CRED with consistent     | |
 |  |  | credential       |          | credential identifiers, for   | |
@@ -1076,6 +1118,10 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 {:removeinrfc}
 
 ## Version -05 to -06 ## {#sec-05-06}
+
+* Generalized trust assessment of authentication credentials.
+
+* Revised discussion on the ELA procedure, based on upcoming updates expected in version -07 of draft-ietf-lake-authz.
 
 * Editorial fixes and improvements.
 
