@@ -1950,9 +1950,12 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
  |  |      |                                                           |
  |  |      |                                                           |
  |  v      v                                                           |
- | +------------------------------------------------------------+      |
- | | 12. Process the EAD items that have not been processed yet |      |
- | +------------------------------------------------------------+      |
+ | +-------------------------------------------------------------+     |
+ | | 12. Process the EAD items that have not been processed yet. |     |
+ | |                                                             |     |
+ | | Make all the results of the EAD processing available to     |     |
+ | | build the next EDHOC message.                               |     |
+ | +-------------------------------------------------------------+     |
  |         |                                                           |
  +---------|-----------------------------------------------------------+
            |
