@@ -934,6 +934,12 @@ However, even in such a case, there would be no advantage in terms or round trip
 
 Therefore, if both the conditions COND8 and COND9 hold, the CoAP client should not send the EDHOC + OSCORE request. Instead, the CoAP client should continue by switching to the original EDHOC execution workflow. That is, the CoAP client first sends EDHOC message_3 prepended by the EDHOC Connection Identifier C_R encoded as per {{Section 3.3 of RFC9528}} and then sends the OSCORE-protected CoAP request once the EDHOC execution is completed.
 
+# Operational Considerations
+
+There are no new operations or manageability requirements introduced by this document.
+
+Explanation: this document provides considerations for implementers of the EDHOC protocol, without updating the protocol or introducing extensions thereof.
+
 # Security Considerations # {#sec-security-considerations}
 
 This document provides considerations for implementations of the EDHOC protocol. The security considerations compiled in {{Section 9 of RFC9528}} and in {{Section 7 of RFC9668}} apply. The compliance requirements for implementations that are listed in {{Section 8 of RFC9528}} also apply.
@@ -1151,6 +1157,8 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 * Revised discussion on the ELA procedure, based on upcoming updates expected in version -07 of draft-ietf-lake-authz.
 
 * Added side-processing check about the absence of expected EAD items in incoming EDHOC messages.
+
+* Added "Operational Considerations" section.
 
 * Editorial fixes and improvements.
 
