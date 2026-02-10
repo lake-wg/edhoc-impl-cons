@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-02-08T01:13:11.455131+00:00",
+  "timestamp": "2026-02-10T01:07:42.274208+00:00",
   "repo": "lake-wg/edhoc-impl-cons",
   "labels": [
     {
@@ -55,15 +55,15 @@
       "id": "I_kwDOMENsL87WZiCl",
       "title": "Describe EAD state machines to detect absence of EAD items",
       "url": "https://github.com/lake-wg/edhoc-impl-cons/issues/1",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "chrysn",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "In the latest authz document, the absence of a voucher is expressed as a bare label (rather than the absence of an EAD item) \"because it makes the EAD item state machine less dependent on looking at other channels\".\n\nI think that this represents a sub-optimal interface between EDHOC library and the EAD implementation, because that interface should be able to express that the next message was received without any EAD item of the numbers to which the EAD mechanism subscribed to.\n\nAligning implementations on that this is valuable information could happen in this document.\n\nCC @geonnave because he probably has input to this too.",
       "createdAt": "2025-11-06T18:23:46Z",
-      "updatedAt": "2025-11-06T18:24:38Z",
-      "closedAt": null,
+      "updatedAt": "2026-02-08T19:41:41Z",
+      "closedAt": "2026-02-08T19:41:41Z",
       "comments": [
         {
           "author": "chrysn",
