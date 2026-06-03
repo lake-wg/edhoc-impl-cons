@@ -371,7 +371,9 @@ Together with other information, the access token specifies (by value or by refe
 
 When the AS issues the first access token that specifies AUTH_CRED_C and is intended to be uploaded to PEER_RS, it is expected that the access token specifies AUTH_CRED_C by value and that PEER_RS is not currently storing AUTH_CRED_C, but instead will obtain it and learn it upon receiving the access token.
 
-Although the AS can upload the access token to PEER_RS on behalf of PEER_C as per the alternative SDC workflow defined in {{I-D.ietf-ace-workflow-and-params}}, the access token is typically uploaded to PEER_RS by PEER_C through a dedicated EAD item, when running EDHOC with PEER_RS. Consequently, PEER_RS has to learn AUTH_CRED_C as a new authentication credential during an EDHOC session with PEER_C.
+Although the AS can upload the access token to PEER_RS on behalf of PEER_C as per the alternative SDC workflow defined in {{I-D.ietf-ace-workflow-and-params}}, the access token is typically uploaded to PEER_RS by PEER_C through a dedicated EAD item, when running EDHOC with PEER_RS. The specific EDHOC message that includes the EAD item conveying the access token depends on whether the two peers use the EDHOC forward message flow or the EDHOC reverse message flow.
+
+Consequently, PEER_RS has to learn AUTH_CRED_C as a new authentication credential during an EDHOC session with PEER_C.
 
 At least for its EDHOC resource used for exchanging the EDHOC messages of the EDHOC session in question, this requires PEER_RS to:
 
@@ -1151,6 +1153,8 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 ## Version -06 to -07 ## {#sec-06-07}
 
 * Consistency alignments with draft-ietf-ace-edhoc-oscore-profile.
+
+* Clarification on EAD item in the EDHOC and OSCORE profile of ACE.
 
 * Editorial fixes and improvements.
 
