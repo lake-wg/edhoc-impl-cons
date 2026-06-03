@@ -305,7 +305,7 @@ There are different ways for P to acquire an authentication credential CRED asso
 
 Alternatively, CRED can be specified by the other peer during the EDHOC execution with P. This can rely on EDHOC message_2 or message_3, whose respective ID_CRED_R and ID_CRED_I field can specify CRED by value, or instead a URI or other external reference where CRED can be retrieved from (see {{Section 3.5.3 of RFC9528}}).
 
-Also during the EDHOC execution, an External Authorization Data (EAD) field might include an EAD item that specifies CRED by value or reference. This is the case, e.g., for the EAD items defined by the EDHOC and OSCORE profile of the ACE framework {{I-D.ietf-ace-edhoc-oscore-profile}}. In particular, they can be used for transporting (a reference to) an access token, which in turn specifies by value or by reference the public authentication credential associated with the EDHOC peer acting as ACE client.
+Also during the EDHOC execution, an External Authorization Data (EAD) field might include an EAD item that specifies CRED by value, or instead a URI or other external reference where CRED can be retrieved from. This is the case, e.g., for an EAD item defined by the EDHOC and OSCORE profile of the ACE framework {{I-D.ietf-ace-edhoc-oscore-profile}}. In particular, the EAD item is used for transporting an access token, which in turn specifies by value or by reference the public authentication credential associated with the EDHOC peer acting as ACE client.
 
 When obtaining a new credential CRED, the peer P has to validate it before storing it. The validation steps to perform depend on the specific type of CRED (e.g., a public key certificate {{RFC5280}}{{I-D.ietf-cose-cbor-encoded-cert}}) and can rely on (the authentication credential associated with) a trusted third party acting as a trust anchor.
 
@@ -377,7 +377,7 @@ At least for its EDHOC resource used for exchanging the EDHOC messages of the ED
 
 * Enforce the trust policy "LEARNING"; or
 
-* If enforcing the trust policy "NO-LEARNING", additionally enforce an overriding exception when an incoming EDHOC message includes an EAD item conveying (a reference to) a valid access token issued by a trusted AS.
+* If enforcing the trust policy "NO-LEARNING", additionally enforce an overriding exception when an incoming EDHOC message includes an EAD item specifying a valid access token issued by a trusted AS.
 
   That is, through a successful verification of the access token, PEER_RS is able to trust AUTH_CRED_C (if found valid), even though it did not already store AUTH_CRED_C upon receiving the EDHOC message with the EAD item.
 
@@ -818,7 +818,7 @@ Typically, an EDHOC peer specifies its associated authentication credential (by 
 
 In addition to that, there may be cases where an EDHOC peer provides the authentication credential also in an EAD item. In particular, such an EAD item can specify a cryptographically protected "envelope" (by value or by reference), which in turn specifies the authentication credential (by value or by reference).
 
-A case in point is the EDHOC and OSCORE profile of the ACE framework {{I-D.ietf-ace-edhoc-oscore-profile}}, where the envelope in question is an access token issued to the ACE client. In such a case, the ACE client can rely on an EAD item specifying the access token by value, or instead on a different EAD item specifying a session identifier as a reference to such access token. In either case, the access token specifies the authentication credential (by value or by reference) associated with the client.
+A case in point is the EDHOC and OSCORE profile of the ACE framework {{I-D.ietf-ace-edhoc-oscore-profile}}, where the envelope in question is an access token issued to the ACE client. In such a case, the ACE client can rely on an EAD item specifying the access token, which in turn specifies the authentication credential (by value or by reference) associated with the client.
 
 During an EDHOC session, an EDHOC peer P1 might therefore receive the authentication credential CRED associated with the other EDHOC peer P2 as specified by two items:
 
@@ -1149,6 +1149,8 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 {:removeinrfc}
 
 ## Version -06 to -07 ## {#sec-06-07}
+
+* Consistency alignments with draft-ietf-ace-edhoc-oscore-profile.
 
 * Editorial fixes and improvements.
 
