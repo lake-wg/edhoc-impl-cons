@@ -1822,30 +1822,29 @@ That is, through a successful verification of the access token, PEER_RS is able 
           <h4 id="name-in-the-lightweight-authoriz">
 <a href="#section-3.3.2" class="section-number selfRef">3.3.2. </a><a href="#name-in-the-lightweight-authoriz" class="section-name selfRef">In the Lightweight Authorization using EDHOC (ELA) Procedure</a>
           </h4>
-<p id="section-3.3.2-1">Editor's note: the text in this section reflects an upcoming update in draft-ietf-lake-authz, which is expected to appear in version -07 of that document.<a href="#section-3.3.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.3.2-2">When the execution of EDHOC embeds the ELA procedure defined in <span>[<a href="#I-D.ietf-lake-authz" class="cite xref">I-D.ietf-lake-authz</a>]</span>, the EDHOC peer U receives an EDHOC message_2 (message_3) where ID_CRED_R (ID_CRED_I) specifies by value the authentication credential CRED associated with the other peer V.<a href="#section-3.3.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.3.2-3">Furthermore, an EDHOC message sent to U includes an EAD item, which specifies a voucher issued by a trusted enrollment server W. The voucher is an assertion to U that W has authorized V and has endorsed CRED.<a href="#section-3.3.2-3" class="pilcrow">¶</a></p>
-<p id="section-3.3.2-4">The specific EDHOC message that includes the EAD item conveying the voucher depends on whether U and V use the EDHOC forward message flow (i.e., U is the EDHOC Initiator) or the EDHOC reverse message flow (i.e., U is the EDHOC Responder). In particular:<a href="#section-3.3.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-1">When the execution of EDHOC embeds the ELA procedure defined in <span>[<a href="#I-D.ietf-lake-authz" class="cite xref">I-D.ietf-lake-authz</a>]</span>, the EDHOC peer U receives an EDHOC message_2 (message_3) where ID_CRED_R (ID_CRED_I) specifies by value the authentication credential CRED associated with the other peer V.<a href="#section-3.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-2">Furthermore, an EDHOC message sent to U includes an EAD item, which specifies a voucher issued by a trusted enrollment server W. The voucher is an assertion to U that W has authorized V and has endorsed CRED.<a href="#section-3.3.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-3">The specific EDHOC message that includes the EAD item conveying the voucher depends on whether U and V use the EDHOC forward message flow (i.e., U is the EDHOC Initiator) or the EDHOC reverse message flow (i.e., U is the EDHOC Responder). In particular:<a href="#section-3.3.2-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.3.2-5.1">
-              <p id="section-3.3.2-5.1.1">When using the EDHOC forward message flow, the EAD item is included in EDHOC message_4, thereby endorsing CRED that was specified by ID_CRED_R in the previous EDHOC message_2.<a href="#section-3.3.2-5.1.1" class="pilcrow">¶</a></p>
-<p id="section-3.3.2-5.1.2">
-Since it is indeed expected that U does not already store CRED upon receiving EDHOC message_2, U can at best provisionally trust CRED (if found valid) when retrieving it from EDHOC message_2.<a href="#section-3.3.2-5.1.2" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3.2-4.1">
+              <p id="section-3.3.2-4.1.1">When using the EDHOC forward message flow, the EAD item is included in EDHOC message_4, thereby endorsing CRED that was specified by ID_CRED_R in the previous EDHOC message_2.<a href="#section-3.3.2-4.1.1" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-4.1.2">
+Since it is indeed expected that U does not already store CRED upon receiving EDHOC message_2, U can at best provisionally trust CRED (if found valid) when retrieving it from EDHOC message_2.<a href="#section-3.3.2-4.1.2" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.3.2-5.2">
-              <p id="section-3.3.2-5.2.1">When using the EDHOC reverse message flow, the EAD item is included in EDHOC message_3, thereby endorsing CRED that is specified by ID_CRED_I in the same EDHOC message.<a href="#section-3.3.2-5.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.3.2-4.2">
+              <p id="section-3.3.2-4.2.1">When using the EDHOC reverse message flow, the EAD item is included in EDHOC message_3, thereby endorsing CRED that is specified by ID_CRED_I in the same EDHOC message.<a href="#section-3.3.2-4.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.3.2-6">In either case, through a successful verification of the voucher, U is able to ultimately trust CRED (if found valid), even though U did not already store CRED upon receiving the EDHOC message specifying CRED.<a href="#section-3.3.2-6" class="pilcrow">¶</a></p>
-<p id="section-3.3.2-7">Therefore, if U enforces the trust policy "NO-LEARNING", it can additionally enforce an overriding exception as below:<a href="#section-3.3.2-7" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-5">In either case, through a successful verification of the voucher, U is able to ultimately trust CRED (if found valid), even though U did not already store CRED upon receiving the EDHOC message specifying CRED.<a href="#section-3.3.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-6">Therefore, if U enforces the trust policy "NO-LEARNING", it can additionally enforce an overriding exception as below:<a href="#section-3.3.2-6" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.3.2-8.1">
-              <p id="section-3.3.2-8.1.1">When using the EDHOC forward message flow, the exception is enforced when processing an EDHOC message_2, and it is raised by the intention of using the ELA procedure. That is, U intends to proceed with sending a consistent EDHOC message_3 that indicates the wish to obtain a voucher issued by W.<a href="#section-3.3.2-8.1.1" class="pilcrow">¶</a></p>
-<p id="section-3.3.2-8.1.2">
-At that point in time, the authentication credential CRED is only provisionally trusted (if found valid), with the expectation to receive an EDHOC message_4 in the same EDHOC session, conveying a valid voucher issued by W and thus confirming that CRED can be ultimately trusted.<a href="#section-3.3.2-8.1.2" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3.2-7.1">
+              <p id="section-3.3.2-7.1.1">When using the EDHOC forward message flow, the exception is enforced when processing an EDHOC message_2, and it is raised by the intention of using the ELA procedure. That is, U intends to proceed with sending a consistent EDHOC message_3 that indicates the wish to obtain a voucher issued by W.<a href="#section-3.3.2-7.1.1" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-7.1.2">
+At that point in time, the authentication credential CRED is only provisionally trusted (if found valid), with the expectation to receive an EDHOC message_4 in the same EDHOC session, conveying a valid voucher issued by W and thus confirming that CRED can be ultimately trusted.<a href="#section-3.3.2-7.1.2" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.3.2-8.2">
-              <p id="section-3.3.2-8.2.1">When using the EDHOC reverse message flow, the exception is enforced when processing an EDHOC message_3, and it is raised by the EDHOC message_3 including an EAD item that conveys a valid voucher issued by W, thus confirming that CRED can be ultimately trusted.<a href="#section-3.3.2-8.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.3.2-7.2">
+              <p id="section-3.3.2-7.2.1">When using the EDHOC reverse message flow, the exception is enforced when processing an EDHOC message_3, and it is raised by the EDHOC message_3 including an EAD item that conveys a valid voucher issued by W, thus confirming that CRED can be ultimately trusted.<a href="#section-3.3.2-7.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
@@ -2034,9 +2033,7 @@ After successfully validating CRED, the peer P can typically consider CRED as ul
 If such additional information can be retrieved from message_X (e.g., from an EAD item included therein), then P uses it to assess if CRED is trusted. Otherwise, if such additional information is expected later on during the EDHOC session, it can be acceptable for P to consider CRED as provisionally trusted.<a href="#section-4.3.1.1-2.6.5" class="pilcrow">¶</a></p>
 <p id="section-4.3.1.1-2.6.6"><a href="#sec-trust-models-ela" class="auto internal xref">Section 3.3.2</a> discusses the ELA procedure defined in <span>[<a href="#I-D.ietf-lake-authz" class="cite xref">I-D.ietf-lake-authz</a>]</span>, as a case in point where additional information required by the peer P to trust CRED could not be included in the same message that specifies CRED.<a href="#section-4.3.1.1-2.6.6" class="pilcrow">¶</a></p>
 <p id="section-4.3.1.1-2.6.7">
-Editor's note: the previous paragraph reflects an upcoming update in draft-ietf-lake-authz, which is expected to appear in version -07 of that document.<a href="#section-4.3.1.1-2.6.7" class="pilcrow">¶</a></p>
-<p id="section-4.3.1.1-2.6.8">
-After completing the validation and trust assessment of CRED, the SPO moves to Step 7.<a href="#section-4.3.1.1-2.6.8" class="pilcrow">¶</a></p>
+After completing the validation and trust assessment of CRED, the SPO moves to Step 7.<a href="#section-4.3.1.1-2.6.7" class="pilcrow">¶</a></p>
 </li>
               <li id="section-4.3.1.1-2.7">
                 <p id="section-4.3.1.1-2.7.1">If CRED has been determined valid and (provisionally) trusted, the SPO moves to Step 8. Otherwise, the SPO moves to Step 11.<a href="#section-4.3.1.1-2.7.1" class="pilcrow">¶</a></p>

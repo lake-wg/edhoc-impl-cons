@@ -702,10 +702,6 @@ Table of Contents
 
 3.3.2.  In the Lightweight Authorization using EDHOC (ELA) Procedure
 
-   Editor's note: the text in this section reflects an upcoming update
-   in draft-ietf-lake-authz, which is expected to appear in version -07
-   of that document.
-
    When the execution of EDHOC embeds the ELA procedure defined in
    [I-D.ietf-lake-authz], the EDHOC peer U receives an EDHOC message_2
    (message_3) where ID_CRED_R (ID_CRED_I) specifies by value the
@@ -1069,10 +1065,6 @@ Table of Contents
         [I-D.ietf-lake-authz], as a case in point where additional
         information required by the peer P to trust CRED could not be
         included in the same message that specifies CRED.
-
-        Editor's note: the previous paragraph reflects an upcoming
-        update in draft-ietf-lake-authz, which is expected to appear in
-        version -07 of that document.
 
         After completing the validation and trust assessment of CRED,
         the SPO moves to Step 7.
