@@ -99,12 +99,13 @@ Table of Contents
    Appendix A.  Foreseen Advanced Processing of Incoming EDHOC
            message_1
    Appendix B.  Document Updates
-     B.1.  Version -05 to -06
-     B.2.  Version -04 to -05
-     B.3.  Version -03 to -04
-     B.4.  Version -02 to -03
-     B.5.  Version -01 to -02
-     B.6.  Version -00 to -01
+     B.1.  Version -06 to -07
+     B.2.  Version -05 to -06
+     B.3.  Version -04 to -05
+     B.4.  Version -03 to -04
+     B.5.  Version -02 to -03
+     B.6.  Version -01 to -02
+     B.7.  Version -00 to -01
    Acknowledgments
    Author's Address
 
@@ -850,7 +851,7 @@ Table of Contents
          that the peer P recognizes (see Section 3.8 of [RFC9528]).
 
          With such information available, EDHOC can early abort the
-         current session in case M includes any EAD item which is both
+         current session if M includes any EAD item which is both
          critical and not recognized by the peer P.
 
          If no such EAD items are found, EDHOC can remove any padding
@@ -917,9 +918,9 @@ Table of Contents
    After that, the application might need to perform follow-up actions,
    depending on the outcome of the EDHOC execution.  For example, the
    SPO might have preliminarily filled application-level data
-   structures, as a result of processing EAD items.  In case of
+   structures, as a result of processing EAD items.  In the case of a
    successful EDHOC execution, the application might need to finalize
-   such data structures.  Instead, in case of unsuccessful EDHOC
+   such data structures.  Instead, in the case of an unsuccessful EDHOC
    execution, the application might need to clean-up or amend such data
    structures, or even roll back what the SPO did, unless the SPO
    already performed such actions before control was transferred back to
@@ -1006,8 +1007,8 @@ Table of Contents
         Those may specify CRED by value or by reference, including a URI
         or other external reference where CRED can be retrieved from.
 
-        If CRED is already installed, the SPO moves to Step 2.
-        Otherwise, the SPO moves to Step 3.
+        If CRED is already stored, the SPO moves to Step 2.  Otherwise,
+        the SPO moves to Step 3.
 
    2.   The SPO determines if the stored CRED is currently trusted and
         valid, e.g., by verifying that CRED has not expired and has not
@@ -1019,8 +1020,8 @@ Table of Contents
         validity of CRED_R specified by ID_CRED_R, as the result of an
         OCSP process [RFC6960].
 
-        In case CRED is determined to be valid, the SPO moves to Step 9.
-        Otherwise, the SPO moves to Step 11.
+        In the case that CRED is determined to be valid, the SPO moves
+        to Step 9.  Otherwise, the SPO moves to Step 11.
 
    3.   The SPO attempts to retrieve CRED via ID_CRED_X or an EAD item
         considered at Step 1.  Then, the SPO moves to Step 4.
@@ -1039,9 +1040,9 @@ Table of Contents
         also enforcing an exception acceptable for message_X (see
         Section 3.2).
 
-        Consistently, the SPO determines if CRED is currently valid,
-        e.g., by verifying that CRED has not expired and has not been
-        revoked.
+        Consistent with that, the SPO determines if CRED is currently
+        valid, e.g., by verifying that CRED has not expired and has not
+        been revoked.
 
         Validating CRED might require the SPO to first process an EAD
         item included in message_X.  For example, it can be an OCSP
@@ -1195,8 +1196,8 @@ Table of Contents
  +---------------------------------------------------------------------+
 
         Figure 4: High-Level Interaction Between the Core EDHOC
-       Processing and the Side-Processor Object (SPO), for EDHOC
-                        message_2 and message_3.
+      Processing and the Side-Processor Object (SPO), for Incoming
+                     EDHOC message_2 and message_3.
 
    The flowchart in Figure 5 shows the different steps taken for
    processing an incoming EDHOC message_2 and message_3.
@@ -1360,7 +1361,8 @@ Table of Contents
   | protocol state |
   +----------------+
 
-     Figure 5: Processing Steps for EDHOC message_2 and message_3.
+      Figure 5: Processing Steps for Incoming EDHOC message_2 and
+                               message_3.
 
 4.4.  Consistency Checks of Authentication Credentials from ID_CRED and
       EAD Items
@@ -1542,7 +1544,7 @@ Table of Contents
 
    *  COND6: (SIZE_BODY + SIZE_EDHOC_M3) > LIMIT
 
-   In particular, consistently with Section 5.2, the SIZE_BLOCK used has
+   In particular, consistent with Section 5.2, the SIZE_BLOCK used has
    to be such that the following condition also holds:
 
    *  COND7: (SIZE_BLOCK + SIZE_EDHOC_M3) <= LIMIT
@@ -1606,7 +1608,7 @@ Table of Contents
    only one more request message transporting the last block of the
    body.
 
-   However, even in such a case, there would be no advantage in terms or
+   However, even in such a case, there would be no advantage in terms of
    round trips compared to the original workflow, while still requiring
    the CoAP client and the CoAP server to perform the processing due to
    using the EDHOC + OSCORE request and Block-wise transferring.
@@ -1622,10 +1624,8 @@ Table of Contents
 6.  Operational Considerations
 
    There are no new operations or manageability requirements introduced
-   by this document.
-
-   Explanation: this document provides considerations for implementers
-   of the EDHOC protocol, without updating the protocol or introducing
+   by this document, which provides considerations for implementers of
+   the EDHOC protocol and does not update the protocol or introduce
    extensions thereof.
 
 7.  Security Considerations
@@ -1817,7 +1817,7 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
       a URI or other external reference where CRED can be retrieved
       from.
 
-      If CRED is already installed, the SPO moves to Step 2.  Otherwise,
+      If CRED is already stored, the SPO moves to Step 2.  Otherwise,
       the SPO moves to Step 3.
 
    *  (2) The SPO determines if the stored CRED is currently trusted and
@@ -1827,8 +1827,8 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
       Performing such a validation might require the SPO to first
       process an EAD item included in message_1.
 
-      In case CRED is determined to be valid, the SPO moves to Step 9.
-      Otherwise, the SPO moves to Step 11.
+      In the case that CRED is determined to be valid, the SPO moves to
+      Step 9.  Otherwise, the SPO moves to Step 11.
 
    *  (3) The SPO attempts to retrieve CRED via an EAD item considered
       at Step 1.  Then, the SPO moves to Step 4.
@@ -1847,8 +1847,9 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
       LEARNING" while also enforcing an exception acceptable for
       message_1 (see Section 3.2).
 
-      Consistently, the SPO determines if CRED is currently valid, e.g.,
-      by verifying that CRED has not expired and has not been revoked.
+      Consistent with that, the SPO determines if CRED is currently
+      valid, e.g., by verifying that CRED has not expired and has not
+      been revoked.
 
       Validating CRED might require the SPO to first process an EAD item
       included in message_1.
@@ -2022,13 +2023,17 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
   | protocol state |
   +----------------+
 
-            Figure 6: Processing Steps for EDHOC message_1.
+        Figure 6: Processing Steps for Incoming EDHOC message_1.
 
 Appendix B.  Document Updates
 
    This section is to be removed before publishing as an RFC.
 
-B.1.  Version -05 to -06
+B.1.  Version -06 to -07
+
+   *  Editorial fixes and improvements.
+
+B.2.  Version -05 to -06
 
    *  Generalized trust assessment of authentication credentials.
 
@@ -2042,13 +2047,13 @@ B.1.  Version -05 to -06
 
    *  Editorial fixes and improvements.
 
-B.2.  Version -04 to -05
+B.3.  Version -04 to -05
 
    *  Minor clarifications.
 
    *  Editorial fixes and improvements.
 
-B.3.  Version -03 to -04
+B.4.  Version -03 to -04
 
    *  Clarified and re-positioned exceptions to NO-LEARNING policy.
 
@@ -2059,7 +2064,7 @@ B.3.  Version -03 to -04
 
    *  Clarifications and editorial improvements.
 
-B.4.  Version -02 to -03
+B.5.  Version -02 to -03
 
    *  Consistent use of "trust policy" instead of "trust model".
 
@@ -2081,7 +2086,7 @@ B.4.  Version -02 to -03
 
    *  Clarifications and editorial improvements.
 
-B.5.  Version -01 to -02
+B.6.  Version -01 to -02
 
    *  Improved content on the EDHOC and OSCORE profile of ACE.
 
@@ -2094,7 +2099,7 @@ B.5.  Version -01 to -02
 
    *  Editorial improvements.
 
-B.6.  Version -00 to -01
+B.7.  Version -00 to -01
 
    *  Added considerations on trust policies when using the EDHOC and
       OSCORE profile of the ACE framework.
