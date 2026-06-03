@@ -518,13 +518,14 @@ Table of Contents
    CRED can be retrieved from (see Section 3.5.3 of [RFC9528]).
 
    Also during the EDHOC execution, an External Authorization Data (EAD)
-   field might include an EAD item that specifies CRED by value or
-   reference.  This is the case, e.g., for the EAD items defined by the
-   EDHOC and OSCORE profile of the ACE framework
-   [I-D.ietf-ace-edhoc-oscore-profile].  In particular, they can be used
-   for transporting (a reference to) an access token, which in turn
-   specifies by value or by reference the public authentication
-   credential associated with the EDHOC peer acting as ACE client.
+   field might include an EAD item that specifies CRED by value, or
+   instead a URI or other external reference where CRED can be retrieved
+   from.  This is the case, e.g., for an EAD item defined by the EDHOC
+   and OSCORE profile of the ACE framework
+   [I-D.ietf-ace-edhoc-oscore-profile].  In particular, the EAD item is
+   used for transporting an access token, which in turn specifies by
+   value or by reference the public authentication credential associated
+   with the EDHOC peer acting as ACE client.
 
    When obtaining a new credential CRED, the peer P has to validate it
    before storing it.  The validation steps to perform depend on the
@@ -688,8 +689,7 @@ Table of Contents
 
    *  If enforcing the trust policy "NO-LEARNING", additionally enforce
       an overriding exception when an incoming EDHOC message includes an
-      EAD item conveying (a reference to) a valid access token issued by
-      a trusted AS.
+      EAD item specifying a valid access token issued by a trusted AS.
 
       That is, through a successful verification of the access token,
       PEER_RS is able to trust AUTH_CRED_C (if found valid), even though
@@ -1381,11 +1381,9 @@ Table of Contents
    A case in point is the EDHOC and OSCORE profile of the ACE framework
    [I-D.ietf-ace-edhoc-oscore-profile], where the envelope in question
    is an access token issued to the ACE client.  In such a case, the ACE
-   client can rely on an EAD item specifying the access token by value,
-   or instead on a different EAD item specifying a session identifier as
-   a reference to such access token.  In either case, the access token
-   specifies the authentication credential (by value or by reference)
-   associated with the client.
+   client can rely on an EAD item specifying the access token, which in
+   turn specifies the authentication credential (by value or by
+   reference) associated with the client.
 
    During an EDHOC session, an EDHOC peer P1 might therefore receive the
    authentication credential CRED associated with the other EDHOC peer
@@ -2030,6 +2028,8 @@ Appendix B.  Document Updates
    This section is to be removed before publishing as an RFC.
 
 B.1.  Version -06 to -07
+
+   *  Consistency alignments with draft-ietf-ace-edhoc-oscore-profile.
 
    *  Editorial fixes and improvements.
 
