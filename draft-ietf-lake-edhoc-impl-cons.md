@@ -385,8 +385,6 @@ At least for its EDHOC resource used for exchanging the EDHOC messages of the ED
 
 ### In the Lightweight Authorization using EDHOC (ELA) Procedure # {#sec-trust-models-ela}
 
-Editor's note: the text in this section reflects an upcoming update in draft-ietf-lake-authz, which is expected to appear in version -07 of that document.
-
 When the execution of EDHOC embeds the ELA procedure defined in {{I-D.ietf-lake-authz}}, the EDHOC peer U receives an EDHOC message_2 (message_3) where ID_CRED_R (ID_CRED_I) specifies by value the authentication credential CRED associated with the other peer V.
 
 Furthermore, an EDHOC message sent to U includes an EAD item, which specifies a voucher issued by a trusted enrollment server W. The voucher is an assertion to U that W has authorized V and has endorsed CRED.
@@ -550,8 +548,6 @@ During PHASE_1, the SPO at the recipient peer P determines CRED, i.e., the authe
    If such additional information can be retrieved from message_X (e.g., from an EAD item included therein), then P uses it to assess if CRED is trusted. Otherwise, if such additional information is expected later on during the EDHOC session, it can be acceptable for P to consider CRED as provisionally trusted.
 
    {{sec-trust-models-ela}} discusses the ELA procedure defined in {{I-D.ietf-lake-authz}}, as a case in point where additional information required by the peer P to trust CRED could not be included in the same message that specifies CRED.
-
-   Editor's note: the previous paragraph reflects an upcoming update in draft-ietf-lake-authz, which is expected to appear in version -07 of that document.
 
    After completing the validation and trust assessment of CRED, the SPO moves to Step 7.
 
