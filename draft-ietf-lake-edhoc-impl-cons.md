@@ -449,7 +449,7 @@ At the right point in time during the processing of an incoming EDHOC message M 
 
    - Note that EDHOC might do some preliminary work on M before invoking the SPO, in order to provide the SPO only with actually relevant EAD items. This requires the application to additionally provide EDHOC with the ead_labels of the EAD items that the peer P recognizes (see {{Section 3.8 of RFC9528}}).
 
-      With such information available, EDHOC can early abort the current session in case M includes any EAD item which is both critical and not recognized by the peer P.
+      With such information available, EDHOC can early abort the current session if M includes any EAD item which is both critical and not recognized by the peer P.
 
       If no such EAD items are found, EDHOC can remove any padding EAD item (see {{Section 3.8.1 of RFC9528}}), as well as any EAD item which is neither critical nor recognized (since the SPO is going to ignore it anyway). This results in EDHOC providing the SPO only with EAD items that will be recognized and that require actual processing.
 
@@ -477,7 +477,7 @@ In the following, {{sec-message-side-processing-m1}} to {{sec-message-side-proce
 
 After completing the EDHOC execution, control is transferred back to the application. In particular, the application is provided with the overall outcome of the EDHOC execution (i.e., successful completion or failure), together with possible specific results produced by the SPO throughout the EDHOC execution (e.g., due to the processing of EAD items).
 
-After that, the application might need to perform follow-up actions, depending on the outcome of the EDHOC execution. For example, the SPO might have preliminarily filled application-level data structures, as a result of processing EAD items. In case of successful EDHOC execution, the application might need to finalize such data structures. Instead, in case of unsuccessful EDHOC execution, the application might need to clean-up or amend such data structures, or even roll back what the SPO did, unless the SPO already performed such actions before control was transferred back to the application.
+After that, the application might need to perform follow-up actions, depending on the outcome of the EDHOC execution. For example, the SPO might have preliminarily filled application-level data structures, as a result of processing EAD items. In the case of a successful EDHOC execution, the application might need to finalize such data structures. Instead, in the case of an unsuccessful EDHOC execution, the application might need to clean-up or amend such data structures, or even roll back what the SPO did, unless the SPO already performed such actions before control was transferred back to the application.
 
 ## EDHOC message_1 ## {#sec-message-side-processing-m1}
 
@@ -523,13 +523,13 @@ During PHASE_1, the SPO at the recipient peer P determines CRED, i.e., the authe
 
    Those may specify CRED by value or by reference, including a URI or other external reference where CRED can be retrieved from.
 
-   If CRED is already installed, the SPO moves to Step 2. Otherwise, the SPO moves to Step 3.
+   If CRED is already stored, the SPO moves to Step 2. Otherwise, the SPO moves to Step 3.
 
 2. The SPO determines if the stored CRED is currently trusted and valid, e.g., by verifying that CRED has not expired and has not been revoked.
 
    Performing such a validation might require the SPO to first process an EAD item included in message_X. For example, it can be an EAD item in EDHOC message_2 that confirms or revokes the validity of CRED_R specified by ID_CRED_R, as the result of an OCSP process {{RFC6960}}.
 
-   In case CRED is determined to be valid, the SPO moves to Step 9. Otherwise, the SPO moves to Step 11.
+   In the case that CRED is determined to be valid, the SPO moves to Step 9. Otherwise, the SPO moves to Step 11.
 
 3. The SPO attempts to retrieve CRED via ID_CRED_X or an EAD item considered at Step 1. Then, the SPO moves to Step 4.
 
@@ -539,7 +539,7 @@ During PHASE_1, the SPO at the recipient peer P determines CRED, i.e., the authe
 
 6. If this step has been reached, the peer P is not already storing the retrieved CRED and, at the same time, it enforces either the trust policy "LEARNING" or the trust policy "NO-LEARNING" while also enforcing an exception acceptable for message_X (see {{sec-policy-no-learning}}).
 
-   Consistently, the SPO determines if CRED is currently valid, e.g., by verifying that CRED has not expired and has not been revoked.
+   Consistent with that, the SPO determines if CRED is currently valid, e.g., by verifying that CRED has not expired and has not been revoked.
 
    Validating CRED might require the SPO to first process an EAD item included in message_X. For example, it can be an OCSP response {{RFC6960}} for validating CRED_R as a public key certificate transported by value or reference in ID_CRED_R.
 
@@ -646,7 +646,7 @@ EDHOC message_X
 |                                         Side-Processor Object (SPO) |
 +---------------------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-flowchart-spo-high-level title="High-Level Interaction Between the Core EDHOC Processing and the Side-Processor Object (SPO), for EDHOC message_2 and message_3." artwork-align="center"}
+{: #fig-flowchart-spo-high-level title="High-Level Interaction Between the Core EDHOC Processing and the Side-Processor Object (SPO), for Incoming EDHOC message_2 and message_3." artwork-align="center"}
 
 The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken for processing an incoming EDHOC message_2 and message_3.
 
@@ -810,7 +810,7 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
  | protocol state |
  +----------------+
 ~~~~~~~~~~~
-{: #fig-flowchart-spo-low-level title="Processing Steps for EDHOC message_2 and message_3." artwork-align="center"}
+{: #fig-flowchart-spo-low-level title="Processing Steps for Incoming EDHOC message_2 and message_3." artwork-align="center"}
 
 ## Consistency Checks of Authentication Credentials from ID\_CRED and EAD Items ## {#sec-consistency-checks-auth-creds}
 
@@ -896,7 +896,7 @@ In order to avoid further fragmentation at lower layers when sending an EDHOC + 
 
 * COND6: (SIZE_BODY + SIZE_EDHOC_M3) > LIMIT
 
-In particular, consistently with {{sec-block-wise-pre-req}}, the SIZE_BLOCK used has to be such that the following condition also holds:
+In particular, consistent with {{sec-block-wise-pre-req}}, the SIZE_BLOCK used has to be such that the following condition also holds:
 
 * COND7: (SIZE_BLOCK + SIZE_EDHOC_M3) <= LIMIT
 
@@ -930,15 +930,13 @@ Therefore, the following round trips are experienced by the CoAP client.
 
 It follows that RT_COMB >= RT_ORIG, i.e., the optimized EDHOC execution workflow might still be not worse than the original EDHOC execution workflow in terms of round trips. This is the case only if the SIZE_BLOCK used is such that ceil(SIZE_BODY / SIZE_BLOCK) is equal to 2, i.e., the plain application data is fragmented into only 2 inner blocks, and thus the EDHOC + OSCORE request is followed by only one more request message transporting the last block of the body.
 
-However, even in such a case, there would be no advantage in terms or round trips compared to the original workflow, while still requiring the CoAP client and the CoAP server to perform the processing due to using the EDHOC + OSCORE request and Block-wise transferring.
+However, even in such a case, there would be no advantage in terms of round trips compared to the original workflow, while still requiring the CoAP client and the CoAP server to perform the processing due to using the EDHOC + OSCORE request and Block-wise transferring.
 
 Therefore, if both the conditions COND8 and COND9 hold, the CoAP client should not send the EDHOC + OSCORE request. Instead, the CoAP client should continue by switching to the original EDHOC execution workflow. That is, the CoAP client first sends EDHOC message_3 prepended by the EDHOC Connection Identifier C_R encoded as per {{Section 3.3 of RFC9528}} and then sends the OSCORE-protected CoAP request once the EDHOC execution is completed.
 
 # Operational Considerations
 
-There are no new operations or manageability requirements introduced by this document.
-
-Explanation: this document provides considerations for implementers of the EDHOC protocol, without updating the protocol or introducing extensions thereof.
+There are no new operations or manageability requirements introduced by this document, which provides considerations for implementers of the EDHOC protocol and does not update the protocol or introduce extensions thereof.
 
 # Security Considerations # {#sec-security-considerations}
 
@@ -980,13 +978,13 @@ Such an extended side processing shares similarities with that of an incoming ED
 
   The EAD item can specify CRED by value or by reference, including a URI or other external reference where CRED can be retrieved from.
 
-  If CRED is already installed, the SPO moves to Step 2. Otherwise, the SPO moves to Step 3.
+  If CRED is already stored, the SPO moves to Step 2. Otherwise, the SPO moves to Step 3.
 
 * (2) The SPO determines if the stored CRED is currently trusted and valid, e.g., by verifying that CRED has not expired and has not been revoked.
 
   Performing such a validation might require the SPO to first process an EAD item included in message_1.
 
-  In case CRED is determined to be valid, the SPO moves to Step 9. Otherwise, the SPO moves to Step 11.
+  In the case that CRED is determined to be valid, the SPO moves to Step 9. Otherwise, the SPO moves to Step 11.
 
 * (3) The SPO attempts to retrieve CRED via an EAD item considered at Step 1. Then, the SPO moves to Step 4.
 
@@ -996,7 +994,7 @@ Such an extended side processing shares similarities with that of an incoming ED
 
 * (6) If this step has been reached, the peer P is not already storing the retrieved CRED and, at the same time, it enforces either the trust policy "LEARNING" or the trust policy "NO-LEARNING" while also enforcing an exception acceptable for message_1 (see {{sec-policy-no-learning}}).
 
-  Consistently, the SPO determines if CRED is currently valid, e.g., by verifying that CRED has not expired and has not been revoked.
+  Consistent with that, the SPO determines if CRED is currently valid, e.g., by verifying that CRED has not expired and has not been revoked.
 
   Validating CRED might require the SPO to first process an EAD item included in message_1.
 
@@ -1145,10 +1143,14 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
  | protocol state |
  +----------------+
 ~~~~~~~~~~~
-{: #fig-flowchart-spo-low-level-m1-advanced title="Processing Steps for EDHOC message_1." artwork-align="center"}
+{: #fig-flowchart-spo-low-level-m1-advanced title="Processing Steps for Incoming EDHOC message_1." artwork-align="center"}
 
 # Document Updates # {#sec-document-updates}
 {:removeinrfc}
+
+## Version -06 to -07 ## {#sec-06-07}
+
+* Editorial fixes and improvements.
 
 ## Version -05 to -06 ## {#sec-05-06}
 
