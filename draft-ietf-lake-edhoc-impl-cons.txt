@@ -4,8 +4,8 @@
 
 LAKE Working Group                                             M. Tiloca
 Internet-Draft                                                   RISE AB
-Intended status: Informational                               3 June 2026
-Expires: 5 December 2026
+Intended status: Informational                               4 June 2026
+Expires: 6 December 2026
 
 
   Implementation Considerations for Ephemeral Diffie-Hellman Over COSE
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 December 2026.
+   This Internet-Draft will expire on 6 December 2026.
 
 Copyright Notice
 
@@ -69,33 +69,35 @@ Table of Contents
      2.1.  EDHOC Sessions Become Invalid
      2.2.  Application Keys Become Invalid
      2.3.  Application Keys or Bound Access Rights Become Invalid
-   3.  Trust Policies for Learning New Authentication Credentials
-     3.1.  Trust Policy LEARNING
-     3.2.  Trust Policy NO-LEARNING
-     3.3.  Enforcement of Trust Policies in Specific Scenarios
-       3.3.1.  In the EDHOC and OSCORE Profile of ACE
-       3.3.2.  In the Lightweight Authorization using EDHOC (ELA)
+   3.  Retention of Completed EDHOC Sessions
+     3.1.  Handling of Incoming EDHOC Error Messages
+   4.  Trust Policies for Learning New Authentication Credentials
+     4.1.  Trust Policy LEARNING
+     4.2.  Trust Policy NO-LEARNING
+     4.3.  Enforcement of Trust Policies in Specific Scenarios
+       4.3.1.  In the EDHOC and OSCORE Profile of ACE
+       4.3.2.  In the Lightweight Authorization using EDHOC (ELA)
                Procedure
-   4.  Side Processing of Incoming EDHOC Messages
-     4.1.  EDHOC message_1
-     4.2.  EDHOC message_4
-     4.3.  EDHOC message_2 and message_3
-       4.3.1.  Pre-Verification Side Processing
-       4.3.2.  Post-Verification Side Processing
-       4.3.3.  Flowcharts
-     4.4.  Consistency Checks of Authentication Credentials from
+   5.  Side Processing of Incoming EDHOC Messages
+     5.1.  EDHOC message_1
+     5.2.  EDHOC message_4
+     5.3.  EDHOC message_2 and message_3
+       5.3.1.  Pre-Verification Side Processing
+       5.3.2.  Post-Verification Side Processing
+       5.3.3.  Flowcharts
+     5.4.  Consistency Checks of Authentication Credentials from
            ID_CRED and EAD Items
-   5.  Using EDHOC over CoAP with Block-Wise
-     5.1.  Notation
-     5.2.  Pre-requirements for the EDHOC + OSCORE Request
-     5.3.  Effectively Using Block-Wise
-   6.  Operational Considerations
-   7.  Security Considerations
-     7.1.  Assessing the Correctness of Implementations
-   8.  IANA Considerations
-   9.  References
-     9.1.  Normative References
-     9.2.  Informative References
+   6.  Using EDHOC over CoAP with Block-Wise
+     6.1.  Notation
+     6.2.  Pre-requirements for the EDHOC + OSCORE Request
+     6.3.  Effectively Using Block-Wise
+   7.  Operational Considerations
+   8.  Security Considerations
+     8.1.  Assessing the Correctness of Implementations
+   9.  IANA Considerations
+   10. References
+     10.1.  Normative References
+     10.2.  Informative References
    Appendix A.  Foreseen Advanced Processing of Incoming EDHOC
            message_1
    Appendix B.  Document Updates
@@ -137,22 +139,26 @@ Table of Contents
       of application keys derived from an EDHOC session when those
       become invalid.  This topic is discussed in Section 2.
 
+   *  Retention of completed EDHOC sessions that are still valid, also
+      in the case that an EDHOC error message is received after their
+      completion.  This topic is discussed in Section Section 3.
+
    *  Enforcement of different trust policies, with respect to learning
       new authentication credentials during an execution of EDHOC.  This
-      topic is discussed in Section 3.
+      topic is discussed in Section 4.
 
    *  Branched-off side processing of incoming EDHOC messages, with
       particular reference to: i) fetching and validation of
       authentication credentials; and ii) processing of External
       Authorization Data (EAD) items, which in turn might play a role in
       the fetching and validation of authentication credentials.  This
-      topic is discussed in Section 4.
+      topic is discussed in Section 5.
 
    *  Effectively using EDHOC over the Constrained Application Protocol
       (CoAP) [RFC7252] in combination with Block-wise transfers for CoAP
       [RFC7959], possibly together with the optimized EDHOC execution
       workflow defined in [RFC9668].  This topic is discussed in
-      Section 5.
+      Section 6.
 
 1.1.  Terminology
 
@@ -501,7 +507,41 @@ Table of Contents
     Figure 3: Handling of an Access Token or of a Set of Application
                      Keys that Have Become Invalid.
 
-3.  Trust Policies for Learning New Authentication Credentials
+3.  Retention of Completed EDHOC Sessions
+
+   After successfully completing an EDHOC session S and possibly using
+   the EDHOC_Exporter interface to derive keying material from S, an
+   EDHOC peer is expected to store and retain the latest state of S over
+   time.
+
+   Requirements to fulfill for persistently storing PRK_out or derived
+   application keys are defined in Sections 5.4.2 and 5.4.3 of
+   [RFC9528].
+
+   Retaining the state of S ensures that it is possible to:
+
+   *  Update S by updating its associated PRK_out in a more efficient
+      way than re-running EDHOC, e.g., by using the EDHOC_KeyUpdate
+      function defined in Appendix H of [RFC9528].
+
+   *  Use the EDHOC_Exporter interface for late derivations of keying
+      material from S that cannot be performed shortly after the session
+      completion or according to a predictable schedule.
+
+   Absent application policies defining more restrictive lifetimes, the
+   peer is expected to retain the latest state of S in its local storage
+   until:
+
+   *  S has to be deleted due to reasons discussed in Section 2; or
+
+   *  S has to be deleted due to memory limitations, in which case the
+      peer ought to delete the oldest completed EDHOC session first.
+
+3.1.  Handling of Incoming EDHOC Error Messages
+
+   TBD
+
+4.  Trust Policies for Learning New Authentication Credentials
 
    A peer P relies on authentication credentials associated with other
    peers, in order to authenticate those peers when running EDHOC with
@@ -547,8 +587,8 @@ Table of Contents
 
    When processing a received EDHOC message M that specifies an
    authentication credential CRED, the peer P can enforce one of the
-   trust policies LEARNING and NO-LEARNING specified in Section 3.1 and
-   Section 3.2, in order to determine whether to trust CRED.
+   trust policies LEARNING and NO-LEARNING specified in Section 4.1 and
+   Section 4.2, in order to determine whether to trust CRED.
 
    Irrespective of the adopted trust policy, P actually uses CRED only
    if it is determined to be fine to use in the context of the ongoing
@@ -584,7 +624,7 @@ Table of Contents
    EDHOC message_2 or message_3 addressed to the peer P.  In turn, this
    allows P to retrieve CRED from its local storage.
 
-3.1.  Trust Policy LEARNING
+4.1.  Trust Policy LEARNING
 
    When enforcing the LEARNING policy, the peer P trusts CRED even if P
    is not already storing CRED at message reception time.
@@ -604,7 +644,7 @@ Table of Contents
        Otherwise, P trusts and stores CRED, and can continue the EDHOC
        execution.
 
-3.2.  Trust Policy NO-LEARNING
+4.2.  Trust Policy NO-LEARNING
 
    When enforcing the NO-LEARNING policy, the peer P trusts CRED only if
    P is already storing CRED at message reception time, unless in cases
@@ -627,7 +667,7 @@ Table of Contents
    already stored upon receiving M.
 
    Such exceptions typically rely on a trusted party that vouches for
-   CRED, e.g., in the cases discussed in Section 3.3.  From the point of
+   CRED, e.g., in the cases discussed in Section 4.3.  From the point of
    view of the peer P, the trusted party might have been involved in the
    background, so that the vouching information about CRED is conveyed
    within an EDHOC message received during the EDHOC session (e.g.,
@@ -638,16 +678,16 @@ Table of Contents
 
    If the peer P admits such an exception and actually enforces it on an
    authentication credential CRED, then P effectively handles CRED
-   according to the trust policy "LEARNING" specified in Section 3.1.
+   according to the trust policy "LEARNING" specified in Section 4.1.
    When doing so, P still attempts to validate CRED, and it aborts the
    EDHOC session if the validation process is not successful.
 
-3.3.  Enforcement of Trust Policies in Specific Scenarios
+4.3.  Enforcement of Trust Policies in Specific Scenarios
 
    The following subsections discuss how an EDHOC peer enforces the
    trust policies LEARNING and NO-LEARNING in specific scenarios.
 
-3.3.1.  In the EDHOC and OSCORE Profile of ACE
+4.3.1.  In the EDHOC and OSCORE Profile of ACE
 
    As discussed in Section 2.3, two EDHOC peers can be using the ACE
    framework [RFC9200] and specifically the EDHOC and OSCORE profile of
@@ -700,7 +740,7 @@ Table of Contents
       it did not already store AUTH_CRED_C upon receiving the EDHOC
       message with the EAD item.
 
-3.3.2.  In the Lightweight Authorization using EDHOC (ELA) Procedure
+4.3.2.  In the Lightweight Authorization using EDHOC (ELA) Procedure
 
    When the execution of EDHOC embeds the ELA procedure defined in
    [I-D.ietf-lake-authz], the EDHOC peer U receives an EDHOC message_2
@@ -755,7 +795,7 @@ Table of Contents
       voucher issued by W, thus confirming that CRED can be ultimately
       trusted.
 
-4.  Side Processing of Incoming EDHOC Messages
+5.  Side Processing of Incoming EDHOC Messages
 
    This section describes an approach that EDHOC peers can use upon
    receiving EDHOC messages, in order to fetch/validate authentication
@@ -902,9 +942,9 @@ Table of Contents
          the application, concerning EAD items to produce irrespective
          of other EAD items included in M.
 
-   In the following, Section 4.1 to Section 4.3 describe more in detail
+   In the following, Section 5.1 to Section 5.3 describe more in detail
    the actions performed by the SPO on the different incoming EDHOC
-   messages.  Then, Section 4.4 describes further special handling of
+   messages.  Then, Section 5.4 describes further special handling of
    incoming EDHOC messages, as to consistency checks concerning
    authentication credentials in particular situations.
 
@@ -926,7 +966,7 @@ Table of Contents
    already performed such actions before control was transferred back to
    the application.
 
-4.1.  EDHOC message_1
+5.1.  EDHOC message_1
 
    During the processing of an incoming EDHOC message_1, EDHOC invokes
    the SPO only once, after the Responder peer has successfully decoded
@@ -950,10 +990,10 @@ Table of Contents
    value or by reference), as wrapped in a cryptographically protected
    "envelope".  In such a case, the processing of an incoming EDHOC
    message_1 shares similarities with that of an incoming EDHOC
-   message_2 or message_3 (see Section 4.3), as it is further elaborated
+   message_2 or message_3 (see Section 5.3), as it is further elaborated
    in Appendix A.
 
-4.2.  EDHOC message_4
+5.2.  EDHOC message_4
 
    During the processing of an incoming EDHOC message_4, EDHOC invokes
    the SPO only once, after the Initiator peer has successfully
@@ -966,7 +1006,7 @@ Table of Contents
    control back to EDHOC, which resumes its execution and advances its
    protocol state.
 
-4.3.  EDHOC message_2 and message_3
+5.3.  EDHOC message_2 and message_3
 
    The following refers to "message_X" as an incoming EDHOC message_2 or
    message_3, and to "message verification" as the verification of
@@ -977,29 +1017,29 @@ Table of Contents
 
    *  Right after message_X has been decrypted and before its
       verification starts.  Following this invocation, the SPO performs
-      the actions described in Section 4.3.1.
+      the actions described in Section 5.3.1.
 
    *  Right after message_X has been successfully verified.  Following
       this invocation, the SPO performs the actions described in
-      Section 4.3.2.
+      Section 5.3.2.
 
-   The flowcharts in Section 4.3.3 show the high-level interaction
+   The flowcharts in Section 5.3.3 show the high-level interaction
    between the core EDHOC processing and the SPO, as well as the
    different steps taken for processing an incoming message_X.
 
-4.3.1.  Pre-Verification Side Processing
+5.3.1.  Pre-Verification Side Processing
 
    The pre-verification side processing occurs in two sequential phases,
-   namely PHASE_1 (see Section 4.3.1.1) and PHASE_2 (see
-   Section 4.3.1.2).
+   namely PHASE_1 (see Section 5.3.1.1) and PHASE_2 (see
+   Section 5.3.1.2).
 
-4.3.1.1.  PHASE_1
+5.3.1.1.  PHASE_1
 
    During PHASE_1, the SPO at the recipient peer P determines CRED,
    i.e., the authentication credential associated with the other peer to
    be used in the ongoing EDHOC session.  In particular, the SPO first
    checks whether expected EAD items are absent in message_X (see
-   Section 4), and then performs the following steps.
+   Section 5), and then performs the following steps.
 
    1.   The SPO determines CRED based on ID_CRED_X or on an EAD item
         included in message_X.
@@ -1031,14 +1071,14 @@ Table of Contents
 
    5.   If the enforced trust policy for new authentication credentials
         is "NO-LEARNING" and P does not admit any exceptions that are
-        acceptable to enforce for message_X (see Section 3.2), the SPO
+        acceptable to enforce for message_X (see Section 4.2), the SPO
         moves to Step 11.  Otherwise, the SPO moves to Step 6.
 
    6.   If this step has been reached, the peer P is not already storing
         the retrieved CRED and, at the same time, it enforces either the
         trust policy "LEARNING" or the trust policy "NO-LEARNING" while
         also enforcing an exception acceptable for message_X (see
-        Section 3.2).
+        Section 4.2).
 
         Consistent with that, the SPO determines if CRED is currently
         valid, e.g., by verifying that CRED has not expired and has not
@@ -1061,7 +1101,7 @@ Table of Contents
         can be acceptable for P to consider CRED as provisionally
         trusted.
 
-        Section 3.3.2 discusses the ELA procedure defined in
+        Section 4.3.2 discusses the ELA procedure defined in
         [I-D.ietf-lake-authz], as a case in point where additional
         information required by the peer P to trust CRED could not be
         included in the same message that specifies CRED.
@@ -1075,7 +1115,7 @@ Table of Contents
    8.   The SPO stores CRED as a valid and (provisionally) trusted
         authentication credential associated with the other peer,
         together with corresponding authentication credential
-        identifiers (see Section 3).  Then, the SPO moves to Step 9.
+        identifiers (see Section 4).  Then, the SPO moves to Step 9.
 
    9.   The SPO checks if CRED is fine to use in the context of the
         ongoing EDHOC session, also depending on the specific identity
@@ -1088,14 +1128,14 @@ Table of Contents
         other peer in the ongoing EDHOC session.
 
         Then, PHASE_1 ends and the pre-verification side processing
-        moves to the next PHASE_2 (see Section 4.3.1.2).
+        moves to the next PHASE_2 (see Section 5.3.1.2).
 
    11.  The SPO has not found a valid and (provisionally) trusted
         authentication credential associated with the other peer that
         can be used in the ongoing EDHOC session.  Therefore, the EDHOC
         session with the other peer is aborted.
 
-4.3.1.2.  PHASE_2
+5.3.1.2.  PHASE_2
 
    During PHASE_2, the SPO processes any EAD item included in message_X
    such that both the following conditions hold:
@@ -1110,7 +1150,7 @@ Table of Contents
    or continues the processing of message_X with its corresponding
    message verification.
 
-4.3.2.  Post-Verification Side Processing
+5.3.2.  Post-Verification Side Processing
 
    During the post-verification side processing, the SPO processes any
    EAD item included in message_X such that the processing of that EAD
@@ -1123,7 +1163,7 @@ Table of Contents
    other peer does possess the private key corresponding to the public
    key specified by CRED, i.e., the authentication credential associated
    with the other peer that was determined during the pre-verification
-   side processing (see Section 4.3.1).  This requirement is fulfilled
+   side processing (see Section 5.3.1).  This requirement is fulfilled
    after a successful verification of message_X.
 
    Once all such EAD items have been processed, the SPO transfers
@@ -1133,7 +1173,7 @@ Table of Contents
 
    Then, EDHOC resumes its execution and advances its protocol state.
 
-4.3.3.  Flowcharts
+5.3.3.  Flowcharts
 
    The flowchart in Figure 4 shows the high-level interaction between
    the core EDHOC processing and the SPO, with particular reference to
@@ -1360,7 +1400,7 @@ Table of Contents
       Figure 5: Processing Steps for Incoming EDHOC message_2 and
                                message_3.
 
-4.4.  Consistency Checks of Authentication Credentials from ID_CRED and
+5.4.  Consistency Checks of Authentication Credentials from ID_CRED and
       EAD Items
 
    Typically, an EDHOC peer specifies its associated authentication
@@ -1422,7 +1462,7 @@ Table of Contents
    message_2 or message_4, i.e., whichever of the two messages includes
    ITEM_B in an EAD item of its EAD field.
 
-5.  Using EDHOC over CoAP with Block-Wise
+6.  Using EDHOC over CoAP with Block-Wise
 
    Appendix A.2 of [RFC9528] specifies how to transfer EDHOC over CoAP
    [RFC7252].  In such a case, EDHOC messages (possibly prepended by an
@@ -1456,7 +1496,7 @@ Table of Contents
    intermediary (e.g., a proxy) might do.  This is the typical case for
    CoAP endpoints using OSCORE (see Section 4.1.3.4 of [RFC8613]).
 
-5.1.  Notation
+6.1.  Notation
 
    The rest of this section refers to the following notation:
 
@@ -1497,7 +1537,7 @@ Table of Contents
 
    *  ceil(): the ceiling function.
 
-5.2.  Pre-requirements for the EDHOC + OSCORE Request
+6.2.  Pre-requirements for the EDHOC + OSCORE Request
 
    Before sending an EDHOC + OSCORE request, a CoAP client has to
    perform the following checks.  Note that, while the CoAP client is
@@ -1528,7 +1568,7 @@ Table of Contents
    then sends the OSCORE-protected CoAP request once the EDHOC execution
    is completed.
 
-5.3.  Effectively Using Block-Wise
+6.3.  Effectively Using Block-Wise
 
    In order to avoid further fragmentation at lower layers when sending
    an EDHOC + OSCORE request, the CoAP client has to use inner Block-
@@ -1538,7 +1578,7 @@ Table of Contents
 
    *  COND6: (SIZE_BODY + SIZE_EDHOC_M3) > LIMIT
 
-   In particular, consistent with Section 5.2, the SIZE_BLOCK used has
+   In particular, consistent with Section 6.2, the SIZE_BLOCK used has
    to be such that the following condition also holds:
 
    *  COND7: (SIZE_BLOCK + SIZE_EDHOC_M3) <= LIMIT
@@ -1615,14 +1655,14 @@ Table of Contents
    Section 3.3 of [RFC9528] and then sends the OSCORE-protected CoAP
    request once the EDHOC execution is completed.
 
-6.  Operational Considerations
+7.  Operational Considerations
 
    There are no new operations or manageability requirements introduced
    by this document, which provides considerations for implementers of
    the EDHOC protocol and does not update the protocol or introduce
    extensions thereof.
 
-7.  Security Considerations
+8.  Security Considerations
 
    This document provides considerations for implementations of the
    EDHOC protocol.  The security considerations compiled in Section 9 of
@@ -1638,7 +1678,7 @@ Table of Contents
    extensions and external applications, the related security
    considerations and compliance requirements also apply.
 
-7.1.  Assessing the Correctness of Implementations
+8.1.  Assessing the Correctness of Implementations
 
    Tools relying on fuzz testing such as EDHOC-Fuzzer [EDHOC-Fuzzer] can
    help assess the correctness of implementations of the EDHOC protocol
@@ -1662,13 +1702,13 @@ Table of Contents
       simplify the implementation, thus reducing the risks of bugs and
       related security vulnerabilities.
 
-8.  IANA Considerations
+9.  IANA Considerations
 
    This document has no actions for IANA.
 
-9.  References
+10.  References
 
-9.1.  Normative References
+10.1.  Normative References
 
    [RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained
               Application Protocol (CoAP)", RFC 7252,
@@ -1697,7 +1737,7 @@ Table of Contents
               (OSCORE)", RFC 9668, DOI 10.17487/RFC9668, November 2024,
               <https://www.rfc-editor.org/rfc/rfc9668>.
 
-9.2.  Informative References
+10.2.  Informative References
 
    [EDHOC-Fuzzer]
               Sagonas, K. and T. Typaldos, "EDHOC-Fuzzer: An EDHOC
@@ -1780,21 +1820,21 @@ Table of Contents
 
 Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
 
-   As mentioned in Section 4.1, future developments in EDHOC and in
+   As mentioned in Section 5.1, future developments in EDHOC and in
    related external security applications might rely on an EAD item in
    EDHOC message_1 that specifies the authentication credential CRED
    associated with the Initiator (by value or by reference), as wrapped
    in a cryptographically protected "envelope".
 
    In order to handle such a case, the processing of an incoming EDHOC
-   message_1 as described in Section 4.1 is extended with additional
+   message_1 as described in Section 5.1 is extended with additional
    steps performed by the SPO.
 
    Such an extended side processing shares similarities with that of an
-   incoming EDHOC message_2 or message_3 (see Section 4.3).  In
-   particular, similarly to what is compiled in Section 4.3.1.1 and
-   Section 4.3.1.2, the SPO first checks whether expected EAD items are
-   absent in message_X (see Section 4), and then performs the following
+   incoming EDHOC message_2 or message_3 (see Section 5.3).  In
+   particular, similarly to what is compiled in Section 5.3.1.1 and
+   Section 5.3.1.2, the SPO first checks whether expected EAD items are
+   absent in message_X (see Section 5), and then performs the following
    steps.
 
    *  (0) The SPO checks the presence of an EAD item that specifies the
@@ -1832,14 +1872,14 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
 
    *  (5) If the enforced trust policy for new authentication
       credentials is "NO-LEARNING" and P does not admit any exceptions
-      that are acceptable to enforce for message_1 (see Section 3.2),
+      that are acceptable to enforce for message_1 (see Section 4.2),
       the SPO moves to Step 11.  Otherwise, the SPO moves to Step 6.
 
    *  (6) If this step has been reached, the peer P is not already
       storing the retrieved CRED and, at the same time, it enforces
       either the trust policy "LEARNING" or the trust policy "NO-
       LEARNING" while also enforcing an exception acceptable for
-      message_1 (see Section 3.2).
+      message_1 (see Section 4.2).
 
       Consistent with that, the SPO determines if CRED is currently
       valid, e.g., by verifying that CRED has not expired and has not
@@ -1868,7 +1908,7 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
    *  (8) The SPO stores CRED as a valid and (provisionally) trusted
       authentication credential associated with the other peer, together
       with corresponding authentication credential identifiers (see
-      Section 3).  Then, the SPO moves to Step 9.
+      Section 4).  Then, the SPO moves to Step 9.
 
    *  (9) The SPO checks if CRED is fine to use in the context of the
       ongoing EDHOC session, also depending on the specific identity of
@@ -2025,6 +2065,8 @@ Appendix B.  Document Updates
 
 B.1.  Version -06 to -07
 
+   *  Discussed retention of completed EDHOC sessions.
+
    *  Consistency alignments with draft-ietf-ace-edhoc-oscore-profile.
 
    *  Clarification on EAD item in the EDHOC and OSCORE profile of ACE.
@@ -2112,8 +2154,8 @@ B.7.  Version -00 to -01
 Acknowledgments
 
    The author sincerely thanks Christian Amsüss, Geovane Fedrecheski,
-   Rikard Höglund, John Preuß Mattsson, Göran Selander, and Mališa
-   Vučinić for their comments and feedback.
+   Rikard Höglund, John Preuß Mattsson, Göran Selander, Brian Sipos, and
+   Mališa Vučinić for their comments and feedback.
 
    The work on this document has been partly supported by the Sweden's
    Innovation Agency VINNOVA and the Celtic-Next project CYPRESS.
