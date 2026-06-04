@@ -75,6 +75,8 @@ In order to prevent multiple, independent re-discoveries and assessments of thos
 
 * Handling of completed EDHOC sessions when they become invalid and of application keys derived from an EDHOC session when those become invalid. This topic is discussed in {{sec-session-handling}}.
 
+* Retention of completed EDHOC sessions that are still valid, also in the case that an EDHOC error message is received after their completion. This topic is discussed in Section {{sec-session-retention}}.
+
 * Enforcement of different trust policies, with respect to learning new authentication credentials during an execution of EDHOC. This topic is discussed in {{sec-trust-models}}.
 
 * Branched-off side processing of incoming EDHOC messages, with particular reference to: i) fetching and validation of authentication credentials; and ii) processing of External Authorization Data (EAD) items, which in turn might play a role in the fetching and validation of authentication credentials. This topic is discussed in {{sec-message-side-processing}}.
@@ -296,6 +298,28 @@ Install the updated
 application keys
 ~~~~~~~~~~~
 {: #fig-flowchart-keys-token-invalid title="Handling of an Access Token or of a Set of Application Keys that Have Become Invalid." artwork-align="center"}
+
+# Retention of Completed EDHOC Sessions # {#sec-session-retention}
+
+After successfully completing an EDHOC session S and possibly using the EDHOC_Exporter interface to derive keying material from S, an EDHOC peer is expected to store and retain the latest state of S over time.
+
+Requirements to fulfill for persistently storing PRK_out or derived application keys are defined in {{Sections 5.4.2 and 5.4.3 of RFC9528}}.
+
+Retaining the state of S ensures that it is possible to:
+
+* Update S by updating its associated PRK_out in a more efficient way than re-running EDHOC, e.g., by using the EDHOC_KeyUpdate function defined in {{Section H of RFC9528}}.
+
+* Use the EDHOC_Exporter interface for late derivations of keying material from S that cannot be performed shortly after the session completion or according to a predictable schedule.
+
+Absent application policies defining more restrictive lifetimes, the peer is expected to retain the latest state of S in its local storage until:
+
+* S has to be deleted due to reasons discussed in {{sec-session-handling}}; or
+
+* S has to be deleted due to memory limitations, in which case the peer ought to delete the oldest completed EDHOC session first.
+
+## Handling of Incoming EDHOC Error Messages
+
+TBD
 
 # Trust Policies for Learning New Authentication Credentials # {#sec-trust-models}
 
@@ -1148,6 +1172,8 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 
 ## Version -06 to -07 ## {#sec-06-07}
 
+* Discussed retention of completed EDHOC sessions.
+
 * Consistency alignments with draft-ietf-ace-edhoc-oscore-profile.
 
 * Clarification on EAD item in the EDHOC and OSCORE profile of ACE.
@@ -1225,6 +1251,6 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 # Acknowledgments # {#acknowledgments}
 {: numbered="no"}
 
-The author sincerely thanks {{{Christian Amsüss}}}, {{{Geovane Fedrecheski}}}, {{{Rikard Höglund}}}, {{{John Preuß Mattsson}}}, {{{Göran Selander}}}, and {{{Mališa Vučinić}}} for their comments and feedback.
+The author sincerely thanks {{{Christian Amsüss}}}, {{{Geovane Fedrecheski}}}, {{{Rikard Höglund}}}, {{{John Preuß Mattsson}}}, {{{Göran Selander}}}, {{{Brian Sipos}}}, and {{{Mališa Vučinić}}} for their comments and feedback.
 
 The work on this document has been partly supported by the Sweden's Innovation Agency VINNOVA and the Celtic-Next project CYPRESS.
