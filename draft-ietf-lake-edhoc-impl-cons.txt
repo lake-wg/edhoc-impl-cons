@@ -185,7 +185,7 @@ Table of Contents
    the event that any of those becomes invalid.
 
    To provide more concrete guidance, the following considers the case
-   where "applications keys" stands for the keying material and
+   where "application keys" stands for the keying material and
    parameters that compose a Security Context for the security protocol
    Object Security for Constrained RESTful Environments (OSCORE)
    [RFC8613], i.e., when specifically those application keys are derived
@@ -2154,8 +2154,8 @@ B.7.  Version -00 to -01
 Acknowledgments
 
    The author sincerely thanks Christian Amsüss, Geovane Fedrecheski,
-   Rikard Höglund, John Preuß Mattsson, Göran Selander, Brian Sipos, and
-   Mališa Vučinić for their comments and feedback.
+   Rikard Höglund, John Preuß Mattsson, Göran Selander, Brian Sipos,
+   Yuxuan Song, and Mališa Vučinić for their comments and feedback.
 
    The work on this document has been partly supported by the Sweden's
    Innovation Agency VINNOVA and the Celtic-Next project CYPRESS.
