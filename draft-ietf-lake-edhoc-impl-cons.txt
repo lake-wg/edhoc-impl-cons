@@ -590,6 +590,34 @@ Table of Contents
    trust policies LEARNING and NO-LEARNING specified in Section 4.1 and
    Section 4.2, in order to determine whether to trust CRED.
 
+   Table 1 provides a summary of the behavior of P about accepting CRED,
+   for different trust policies.  Provisional trust on CRED has to be
+   later confirmed, e.g., by information that vouches for CRED and is
+   conveyed within an EDHOC message received during the EDHOC session
+   (e.g., transported by an EAD item).
+
+   +======================+================+==========================+
+   |                      | CRED is not    | CRED is new              |
+   |                      | new (already   | (not already stored)     |
+   |                      | stored)        |                          |
+   +======================+================+==========================+
+   | LEARNING policy      | Accept,        | Accept, if valid and     |
+   |                      | if still valid | therefore                |
+   |                      | and trusted.   | (provisionally) trusted. |
+   +----------------------+----------------+--------------------------+
+   | NO-LEARNING policy,  | Accept,        | Do not accept.           |
+   | without              | if still valid |                          |
+   | acceptable exception | and trusted.   |                          |
+   +----------------------+----------------+--------------------------+
+   | NO-LEARNING policy,  | Accept,        | Accept, if valid and     |
+   | with                 | if still valid | (provisionally) trusted. |
+   | acceptable exception | and trusted.   |                          |
+   +----------------------+----------------+--------------------------+
+
+      Table 1: Summary about Accepting the Authetication Credential
+       CRED Associated with the Other Peer in an EDHOC Session, for
+                        Different Trust Policies.
+
    Irrespective of the adopted trust policy, P actually uses CRED only
    if it is determined to be fine to use in the context of the ongoing
    EDHOC session, also depending on the specific identity of the other
@@ -663,8 +691,8 @@ Table of Contents
 
    Exceptions may apply and be actually enforced in cases where, during
    an EDHOC execution, P obtains additional information that allows it
-   to trust and successfully validate CRED, even though CRED is not
-   already stored upon receiving M.
+   to trust and successfully validate CRED, even though P was not
+   already storing CRED when receiving M.
 
    Such exceptions typically rely on a trusted party that vouches for
    CRED, e.g., in the cases discussed in Section 4.3.  From the point of
@@ -737,7 +765,7 @@ Table of Contents
 
       That is, through a successful verification of the access token,
       PEER_RS is able to trust AUTH_CRED_C (if found valid), even though
-      it did not already store AUTH_CRED_C upon receiving the EDHOC
+      it was not already storing AUTH_CRED_C when receiving the EDHOC
       message with the EAD item.
 
 4.3.2.  In the Lightweight Authorization using EDHOC (ELA) Procedure
@@ -761,7 +789,7 @@ Table of Contents
       included in EDHOC message_4, thereby endorsing CRED that was
       specified by ID_CRED_R in the previous EDHOC message_2.
 
-      Since it is indeed expected that U does not already store CRED
+      Since it is indeed expected that U is not already storing CRED
       upon receiving EDHOC message_2, U can at best provisionally trust
       CRED (if found valid) when retrieving it from EDHOC message_2.
 
@@ -770,8 +798,8 @@ Table of Contents
       specified by ID_CRED_I in the same EDHOC message.
 
    In either case, through a successful verification of the voucher, U
-   is able to ultimately trust CRED (if found valid), even though U did
-   not already store CRED upon receiving the EDHOC message specifying
+   is able to ultimately trust CRED (if found valid), even though U was
+   not already storing CRED upon receiving the EDHOC message specifying
    CRED.
 
    Therefore, if U enforces the trust policy "NO-LEARNING", it can
@@ -2078,6 +2106,9 @@ B.1.  Version -06 to -07
       -  An EAD field can include one or more EAD items.
 
       -  Use of a new EAD item in the EDHOC and OSCORE profile of ACE.
+
+      -  Table summarizing expected behavior for different trust
+         policies.
 
    *  Consistency alignments with draft-ietf-ace-edhoc-oscore-profile.
 

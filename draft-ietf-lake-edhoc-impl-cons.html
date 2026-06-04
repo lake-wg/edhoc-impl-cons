@@ -1780,19 +1780,52 @@ At the RS, the access token is bound to this latest EDHOC session and the newly 
 <p id="section-4-6">Upon retrieving a new CRED through the processing of a received EDHOC message and following the successful validation of CRED, the peer P stores CRED only if it assesses CRED to also be (provisionally) trusted, while it must not store CRED otherwise.<a href="#section-4-6" class="pilcrow">¶</a></p>
 <p id="section-4-7">An exception applies for the two unauthenticated operations described in <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-D.5" class="relref">Appendix D.5</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>, where a trust relationship with an unknown or not-yet-trusted endpoint is established later. In such a case, CRED is verified out-of-band at a later stage, or an EDHOC session key is bound to an identity out-of-band at a later stage.<a href="#section-4-7" class="pilcrow">¶</a></p>
 <p id="section-4-8">When processing a received EDHOC message M that specifies an authentication credential CRED, the peer P can enforce one of the trust policies LEARNING and NO-LEARNING specified in <a href="#sec-policy-learning" class="auto internal xref">Section 4.1</a> and <a href="#sec-policy-no-learning" class="auto internal xref">Section 4.2</a>, in order to determine whether to trust CRED.<a href="#section-4-8" class="pilcrow">¶</a></p>
-<p id="section-4-9">Irrespective of the adopted trust policy, P actually uses CRED only if it is determined to be fine to use in the context of the ongoing EDHOC session, also depending on the specific identity of the other peer (see Sections <a href="https://rfc-editor.org/rfc/rfc9528#section-3.5" class="relref">3.5</a> and <a href="https://rfc-editor.org/rfc/rfc9528#appendix-D.2" class="relref">D.2</a> of <span>[<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>). If this is not the case, P aborts the EDHOC session with the other peer.<a href="#section-4-9" class="pilcrow">¶</a></p>
-<p id="section-4-10">If P stores CRED, then P will consider CRED as valid and trusted until:<a href="#section-4-10" class="pilcrow">¶</a></p>
+<p id="section-4-9"><a href="#tab-trust-policies" class="auto internal xref">Table 1</a> provides a summary of the behavior of P about accepting CRED, for different trust policies. Provisional trust on CRED has to be later confirmed, e.g., by information that vouches for CRED and is conveyed within an EDHOC message received during the EDHOC session (e.g., transported by an EAD item).<a href="#section-4-9" class="pilcrow">¶</a></p>
+<span id="name-summary-about-accepting-the"></span><div id="tab-trust-policies">
+<table class="center" id="table-1">
+        <caption>
+<a href="#table-1" class="selfRef">Table 1</a>:
+<a href="#name-summary-about-accepting-the" class="selfRef">Summary about Accepting the Authetication Credential CRED Associated with the Other Peer in an EDHOC Session, for Different Trust Policies.</a>
+        </caption>
+<thead>
+          <tr>
+            <th class="text-left" rowspan="1" colspan="1"> </th>
+            <th class="text-left" rowspan="1" colspan="1">CRED is not new (already stored)</th>
+            <th class="text-left" rowspan="1" colspan="1">CRED is new<br>(not already stored)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">LEARNING policy</td>
+            <td class="text-left" rowspan="1" colspan="1">Accept,<br>if still valid<br>and trusted.</td>
+            <td class="text-left" rowspan="1" colspan="1">Accept, if valid and therefore (provisionally) trusted.</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">NO-LEARNING policy, without <br> acceptable exception</td>
+            <td class="text-left" rowspan="1" colspan="1">Accept,<br>if still valid<br>and trusted.</td>
+            <td class="text-left" rowspan="1" colspan="1">Do not accept.</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">NO-LEARNING policy, with <br> acceptable exception</td>
+            <td class="text-left" rowspan="1" colspan="1">Accept,<br>if still valid<br>and trusted.</td>
+            <td class="text-left" rowspan="1" colspan="1">Accept, if valid and<br>(provisionally) trusted.</td>
+          </tr>
+        </tbody>
+      </table>
+</div>
+<p id="section-4-11">Irrespective of the adopted trust policy, P actually uses CRED only if it is determined to be fine to use in the context of the ongoing EDHOC session, also depending on the specific identity of the other peer (see Sections <a href="https://rfc-editor.org/rfc/rfc9528#section-3.5" class="relref">3.5</a> and <a href="https://rfc-editor.org/rfc/rfc9528#appendix-D.2" class="relref">D.2</a> of <span>[<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>). If this is not the case, P aborts the EDHOC session with the other peer.<a href="#section-4-11" class="pilcrow">¶</a></p>
+<p id="section-4-12">If P stores CRED, then P will consider CRED as valid and trusted until:<a href="#section-4-12" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4-11.1">
-          <p id="section-4-11.1.1">CRED possibly becomes invalid, e.g., because it expires or because P gains knowledge that it has been revoked; or<a href="#section-4-11.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4-13.1">
+          <p id="section-4-13.1.1">CRED possibly becomes invalid, e.g., because it expires or because P gains knowledge that it has been revoked; or<a href="#section-4-13.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-4-11.2">
-          <p id="section-4-11.2.1">CRED becomes non-trusted, e.g., because P originally assessed CRED to be provisionally trusted, and later on failed to obtain an expected final confirmation of trust.<a href="#section-4-11.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-4-13.2">
+          <p id="section-4-13.2.1">CRED becomes non-trusted, e.g., because P originally assessed CRED to be provisionally trusted, and later on failed to obtain an expected final confirmation of trust.<a href="#section-4-13.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-4-12">P must delete CRED from its local storage if CRED becomes invalid or non-trusted.<a href="#section-4-12" class="pilcrow">¶</a></p>
-<p id="section-4-13">When storing CRED, the peer P should generate the authentication credential identifier(s) corresponding to CRED and store them as associated with CRED. For example, if CRED is a public key certificate, an identifier of CRED can be the hash of the certificate. In general, P should generate and associate with CRED one corresponding identifier for each type of authentication credential identifier that P supports and that is compatible with CRED.<a href="#section-4-13" class="pilcrow">¶</a></p>
-<p id="section-4-14">In future executions of EDHOC with the other peer associated with CRED, this allows such other peer to specify CRED by reference, e.g., by indicating its credential identifier as ID_CRED_R/ID_CRED_I in the EDHOC message_2 or message_3 addressed to the peer P. In turn, this allows P to retrieve CRED from its local storage.<a href="#section-4-14" class="pilcrow">¶</a></p>
+<p id="section-4-14">P must delete CRED from its local storage if CRED becomes invalid or non-trusted.<a href="#section-4-14" class="pilcrow">¶</a></p>
+<p id="section-4-15">When storing CRED, the peer P should generate the authentication credential identifier(s) corresponding to CRED and store them as associated with CRED. For example, if CRED is a public key certificate, an identifier of CRED can be the hash of the certificate. In general, P should generate and associate with CRED one corresponding identifier for each type of authentication credential identifier that P supports and that is compatible with CRED.<a href="#section-4-15" class="pilcrow">¶</a></p>
+<p id="section-4-16">In future executions of EDHOC with the other peer associated with CRED, this allows such other peer to specify CRED by reference, e.g., by indicating its credential identifier as ID_CRED_R/ID_CRED_I in the EDHOC message_2 or message_3 addressed to the peer P. In turn, this allows P to retrieve CRED from its local storage.<a href="#section-4-16" class="pilcrow">¶</a></p>
 <div id="sec-policy-learning">
 <section id="section-4.1">
         <h3 id="name-trust-policy-learning">
@@ -1828,7 +1861,7 @@ At the RS, the access token is bound to this latest EDHOC session and the newly 
             <p id="section-4.2-3.2.1">CRED is still valid (i.e., P believes CRED to not be expired or revoked) and trusted.<a href="#section-4.2-3.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-4.2-4">Exceptions may apply and be actually enforced in cases where, during an EDHOC execution, P obtains additional information that allows it to trust and successfully validate CRED, even though CRED is not already stored upon receiving M.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
+<p id="section-4.2-4">Exceptions may apply and be actually enforced in cases where, during an EDHOC execution, P obtains additional information that allows it to trust and successfully validate CRED, even though P was not already storing CRED when receiving M.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
 <p id="section-4.2-5">Such exceptions typically rely on a trusted party that vouches for CRED, e.g., in the cases discussed in <a href="#sec-trust-models-specific" class="auto internal xref">Section 4.3</a>. From the point of view of the peer P, the trusted party might have been involved in the background, so that the vouching information about CRED is conveyed within an EDHOC message received during the EDHOC session (e.g., transported by an EAD item). Alternatively, P might directly interact with the trusted party for retrieving the vouching information about CRED, e.g., after having received M and before continuing the EDHOC execution.<a href="#section-4.2-5" class="pilcrow">¶</a></p>
 <p id="section-4.2-6">If the peer P admits such an exception and actually enforces it on an authentication credential CRED, then P effectively handles CRED according to the trust policy "LEARNING" specified in <a href="#sec-policy-learning" class="auto internal xref">Section 4.1</a>. When doing so, P still attempts to validate CRED, and it aborts the EDHOC session if the validation process is not successful.<a href="#section-4.2-6" class="pilcrow">¶</a></p>
 </section>
@@ -1858,7 +1891,7 @@ At the RS, the access token is bound to this latest EDHOC session and the newly 
             <li class="normal" id="section-4.3.1-8.2">
               <p id="section-4.3.1-8.2.1">If enforcing the trust policy "NO-LEARNING", additionally enforce an overriding exception when an incoming EDHOC message includes an EAD item specifying a valid access token issued by a trusted AS.<a href="#section-4.3.1-8.2.1" class="pilcrow">¶</a></p>
 <p id="section-4.3.1-8.2.2">
-That is, through a successful verification of the access token, PEER_RS is able to trust AUTH_CRED_C (if found valid), even though it did not already store AUTH_CRED_C upon receiving the EDHOC message with the EAD item.<a href="#section-4.3.1-8.2.2" class="pilcrow">¶</a></p>
+That is, through a successful verification of the access token, PEER_RS is able to trust AUTH_CRED_C (if found valid), even though it was not already storing AUTH_CRED_C when receiving the EDHOC message with the EAD item.<a href="#section-4.3.1-8.2.2" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
@@ -1875,13 +1908,13 @@ That is, through a successful verification of the access token, PEER_RS is able 
 <li class="normal" id="section-4.3.2-4.1">
               <p id="section-4.3.2-4.1.1">When using the EDHOC forward message flow, the EAD item is included in EDHOC message_4, thereby endorsing CRED that was specified by ID_CRED_R in the previous EDHOC message_2.<a href="#section-4.3.2-4.1.1" class="pilcrow">¶</a></p>
 <p id="section-4.3.2-4.1.2">
-Since it is indeed expected that U does not already store CRED upon receiving EDHOC message_2, U can at best provisionally trust CRED (if found valid) when retrieving it from EDHOC message_2.<a href="#section-4.3.2-4.1.2" class="pilcrow">¶</a></p>
+Since it is indeed expected that U is not already storing CRED upon receiving EDHOC message_2, U can at best provisionally trust CRED (if found valid) when retrieving it from EDHOC message_2.<a href="#section-4.3.2-4.1.2" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.3.2-4.2">
               <p id="section-4.3.2-4.2.1">When using the EDHOC reverse message flow, the EAD item is included in EDHOC message_3, thereby endorsing CRED that is specified by ID_CRED_I in the same EDHOC message.<a href="#section-4.3.2-4.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-4.3.2-5">In either case, through a successful verification of the voucher, U is able to ultimately trust CRED (if found valid), even though U did not already store CRED upon receiving the EDHOC message specifying CRED.<a href="#section-4.3.2-5" class="pilcrow">¶</a></p>
+<p id="section-4.3.2-5">In either case, through a successful verification of the voucher, U is able to ultimately trust CRED (if found valid), even though U was not already storing CRED upon receiving the EDHOC message specifying CRED.<a href="#section-4.3.2-5" class="pilcrow">¶</a></p>
 <p id="section-4.3.2-6">Therefore, if U enforces the trust policy "NO-LEARNING", it can additionally enforce an overriding exception as below:<a href="#section-4.3.2-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.3.2-7.1">
@@ -3555,6 +3588,9 @@ Once all such EAD items have been processed, the SPO transfers control back to E
 </li>
               <li class="normal" id="appendix-B.1-1.2.2.2">
                 <p id="appendix-B.1-1.2.2.2.1">Use of a new EAD item in the EDHOC and OSCORE profile of ACE.<a href="#appendix-B.1-1.2.2.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="appendix-B.1-1.2.2.3">
+                <p id="appendix-B.1-1.2.2.3.1">Table summarizing expected behavior for different trust policies.<a href="#appendix-B.1-1.2.2.3.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
