@@ -1905,94 +1905,95 @@ At that point in time, the authentication credential CRED is only provisionally 
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-side-processing-of-incoming" class="section-name selfRef">Side Processing of Incoming EDHOC Messages</a>
       </h2>
 <p id="section-5-1">This section describes an approach that EDHOC peers can use upon receiving EDHOC messages, in order to fetch/validate authentication credentials and to process External Authorization Data (EAD) items.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">As per <span><a href="https://rfc-editor.org/rfc/rfc9528#section-9.1" class="relref">Section 9.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>, the EDHOC protocol provides a transport mechanism for conveying EAD items, but specifications defining those items have to set the ground for "agreeing on the surrounding context and the meaning of the information passed to and from the application".<a href="#section-5-2" class="pilcrow">¶</a></p>
-<p id="section-5-3">The approach described in this section aims to help implementers navigate the surrounding context mentioned above, irrespective of the specific EAD items conveyed in the EDHOC messages. In particular, the described approach takes into account the following points:<a href="#section-5-3" class="pilcrow">¶</a></p>
+<p id="section-5-2">The transport mechanism provided by EDHOC for conveying EAD items is defined in <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.8" class="relref">Section 3.8</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>. In particular, an EDHOC message_x can include one dedicated EAD field EAD_x, for x = 1, 2, 3, or 4. In turn, an EAD field can include one or more EAD items.<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-3">As per <span><a href="https://rfc-editor.org/rfc/rfc9528#section-9.1" class="relref">Section 9.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>, specifications defining those EAD items have to set the ground for "agreeing on the surrounding context and the meaning of the information passed to and from the application".<a href="#section-5-3" class="pilcrow">¶</a></p>
+<p id="section-5-4">The approach described in this section aims to help implementers navigate the surrounding context mentioned above, irrespective of the specific EAD items conveyed in the EDHOC messages. In particular, the described approach takes into account the following points:<a href="#section-5-4" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5-4.1">
-          <p id="section-5-4.1.1">The fetching and validation of the authentication credential associated with the other peer relies on ID_CRED_I in EDHOC message_2, or on ID_CRED_R in EDHOC message_3, or on the value of an EAD item. When this occurs upon receiving EDHOC message_2 or message_3, the decryption of the EDHOC message has to be completed first.<a href="#section-5-4.1.1" class="pilcrow">¶</a></p>
-<p id="section-5-4.1.2">
-Validating the authentication credential or assessing whether it is trusted might depend on using the value of an EAD item, which in turn has to be validated first.<a href="#section-5-4.1.2" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5-5.1">
+          <p id="section-5-5.1.1">The fetching and validation of the authentication credential associated with the other peer relies on ID_CRED_I in EDHOC message_2, or on ID_CRED_R in EDHOC message_3, or on the value of an EAD item. When this occurs upon receiving EDHOC message_2 or message_3, the decryption of the EDHOC message has to be completed first.<a href="#section-5-5.1.1" class="pilcrow">¶</a></p>
+<p id="section-5-5.1.2">
+Validating the authentication credential or assessing whether it is trusted might depend on using the value of an EAD item, which in turn has to be validated first.<a href="#section-5-5.1.2" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-5-4.2">
-          <p id="section-5-4.2.1">It is possible that some EAD items can be processed only after having successfully verified the EDHOC message, i.e., after a successful verification of the Signature_or_MAC field in EDHOC message_2 or message_3.<a href="#section-5-4.2.1" class="pilcrow">¶</a></p>
-<p id="section-5-4.2.2">
-For instance, an EAD item within the EAD_3 field of EDHOC message_3 might contain a Certificate Signing Request (CSR) <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>. Hence, such an EAD item can be processed only once the recipient peer has attained proof that the other peer possesses its own private key.<a href="#section-5-4.2.2" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-5-5.2">
+          <p id="section-5-5.2.1">It is possible that some EAD items can be processed only after having successfully verified the EDHOC message, i.e., after a successful verification of the Signature_or_MAC field in EDHOC message_2 or message_3.<a href="#section-5-5.2.1" class="pilcrow">¶</a></p>
+<p id="section-5-5.2.2">
+For instance, an EAD item within the EAD_3 field of EDHOC message_3 might contain a Certificate Signing Request (CSR) <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>. Hence, such an EAD item can be processed only once the recipient peer has attained proof that the other peer possesses its own private key.<a href="#section-5-5.2.2" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-5-5">In order to conveniently handle such processing, the application can prepare in advance a "side-processor object" (SPO), which takes care of the operations above during the EDHOC execution.<a href="#section-5-5" class="pilcrow">¶</a></p>
-<p id="section-5-6">In particular, the application provides EDHOC with the SPO before starting an EDHOC execution, during which EDHOC will temporarily transfer control to the SPO at the right point in time, in order to perform the required side-processing of an incoming EDHOC message.<a href="#section-5-6" class="pilcrow">¶</a></p>
-<p id="section-5-7">Furthermore, the application has to instruct the SPO about:<a href="#section-5-7" class="pilcrow">¶</a></p>
+<p id="section-5-6">In order to conveniently handle such processing, the application can prepare in advance a "side-processor object" (SPO), which takes care of the operations above during the EDHOC execution.<a href="#section-5-6" class="pilcrow">¶</a></p>
+<p id="section-5-7">In particular, the application provides EDHOC with the SPO before starting an EDHOC execution, during which EDHOC will temporarily transfer control to the SPO at the right point in time, in order to perform the required side-processing of an incoming EDHOC message.<a href="#section-5-7" class="pilcrow">¶</a></p>
+<p id="section-5-8">Furthermore, the application has to instruct the SPO about:<a href="#section-5-8" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5-8.1">
-          <p id="section-5-8.1.1">How to prepare any EAD item such that: it has to be included in an outgoing EDHOC message; and it is independent of the processing of other EAD items included in incoming EDHOC messages. This includes, for instance, the preparation of padding EAD items (see <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.8.1" class="relref">Section 3.8.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-5-8.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5-9.1">
+          <p id="section-5-9.1.1">How to prepare any EAD item such that: it has to be included in the EAD field of an outgoing EDHOC message, possibly together with other EAD items; and it is independent of the processing of other EAD items included in incoming EDHOC messages. This includes, for instance, the preparation of padding EAD items (see <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.8.1" class="relref">Section 3.8.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-5-9.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-5-8.2">
-          <p id="section-5-8.2.1">The list of EAD items that are expected to be present in specific, incoming EDHOC messages during the EDHOC session. This takes into account, for instance, external security applications that will be integrated in the EDHOC session (e.g., see <span>[<a href="#I-D.ietf-lake-authz" class="cite xref">I-D.ietf-lake-authz</a>]</span>).<a href="#section-5-8.2.1" class="pilcrow">¶</a></p>
-<p id="section-5-8.2.2">
-Throughout the EDHOC session, the SPO keeps such a list of expected EAD items up-to-date. This takes into account, for instance, external security applications that have been run integrated in the EDHOC session, the current status of the session, as well as the EDHOC messages that have been exchanged during the session and the outcome of their processing.<a href="#section-5-8.2.2" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-5-9.2">
+          <p id="section-5-9.2.1">The list of one or more EAD items that are expected to be present within the dedicated EAD field of specific, incoming EDHOC messages during the EDHOC session. This takes into account, for instance, external security applications that will be integrated in the EDHOC session (e.g., see <span>[<a href="#I-D.ietf-lake-authz" class="cite xref">I-D.ietf-lake-authz</a>]</span>).<a href="#section-5-9.2.1" class="pilcrow">¶</a></p>
+<p id="section-5-9.2.2">
+Throughout the EDHOC session, the SPO keeps such a list of expected EAD items up-to-date. This takes into account, for instance, external security applications that have been run integrated in the EDHOC session, the current status of the session, as well as the EDHOC messages that have been exchanged during the session and the outcome of their processing.<a href="#section-5-9.2.2" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-5-9">At the right point in time during the processing of an incoming EDHOC message M at the peer P, EDHOC invokes the SPO and provides it with the following input:<a href="#section-5-9" class="pilcrow">¶</a></p>
+<p id="section-5-10">At the right point in time during the processing of an incoming EDHOC message M at the peer P, EDHOC invokes the SPO and provides it with the following input:<a href="#section-5-10" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5-10.1">
-          <p id="section-5-10.1.1">When M is EDHOC message_2 or message_3, an indication of whether this invocation is happening before or after the message verification (i.e., before or after having verified the Signature_or_MAC field).<a href="#section-5-10.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5-11.1">
+          <p id="section-5-11.1.1">When M is EDHOC message_2 or message_3, an indication of whether this invocation is happening before or after the message verification (i.e., before or after having verified the Signature_or_MAC field).<a href="#section-5-11.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-5-10.2">
-          <p id="section-5-10.2.1">The full set of information related to the current EDHOC session. This especially includes the selected cipher suite and the ephemeral Diffie-Hellman public keys G_X and G_Y that the two peers have exchanged in the EDHOC session.<a href="#section-5-10.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-5-11.2">
+          <p id="section-5-11.2.1">The full set of information related to the current EDHOC session. This especially includes the selected cipher suite and the ephemeral Diffie-Hellman public keys G_X and G_Y that the two peers have exchanged in the EDHOC session.<a href="#section-5-11.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-5-10.3">
-          <p id="section-5-10.3.1">The authentication credentials that the peer P stores as associated with other peers.<a href="#section-5-10.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-5-11.3">
+          <p id="section-5-11.3.1">The authentication credentials that the peer P stores as associated with other peers.<a href="#section-5-11.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-5-10.4">
-          <p id="section-5-10.4.1">All the decrypted information elements retrieved from M.<a href="#section-5-10.4.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-5-11.4">
+          <p id="section-5-11.4.1">All the decrypted information elements retrieved from M.<a href="#section-5-11.4.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-5-10.5">
-          <p id="section-5-10.5.1">The EAD items included in M.<a href="#section-5-10.5.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-5-11.5">
+          <p id="section-5-11.5.1">The EAD items included in M.<a href="#section-5-11.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5-10.5.2.1">
-              <p id="section-5-10.5.2.1.1">Note that EDHOC might do some preliminary work on M before invoking the SPO, in order to provide the SPO only with actually relevant EAD items. This requires the application to additionally provide EDHOC with the ead_labels of the EAD items that the peer P recognizes (see <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.8" class="relref">Section 3.8</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-5-10.5.2.1.1" class="pilcrow">¶</a></p>
-<p id="section-5-10.5.2.1.2">
-With such information available, EDHOC can early abort the current session if M includes any EAD item which is both critical and not recognized by the peer P.<a href="#section-5-10.5.2.1.2" class="pilcrow">¶</a></p>
-<p id="section-5-10.5.2.1.3">
-If no such EAD items are found, EDHOC can remove any padding EAD item (see <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.8.1" class="relref">Section 3.8.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>), as well as any EAD item which is neither critical nor recognized (since the SPO is going to ignore it anyway). This results in EDHOC providing the SPO only with EAD items that will be recognized and that require actual processing.<a href="#section-5-10.5.2.1.3" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5-11.5.2.1">
+              <p id="section-5-11.5.2.1.1">Note that EDHOC might do some preliminary work on M before invoking the SPO, in order to provide the SPO only with actually relevant EAD items. This requires the application to additionally provide EDHOC with the ead_labels of the EAD items that the peer P recognizes (see <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.8" class="relref">Section 3.8</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-5-11.5.2.1.1" class="pilcrow">¶</a></p>
+<p id="section-5-11.5.2.1.2">
+With such information available, EDHOC can early abort the current session if M includes any EAD item which is both critical and not recognized by the peer P.<a href="#section-5-11.5.2.1.2" class="pilcrow">¶</a></p>
+<p id="section-5-11.5.2.1.3">
+If no such EAD items are found, EDHOC can remove any padding EAD item (see <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.8.1" class="relref">Section 3.8.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>), as well as any EAD item which is neither critical nor recognized (since the SPO is going to ignore it anyway). This results in EDHOC providing the SPO only with EAD items that will be recognized and that require actual processing.<a href="#section-5-11.5.2.1.3" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-5-10.5.2.2">
-              <p id="section-5-10.5.2.2.1">Note that, after having processed the EAD items, the SPO might actually need to store them throughout the whole EDHOC execution, e.g., in order to refer to them also when processing later EDHOC messages in the current EDHOC session.<a href="#section-5-10.5.2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-5-11.5.2.2">
+              <p id="section-5-11.5.2.2.1">Note that, after having processed the EAD items, the SPO might actually need to store them throughout the whole EDHOC execution, e.g., in order to refer to them also when processing later EDHOC messages in the current EDHOC session.<a href="#section-5-11.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </li>
       </ul>
-<p id="section-5-11">The SPO performs the following tasks on an incoming EDHOC message M:<a href="#section-5-11" class="pilcrow">¶</a></p>
+<p id="section-5-12">The SPO performs the following tasks on an incoming EDHOC message M:<a href="#section-5-12" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5-12.1">
-          <p id="section-5-12.1.1">The SPO checks whether M does not include an EAD item whose presence was expected, based on the related list maintained throughout the EDHOC session. If such an EAD item is absent, the SPO can come to an early determination about whether and how to proceed with the processing of M.<a href="#section-5-12.1.1" class="pilcrow">¶</a></p>
-<p id="section-5-12.1.2">
-In particular, if an EAD item is absent although its presence was strictly required, then the SPO can early abort the EDHOC session, thereby avoiding potentially costly operations (e.g., the retrieval and validation of the authentication credential associated with the other peer).<a href="#section-5-12.1.2" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5-13.1">
+          <p id="section-5-13.1.1">The SPO checks whether M does not include an EAD item whose presence was expected, based on the related list maintained throughout the EDHOC session. If such an EAD item is absent, the SPO can come to an early determination about whether and how to proceed with the processing of M.<a href="#section-5-13.1.1" class="pilcrow">¶</a></p>
+<p id="section-5-13.1.2">
+In particular, if an EAD item is absent although its presence was strictly required, then the SPO can early abort the EDHOC session, thereby avoiding potentially costly operations (e.g., the retrieval and validation of the authentication credential associated with the other peer).<a href="#section-5-13.1.2" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-5-12.2">
-          <p id="section-5-12.2.1">The SPO fetches and/or validates the authentication credential CRED associated with the other peer, based on a dedicated EAD item of M or on the ID_CRED field of M (for EDHOC message_2 or message_3).<a href="#section-5-12.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-5-13.2">
+          <p id="section-5-13.2.1">The SPO fetches and/or validates the authentication credential CRED associated with the other peer, based on a dedicated EAD item of M or on the ID_CRED field of M (for EDHOC message_2 or message_3).<a href="#section-5-13.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-5-12.3">
-          <p id="section-5-12.3.1">The SPO processes the EAD items conveyed in the EAD field of M.<a href="#section-5-12.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-5-13.3">
+          <p id="section-5-13.3.1">The SPO processes the EAD items conveyed in the EAD field of M.<a href="#section-5-13.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-5-12.4">
-          <p id="section-5-12.4.1">The SPO stores the results of the performed operations and makes such results available to the application.<a href="#section-5-12.4.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-5-13.4">
+          <p id="section-5-13.4.1">The SPO stores the results of the performed operations and makes such results available to the application.<a href="#section-5-13.4.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-5-12.5">
-          <p id="section-5-12.5.1">When the SPO has completed its side processing and transfers control back to EDHOC, the SPO provides EDHOC with the produced EAD items to include in the EAD field of the next outgoing EDHOC message. The production of such EAD items can be triggered, e.g., by:<a href="#section-5-12.5.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-5-13.5">
+          <p id="section-5-13.5.1">When the SPO has completed its side processing and transfers control back to EDHOC, the SPO provides EDHOC with the produced EAD items to include in the EAD field of the next outgoing EDHOC message. The production of such EAD items can be triggered, e.g., by:<a href="#section-5-13.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5-12.5.2.1">
-              <p id="section-5-12.5.2.1.1">The consumption of EAD items included in M.<a href="#section-5-12.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5-13.5.2.1">
+              <p id="section-5-13.5.2.1.1">The consumption of EAD items included in M.<a href="#section-5-13.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-5-12.5.2.2">
-              <p id="section-5-12.5.2.2.1">The execution of instructions that the SPO has received from the application, concerning EAD items to produce irrespective of other EAD items included in M.<a href="#section-5-12.5.2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-5-13.5.2.2">
+              <p id="section-5-13.5.2.2.1">The execution of instructions that the SPO has received from the application, concerning EAD items to produce irrespective of other EAD items included in M.<a href="#section-5-13.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </li>
       </ul>
-<p id="section-5-13">In the following, <a href="#sec-message-side-processing-m1" class="auto internal xref">Section 5.1</a> to <a href="#sec-message-side-processing-m2-m3" class="auto internal xref">Section 5.3</a> describe more in detail the actions performed by the SPO on the different incoming EDHOC messages. Then, <a href="#sec-consistency-checks-auth-creds" class="auto internal xref">Section 5.4</a> describes further special handling of incoming EDHOC messages, as to consistency checks concerning authentication credentials in particular situations.<a href="#section-5-13" class="pilcrow">¶</a></p>
-<p id="section-5-14">After completing the EDHOC execution, control is transferred back to the application. In particular, the application is provided with the overall outcome of the EDHOC execution (i.e., successful completion or failure), together with possible specific results produced by the SPO throughout the EDHOC execution (e.g., due to the processing of EAD items).<a href="#section-5-14" class="pilcrow">¶</a></p>
-<p id="section-5-15">After that, the application might need to perform follow-up actions, depending on the outcome of the EDHOC execution. For example, the SPO might have preliminarily filled application-level data structures, as a result of processing EAD items. In the case of a successful EDHOC execution, the application might need to finalize such data structures. Instead, in the case of an unsuccessful EDHOC execution, the application might need to clean-up or amend such data structures, or even roll back what the SPO did, unless the SPO already performed such actions before control was transferred back to the application.<a href="#section-5-15" class="pilcrow">¶</a></p>
+<p id="section-5-14">In the following, <a href="#sec-message-side-processing-m1" class="auto internal xref">Section 5.1</a> to <a href="#sec-message-side-processing-m2-m3" class="auto internal xref">Section 5.3</a> describe more in detail the actions performed by the SPO on the different incoming EDHOC messages. Then, <a href="#sec-consistency-checks-auth-creds" class="auto internal xref">Section 5.4</a> describes further special handling of incoming EDHOC messages, as to consistency checks concerning authentication credentials in particular situations.<a href="#section-5-14" class="pilcrow">¶</a></p>
+<p id="section-5-15">After completing the EDHOC execution, control is transferred back to the application. In particular, the application is provided with the overall outcome of the EDHOC execution (i.e., successful completion or failure), together with possible specific results produced by the SPO throughout the EDHOC execution (e.g., due to the processing of EAD items).<a href="#section-5-15" class="pilcrow">¶</a></p>
+<p id="section-5-16">After that, the application might need to perform follow-up actions, depending on the outcome of the EDHOC execution. For example, the SPO might have preliminarily filled application-level data structures, as a result of processing EAD items. In the case of a successful EDHOC execution, the application might need to finalize such data structures. Instead, in the case of an unsuccessful EDHOC execution, the application might need to clean-up or amend such data structures, or even roll back what the SPO did, unless the SPO already performed such actions before control was transferred back to the application.<a href="#section-5-16" class="pilcrow">¶</a></p>
 <div id="sec-message-side-processing-m1">
 <section id="section-5.1">
         <h3 id="name-edhoc-message_1">
@@ -3547,10 +3548,18 @@ Once all such EAD items have been processed, the SPO transfers control back to E
             <p id="appendix-B.1-1.1.1">Discussed retention of completed EDHOC sessions.<a href="#appendix-B.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-B.1-1.2">
-            <p id="appendix-B.1-1.2.1">Consistency alignments with draft-ietf-ace-edhoc-oscore-profile.<a href="#appendix-B.1-1.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.1-1.2.1">Clarifications:<a href="#appendix-B.1-1.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-B.1-1.2.2.1">
+                <p id="appendix-B.1-1.2.2.1.1">An EAD field can include one or more EAD items.<a href="#appendix-B.1-1.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="appendix-B.1-1.2.2.2">
+                <p id="appendix-B.1-1.2.2.2.1">Use of a new EAD item in the EDHOC and OSCORE profile of ACE.<a href="#appendix-B.1-1.2.2.2.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
 </li>
           <li class="normal" id="appendix-B.1-1.3">
-            <p id="appendix-B.1-1.3.1">Clarification on EAD item in the EDHOC and OSCORE profile of ACE.<a href="#appendix-B.1-1.3.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.1-1.3.1">Consistency alignments with draft-ietf-ace-edhoc-oscore-profile.<a href="#appendix-B.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-B.1-1.4">
             <p id="appendix-B.1-1.4.1">Editorial fixes and improvements.<a href="#appendix-B.1-1.4.1" class="pilcrow">¶</a></p>
