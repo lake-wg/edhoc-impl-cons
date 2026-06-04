@@ -141,7 +141,7 @@ Table of Contents
 
    *  Retention of completed EDHOC sessions that are still valid, also
       in the case that an EDHOC error message is received after their
-      completion.  This topic is discussed in Section Section 3.
+      completion.  This topic is discussed in Section 3.
 
    *  Enforcement of different trust policies, with respect to learning
       new authentication credentials during an execution of EDHOC.  This
