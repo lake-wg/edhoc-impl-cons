@@ -1276,6 +1276,6 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 # Acknowledgments # {#acknowledgments}
 {: numbered="no"}
 
-The author sincerely thanks {{{Christian Amsüss}}}, {{{Geovane Fedrecheski}}}, {{{Rikard Höglund}}}, {{{John Preuß Mattsson}}}, {{{Göran Selander}}}, {{{Brian Sipos}}}, {{{Yuxuan Song}}}, and {{{Mališa Vučinić}}} for their comments and feedback.
+The author sincerely thanks {{{Christian Amsüss}}}, {{{Geovane Fedrecheski}}}, {{{Rikard Höglund}}}, {{{Elsa Lopez-Perez}}}, {{{John Preuß Mattsson}}}, {{{Göran Selander}}}, {{{Brian Sipos}}}, {{{Yuxuan Song}}}, and {{{Mališa Vučinić}}} for their comments and feedback.
 
 The work on this document has been partly supported by the Sweden's Innovation Agency VINNOVA and the Celtic-Next project CYPRESS.
