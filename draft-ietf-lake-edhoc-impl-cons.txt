@@ -160,6 +160,14 @@ Table of Contents
       workflow defined in [RFC9668].  This topic is discussed in
       Section 6.
 
+   The scope of the present implementation considerations only includes
+   the use of EDHOC with the authentication methods specified in
+   Section 3.2 of [RFC9528] and based on public key authentication.  A
+   future revision of this document can include implementation
+   considerations that consider the use of EDHOC with other
+   authentication methods, such as the one defined in
+   [I-D.ietf-lake-edhoc-psk] and based on symmetric pre-shared keys.
+
 1.1.  Terminology
 
    The reader is expected to be familiar with terms and concepts related
@@ -1829,6 +1837,14 @@ Table of Contents
               March 2026, <https://datatracker.ietf.org/doc/html/draft-
               ietf-lake-authz-07>.
 
+   [I-D.ietf-lake-edhoc-psk]
+              Lopez-Perez, Selander, G., Mattsson, J. P., Marin-Lopez,
+              R., and F. Lopez-Gomez, "EDHOC Authenticated with Pre-
+              Shared Keys (PSK)", Work in Progress, Internet-Draft,
+              draft-ietf-lake-edhoc-psk-07, 2 March 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-lake-
+              edhoc-psk-07>.
+
    [RFC2986]  Nystrom, M. and B. Kaliski, "PKCS #10: Certification
               Request Syntax Specification Version 1.7", RFC 2986,
               DOI 10.17487/RFC2986, November 2000,
@@ -2109,6 +2125,8 @@ B.1.  Version -06 to -07
 
       -  Table summarizing expected behavior for different trust
          policies.
+
+      -  Scope limited to authentication methods defined in RFC 9528.
 
    *  Consistency alignments with draft-ietf-ace-edhoc-oscore-profile.
 

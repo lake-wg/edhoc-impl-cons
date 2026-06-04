@@ -1323,6 +1323,7 @@ svg {
           <p id="section-1-5.5.1">Effectively using EDHOC over the Constrained Application Protocol (CoAP) <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span> in combination with Block-wise transfers for CoAP <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span>, possibly together with the optimized EDHOC execution workflow defined in <span>[<a href="#RFC9668" class="cite xref">RFC9668</a>]</span>. This topic is discussed in <a href="#sec-block-wise" class="auto internal xref">Section 6</a>.<a href="#section-1-5.5.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
+<p id="section-1-6">The scope of the present implementation considerations only includes the use of EDHOC with the authentication methods specified in <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.2" class="relref">Section 3.2</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span> and based on public key authentication. A future revision of this document can include implementation considerations that consider the use of EDHOC with other authentication methods, such as the one defined in <span>[<a href="#I-D.ietf-lake-edhoc-psk" class="cite xref">I-D.ietf-lake-edhoc-psk</a>]</span> and based on symmetric pre-shared keys.<a href="#section-1-6" class="pilcrow">¶</a></p>
 <div id="terminology">
 <section id="section-1.1">
         <h3 id="name-terminology">
@@ -3107,6 +3108,10 @@ These states and transitions should be amended or removed, in order to reduce th
         <dd>
 <span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Vučinić, M.</span>, <span class="refAuthor">Fedrecheski, G.</span>, and <span class="refAuthor">M. Richardson</span>, <span class="refTitle">"Lightweight Authorization using Ephemeral Diffie-Hellman Over COSE (ELA)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lake-authz-07</span>, <time datetime="2026-03-02" class="refDate">2 March 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lake-authz-07">https://datatracker.ietf.org/doc/html/draft-ietf-lake-authz-07</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="I-D.ietf-lake-edhoc-psk">[I-D.ietf-lake-edhoc-psk]</dt>
+        <dd>
+<span class="refAuthor">Lopez-Perez</span>, <span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Marin-Lopez, R.</span>, and <span class="refAuthor">F. Lopez-Gomez</span>, <span class="refTitle">"EDHOC Authenticated with Pre-Shared Keys (PSK)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lake-edhoc-psk-07</span>, <time datetime="2026-03-02" class="refDate">2 March 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lake-edhoc-psk-07">https://datatracker.ietf.org/doc/html/draft-ietf-lake-edhoc-psk-07</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC2986">[RFC2986]</dt>
         <dd>
 <span class="refAuthor">Nystrom, M.</span> and <span class="refAuthor">B. Kaliski</span>, <span class="refTitle">"PKCS #10: Certification Request Syntax Specification Version 1.7"</span>, <span class="seriesInfo">RFC 2986</span>, <span class="seriesInfo">DOI 10.17487/RFC2986</span>, <time datetime="2000-11" class="refDate">November 2000</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2986">https://www.rfc-editor.org/rfc/rfc2986</a>&gt;</span>. </dd>
@@ -3591,6 +3596,9 @@ Once all such EAD items have been processed, the SPO transfers control back to E
 </li>
               <li class="normal" id="appendix-B.1-1.2.2.3">
                 <p id="appendix-B.1-1.2.2.3.1">Table summarizing expected behavior for different trust policies.<a href="#appendix-B.1-1.2.2.3.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="appendix-B.1-1.2.2.4">
+                <p id="appendix-B.1-1.2.2.4.1">Scope limited to authentication methods defined in RFC 9528.<a href="#appendix-B.1-1.2.2.4.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
