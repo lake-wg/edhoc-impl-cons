@@ -435,7 +435,9 @@ Therefore, if U enforces the trust policy "NO-LEARNING", it can additionally enf
 
 This section describes an approach that EDHOC peers can use upon receiving EDHOC messages, in order to fetch/validate authentication credentials and to process External Authorization Data (EAD) items.
 
-As per {{Section 9.1 of RFC9528}}, the EDHOC protocol provides a transport mechanism for conveying EAD items, but specifications defining those items have to set the ground for "agreeing on the surrounding context and the meaning of the information passed to and from the application".
+The transport mechanism provided by EDHOC for conveying EAD items is defined in {{Section 3.8 of RFC9528}}. In particular, an EDHOC message_x can include one dedicated EAD field EAD_x, for x = 1, 2, 3, or 4. In turn, an EAD field can include one or more EAD items.
+
+As per {{Section 9.1 of RFC9528}}, specifications defining those EAD items have to set the ground for "agreeing on the surrounding context and the meaning of the information passed to and from the application".
 
 The approach described in this section aims to help implementers navigate the surrounding context mentioned above, irrespective of the specific EAD items conveyed in the EDHOC messages. In particular, the described approach takes into account the following points:
 
@@ -453,9 +455,9 @@ In particular, the application provides EDHOC with the SPO before starting an ED
 
 Furthermore, the application has to instruct the SPO about:
 
-* How to prepare any EAD item such that: it has to be included in an outgoing EDHOC message; and it is independent of the processing of other EAD items included in incoming EDHOC messages. This includes, for instance, the preparation of padding EAD items (see {{Section 3.8.1 of RFC9528}}).
+* How to prepare any EAD item such that: it has to be included in the EAD field of an outgoing EDHOC message, possibly together with other EAD items; and it is independent of the processing of other EAD items included in incoming EDHOC messages. This includes, for instance, the preparation of padding EAD items (see {{Section 3.8.1 of RFC9528}}).
 
-* The list of EAD items that are expected to be present in specific, incoming EDHOC messages during the EDHOC session. This takes into account, for instance, external security applications that will be integrated in the EDHOC session (e.g., see {{I-D.ietf-lake-authz}}).
+* The list of one or more EAD items that are expected to be present within the dedicated EAD field of specific, incoming EDHOC messages during the EDHOC session. This takes into account, for instance, external security applications that will be integrated in the EDHOC session (e.g., see {{I-D.ietf-lake-authz}}).
 
   Throughout the EDHOC session, the SPO keeps such a list of expected EAD items up-to-date. This takes into account, for instance, external security applications that have been run integrated in the EDHOC session, the current status of the session, as well as the EDHOC messages that have been exchanged during the session and the outcome of their processing.
 
@@ -1174,9 +1176,13 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 
 * Discussed retention of completed EDHOC sessions.
 
-* Consistency alignments with draft-ietf-ace-edhoc-oscore-profile.
+* Clarifications:
 
-* Clarification on EAD item in the EDHOC and OSCORE profile of ACE.
+  * An EAD field can include one or more EAD items.
+
+  * Use of a new EAD item in the EDHOC and OSCORE profile of ACE.
+
+* Consistency alignments with draft-ietf-ace-edhoc-oscore-profile.
 
 * Editorial fixes and improvements.
 
