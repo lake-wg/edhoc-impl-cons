@@ -75,7 +75,7 @@ In order to prevent multiple, independent re-discoveries and assessments of thos
 
 * Handling of completed EDHOC sessions when they become invalid and of application keys derived from an EDHOC session when those become invalid. This topic is discussed in {{sec-session-handling}}.
 
-* Retention of completed EDHOC sessions that are still valid, also in the case that an EDHOC error message is received after their completion. This topic is discussed in Section {{sec-session-retention}}.
+* Retention of completed EDHOC sessions that are still valid, also in the case that an EDHOC error message is received after their completion. This topic is discussed in {{sec-session-retention}}.
 
 * Enforcement of different trust policies, with respect to learning new authentication credentials during an execution of EDHOC. This topic is discussed in {{sec-trust-models}}.
 
