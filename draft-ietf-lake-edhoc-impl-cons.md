@@ -41,6 +41,7 @@ informative:
   I-D.ietf-cose-cbor-encoded-cert:
   I-D.ietf-lake-authz:
   I-D.ietf-ace-workflow-and-params:
+  I-D.ietf-lake-edhoc-psk:
   EDHOC-Fuzzer:
     author:
       -
@@ -82,6 +83,8 @@ In order to prevent multiple, independent re-discoveries and assessments of thos
 * Branched-off side processing of incoming EDHOC messages, with particular reference to: i) fetching and validation of authentication credentials; and ii) processing of External Authorization Data (EAD) items, which in turn might play a role in the fetching and validation of authentication credentials. This topic is discussed in {{sec-message-side-processing}}.
 
 * Effectively using EDHOC over the Constrained Application Protocol (CoAP) {{RFC7252}} in combination with Block-wise transfers for CoAP {{RFC7959}}, possibly together with the optimized EDHOC execution workflow defined in {{RFC9668}}. This topic is discussed in {{sec-block-wise}}.
+
+The scope of the present implementation considerations only includes the use of EDHOC with the authentication methods specified in {{Section 3.2 of RFC9528}} and based on public key authentication. A future revision of this document can include implementation considerations that consider the use of EDHOC with other authentication methods, such as the one defined in {{I-D.ietf-lake-edhoc-psk}} and based on symmetric pre-shared keys.
 
 ## Terminology ## {#terminology}
 
@@ -1195,6 +1198,8 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
   * Use of a new EAD item in the EDHOC and OSCORE profile of ACE.
 
   * Table summarizing expected behavior for different trust policies.
+
+  * Scope limited to authentication methods defined in RFC 9528.
 
 * Consistency alignments with draft-ietf-ace-edhoc-oscore-profile.
 
