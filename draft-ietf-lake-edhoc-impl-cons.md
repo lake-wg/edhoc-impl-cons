@@ -97,7 +97,7 @@ This section considers the most common situation where, given a certain peer, on
 
 Building on the above, the following expands on three relevant cases concerning the handling of EDHOC sessions and application keys, in the event that any of those becomes invalid.
 
-To provide more concrete guidance, the following considers the case where "applications keys" stands for the keying material and parameters that compose a Security Context for the security protocol Object Security for Constrained RESTful Environments (OSCORE) {{RFC8613}}, i.e., when specifically those application keys are derived from an EDHOC session (see {{Section A.1 of RFC9528}}).
+To provide more concrete guidance, the following considers the case where "application keys" stands for the keying material and parameters that compose a Security Context for the security protocol Object Security for Constrained RESTful Environments (OSCORE) {{RFC8613}}, i.e., when specifically those application keys are derived from an EDHOC session (see {{Section A.1 of RFC9528}}).
 
 Nevertheless, the same considerations are applicable if EDHOC is used to derive other application keys, e.g., when used to key different security protocols than OSCORE or to provide the application with secure values that are bound to an EDHOC session.
 
@@ -1251,6 +1251,6 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 # Acknowledgments # {#acknowledgments}
 {: numbered="no"}
 
-The author sincerely thanks {{{Christian Amsüss}}}, {{{Geovane Fedrecheski}}}, {{{Rikard Höglund}}}, {{{John Preuß Mattsson}}}, {{{Göran Selander}}}, {{{Brian Sipos}}}, and {{{Mališa Vučinić}}} for their comments and feedback.
+The author sincerely thanks {{{Christian Amsüss}}}, {{{Geovane Fedrecheski}}}, {{{Rikard Höglund}}}, {{{John Preuß Mattsson}}}, {{{Göran Selander}}}, {{{Brian Sipos}}}, {{{Yuxuan Song}}}, and {{{Mališa Vučinić}}} for their comments and feedback.
 
 The work on this document has been partly supported by the Sweden's Innovation Agency VINNOVA and the Celtic-Next project CYPRESS.
