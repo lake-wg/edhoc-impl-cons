@@ -410,7 +410,7 @@ When processing a received EDHOC message M that specifies an authentication cred
 +-------------------------------------------------------|-------------------------------------------|---------------------------------------------------------|
 | NO-LEARNING policy, with <br> acceptable exception    | Accept,<br>if still valid<br>and trusted. | Accept, if valid and<br>(provisionally) trusted.        |
 +-------------------------------------------------------|-------------------------------------------|---------------------------------------------------------|
-{: #tab-trust-policies title="Summary about Accepting the Authetication Credential CRED Associated with the Other Peer in an EDHOC Session, for Different Trust Policies." align="center"}
+{: #tab-trust-policies title="Summary about Accepting the Authentication Credential CRED Associated with the Other Peer in an EDHOC Session, for Different Trust Policies." align="center"}
 
 Irrespective of the adopted trust policy, P actually uses CRED only if it is determined to be fine to use in the context of the ongoing EDHOC session, also depending on the specific identity of the other peer (see {{Sections 3.5 and D.2 of RFC9528}}). If this is not the case, P aborts the EDHOC session with the other peer.
 
