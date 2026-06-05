@@ -1047,7 +1047,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tiloca</td>
-<td class="center">Expires 6 December 2026</td>
+<td class="center">Expires 7 December 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1060,12 +1060,12 @@ svg {
 <dd class="internet-draft">draft-ietf-lake-edhoc-impl-cons-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-06-04" class="published">4 June 2026</time>
+<time datetime="2026-06-05" class="published">5 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-12-06">6 December 2026</time></dd>
+<dd class="expires"><time datetime="2026-12-07">7 December 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1110,7 +1110,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 6 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 7 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1763,7 +1763,76 @@ At the RS, the access token is bound to this latest EDHOC session and the newly 
         <h3 id="name-handling-of-incoming-edhoc-">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-handling-of-incoming-edhoc-" class="section-name selfRef">Handling of Incoming EDHOC Error Messages</a>
         </h3>
-<p id="section-3.1-1">TBD<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-1"><span><a href="https://rfc-editor.org/rfc/rfc9528#section-5.1" class="relref">Section 5.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span> defines that an EDHOC session is completed after having successfully processed the last message, i.e., message_3 or message_4, depending on the application profile used (see <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.9" class="relref">Section 3.9</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>). It follows that:<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-2.1">
+            <p id="section-3.1-2.1.1">The Responder completes a session after successfully processing the incoming EDHOC message_3, if EDHOC message_4 is not used, or after sending EDHOC message_4 otherwise.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.1-2.2">
+            <p id="section-3.1-2.2.1">The Initiator completes a session after successfully processing the incoming EDHOC message_4, if EDHOC message_4 is used, or after sending EDHOC message_3 otherwise.<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.1-3">Furthermore, <span><a href="https://rfc-editor.org/rfc/rfc9528#section-6" class="relref">Section 6</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span> defines EDHOC error messages and the processing associated with the initial set of error codes. According to <span><a href="https://rfc-editor.org/rfc/rfc9528#section-5.1" class="relref">Section 5.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>, after an EDHOC session is completed, no EDHOC error messages are sent, and the EDHOC session output may be maintained even if EDHOC error messages are received.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-4">That is, an implementation has a lot of latitude about handling incoming EDHOC error messages that pertain to a completed EDHOC session.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1-5">In general, a safe approach simply consists in aborting the completed EDHOC session, thereby deleting the corresponding output such as derived application keys. If the reception of EDHOC error messages at a given peer is still plausible, this is actually an appropriate course of action for that peer. An example is the case where the Responder sends EDHOC message_4, and it receives an EDHOC error message as a follow-up from the Initiator that rejected EDHOC message_4.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.1-6">However, there are indeed cases where it is not plausible anymore to receive EDHOC error messages pertaining to a completed EDHOC session. Such EDHOC error messages can be safely ignored as irrelevant and possibly resulting from an attack, thereby preserving the EDHOC session output such as derived application keys. An example is the case where the Responder successfully processes the incoming EDHOC message_3 and, at the same time, EDHOC message_4 is not used.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.1-7">To provide more concrete guidance, the rest of this section considers the case where the following applies:<a href="#section-3.1-7" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-8.1">
+            <p id="section-3.1-8.1.1">"application keys" stands for the keying material and parameters that compose an OSCORE Security Context <span>[<a href="#RFC8613" class="cite xref">RFC8613</a>]</span>, i.e., when specifically those application keys are derived from an EDHOC session (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.1" class="relref">Appendix A.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-3.1-8.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.1-8.2">
+            <p id="section-3.1-8.2.1">EDHOC messages are transferred over CoAP <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span> using the forward message flow (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.2" class="relref">Appendix A.2</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>), i.e., the EDHOC Responder acts as a CoAP server and the EDHOC Initiator acts as a CoAP client.<a href="#section-3.1-8.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.1-9">Building on the above, the following holds for the EDHOC Responder.<a href="#section-3.1-9" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-10.1">
+            <p id="section-3.1-10.1.1">If EDHOC message_4 is not used, the Responder completes the EDHOC session after successfully processing the incoming EDHOC message_3. In this case, no further EDHOC messages are supposed to be exchanged in the session.<a href="#section-3.1-10.1.1" class="pilcrow">¶</a></p>
+<p id="section-3.1-10.1.2">
+Consequently, the Responder can safely set the EDHOC session to ignore any incoming EDHOC error message pertaining to the session from then on, thereby preserving the OSCORE Security Context derived from the session.<a href="#section-3.1-10.1.2" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.1-10.2">
+            <p id="section-3.1-10.2.1">If EDHOC message_4 is used, the Responder completes the EDHOC session after sending EDHOC message_4.<a href="#section-3.1-10.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.1-10.2.2">
+After that, it remains generally appropriate for the Responder to abort the EDHOC session in the event that the Responder receives an EDHOC error message pertaining to the session. In particular, the EDHOC error message might have been legitimately sent by the Initiator that failed to process EDHOC message_4.<a href="#section-3.1-10.2.2" class="pilcrow">¶</a></p>
+<p id="section-3.1-10.2.3">
+However, the Responder can safely set the EDHOC session to ignore any incoming EDHOC error message pertaining to the session from then on, after successfully processing an incoming OSCORE-protected message received from the Initiator. Similarly to the case previously discussed, this preserves the OSCORE Security Context derived from the session, in the event that the Responder receives EDHOC error messages.<a href="#section-3.1-10.2.3" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.1-11">Also building on the above, the following holds for the EDHOC Initiator.<a href="#section-3.1-11" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-12.1">
+            <p id="section-3.1-12.1.1">If EDHOC message_4 is used, the Initiator completes a session after successfully processing the incoming EDHOC message_4. In this case, no further EDHOC messages are supposed to be exchanged in the session.<a href="#section-3.1-12.1.1" class="pilcrow">¶</a></p>
+<p id="section-3.1-12.1.2">
+Consequently, the Initiator can safely set the EDHOC session to ignore any incoming EDHOC error message pertaining to the session from then on, thereby preserving the OSCORE Security Context derived from the session.<a href="#section-3.1-12.1.2" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.1-12.2">
+            <p id="section-3.1-12.2.1">If EDHOC message_4 is not used, the Initiator completes a session after sending EDHOC message_3.<a href="#section-3.1-12.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.1-12.2.2">
+After that, it remains generally appropriate for the Initiator to abort the EDHOC session in the event that the Initiator receives an EDHOC error message pertaining to the session. In particular, the EDHOC error message might have been legitimately sent by the Responder that failed to process EDHOC message_3.<a href="#section-3.1-12.2.2" class="pilcrow">¶</a></p>
+<p id="section-3.1-12.2.3">
+If an active adversary injects an EDHOC error message intended to the Initiator and pertaining to the EDHOC session, the Initiator would effectively receive and process that message only during a specific time interval, i.e., from when the Initiator sends EDHOC message_3 until when the Initiator frees up the CoAP Token value used in the CoAP request message that conveyed EDHOC message_3.<a href="#section-3.1-12.2.3" class="pilcrow">¶</a></p>
+<p id="section-3.1-12.2.4">
+However, the Initiator can safely set the EDHOC session to ignore any incoming EDHOC error message pertaining to the session, after successfully processing an incoming OSCORE-protected message received from the Responder. Similarly to the case previously discussed, this preserves the OSCORE Security Context derived from the session, in the event that the Initiator receives EDHOC error messages.<a href="#section-3.1-12.2.4" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.1-13">Following the reception and successful verification for the first time of an OSCORE-protected message using the OSCORE Security Context derived from a completed EDHOC session, a recipient EDHOC peer has different ways for setting the session to ignore pertaining EDHOC error messages from then on.<a href="#section-3.1-13" class="pilcrow">¶</a></p>
+<p id="section-3.1-14">Some approaches can be easier and more appealing to use than others, depending on the specific EDHOC implementation and its integration with the communication stack. As an example, two possible approaches are described below:<a href="#section-3.1-14" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-15.1">
+            <p id="section-3.1-15.1.1">The OSCORE library used or an OSCORE layer that takes part in the communication stack can be aware that an OSCORE Security Context CTX was derived from an EDHOC session S.<a href="#section-3.1-15.1.1" class="pilcrow">¶</a></p>
+<p id="section-3.1-15.1.2">
+In such a case, after receiving and successfully verifying for the first time an OSCORE-protected message using CTX, the OSCORE library/layer on the recipient EDHOC peer can effectively set the EDHOC session S to ignore any incoming EDHOC error message pertaining to the session from then on.<a href="#section-3.1-15.1.2" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.1-15.2">
+            <p id="section-3.1-15.2.1">When receiving an EDHOC error message pertaining to a completed EDHOC session, EDHOC can check whether the session is set to ignore pertaining EDHOC error messages. If that is the case, the received EDHOC error message is ignored.<a href="#section-3.1-15.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.1-15.2.2">
+Otherwise, EDHOC checks whether the OSCORE Security Context CTX derived from the EDHOC session has been used at least once for successfully verifying an incoming OSCORE-protected message from the other EDHOC peer (e.g., by checking the Replay Window within the Recipient Context of CTX).<a href="#section-3.1-15.2.2" class="pilcrow">¶</a></p>
+<p id="section-3.1-15.2.3">
+In the case that CTX has not been used yet, the received EDHOC error message is processed as usual, i.e., the EDHOC session is aborted and CTX is deleted. Instead, in the case that CTX has been used at least once for successfully verifying an incoming OSCORE-protected message from the other EDHOC peer, the EDHOC error message is ignored and EDHOC sets the EDHOC session to ignore pertaining EDHOC error messages from then on.<a href="#section-3.1-15.2.3" class="pilcrow">¶</a></p>
+</li>
+        </ul>
 </section>
 </div>
 </section>
@@ -3586,27 +3655,30 @@ Once all such EAD items have been processed, the SPO transfers control back to E
             <p id="appendix-B.1-1.1.1">Discussed retention of completed EDHOC sessions.<a href="#appendix-B.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-B.1-1.2">
-            <p id="appendix-B.1-1.2.1">Clarifications:<a href="#appendix-B.1-1.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.1-1.2.1">Discussed handling of incoming EDHOC error messages in a completed EDHOC session.<a href="#appendix-B.1-1.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-B.1-1.3">
+            <p id="appendix-B.1-1.3.1">Clarifications:<a href="#appendix-B.1-1.3.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-B.1-1.2.2.1">
-                <p id="appendix-B.1-1.2.2.1.1">An EAD field can include one or more EAD items.<a href="#appendix-B.1-1.2.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-B.1-1.3.2.1">
+                <p id="appendix-B.1-1.3.2.1.1">An EAD field can include one or more EAD items.<a href="#appendix-B.1-1.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="appendix-B.1-1.2.2.2">
-                <p id="appendix-B.1-1.2.2.2.1">Use of a new EAD item in the EDHOC and OSCORE profile of ACE.<a href="#appendix-B.1-1.2.2.2.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="appendix-B.1-1.3.2.2">
+                <p id="appendix-B.1-1.3.2.2.1">Use of a new EAD item in the EDHOC and OSCORE profile of ACE.<a href="#appendix-B.1-1.3.2.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="appendix-B.1-1.2.2.3">
-                <p id="appendix-B.1-1.2.2.3.1">Table summarizing expected behavior for different trust policies.<a href="#appendix-B.1-1.2.2.3.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="appendix-B.1-1.3.2.3">
+                <p id="appendix-B.1-1.3.2.3.1">Table summarizing expected behavior for different trust policies.<a href="#appendix-B.1-1.3.2.3.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="appendix-B.1-1.2.2.4">
-                <p id="appendix-B.1-1.2.2.4.1">Scope limited to authentication methods defined in RFC 9528.<a href="#appendix-B.1-1.2.2.4.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="appendix-B.1-1.3.2.4">
+                <p id="appendix-B.1-1.3.2.4.1">Scope limited to authentication methods defined in RFC 9528.<a href="#appendix-B.1-1.3.2.4.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="normal" id="appendix-B.1-1.3">
-            <p id="appendix-B.1-1.3.1">Consistency alignments with draft-ietf-ace-edhoc-oscore-profile.<a href="#appendix-B.1-1.3.1" class="pilcrow">¶</a></p>
-</li>
           <li class="normal" id="appendix-B.1-1.4">
-            <p id="appendix-B.1-1.4.1">Editorial fixes and improvements.<a href="#appendix-B.1-1.4.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.1-1.4.1">Consistency alignments with draft-ietf-ace-edhoc-oscore-profile.<a href="#appendix-B.1-1.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-B.1-1.5">
+            <p id="appendix-B.1-1.5.1">Editorial fixes and improvements.<a href="#appendix-B.1-1.5.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
