@@ -779,7 +779,7 @@ Table of Contents
    | acceptable exception | and trusted.   |                          |
    +----------------------+----------------+--------------------------+
 
-      Table 1: Summary about Accepting the Authetication Credential
+      Table 1: Summary about Accepting the Authentication Credential
        CRED Associated with the Other Peer in an EDHOC Session, for
                         Different Trust Policies.
 
