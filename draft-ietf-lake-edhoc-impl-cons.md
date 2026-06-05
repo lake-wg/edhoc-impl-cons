@@ -322,7 +322,65 @@ Absent application policies defining more restrictive lifetimes, the peer is exp
 
 ## Handling of Incoming EDHOC Error Messages
 
-TBD
+{{Section 5.1 of RFC9528}} defines that an EDHOC session is completed after having successfully processed the last message, i.e., message_3 or message_4, depending on the application profile used (see {{Section 3.9 of RFC9528}}). It follows that:
+
+* The Responder completes a session after successfully processing the incoming EDHOC message_3, if EDHOC message_4 is not used, or after sending EDHOC message_4 otherwise.
+
+* The Initiator completes a session after successfully processing the incoming EDHOC message_4, if EDHOC message_4 is used, or after sending EDHOC message_3 otherwise.
+
+Furthermore, {{Section 6 of RFC9528}} defines EDHOC error messages and the processing associated with the initial set of error codes. According to {{Section 5.1 of RFC9528}}, after an EDHOC session is completed, no EDHOC error messages are sent, and the EDHOC session output may be maintained even if EDHOC error messages are received.
+
+That is, an implementation has a lot of latitude about handling incoming EDHOC error messages that pertain to a completed EDHOC session.
+
+In general, a safe approach simply consists in aborting the completed EDHOC session, thereby deleting the corresponding output such as derived application keys. If the reception of EDHOC error messages at a given peer is still plausible, this is actually an appropriate course of action for that peer. An example is the case where the Responder sends EDHOC message_4, and it receives an EDHOC error message as a follow-up from the Initiator that rejected EDHOC message_4.
+
+However, there are indeed cases where it is not plausible anymore to receive EDHOC error messages pertaining to a completed EDHOC session. Such EDHOC error messages can be safely ignored as irrelevant and possibly resulting from an attack, thereby preserving the EDHOC session output such as derived application keys. An example is the case where the Responder successfully processes the incoming EDHOC message_3 and, at the same time, EDHOC message_4 is not used.
+
+To provide more concrete guidance, the rest of this section considers the case where the following applies:
+
+* "application keys" stands for the keying material and parameters that compose an OSCORE Security Context {{RFC8613}}, i.e., when specifically those application keys are derived from an EDHOC session (see {{Section A.1 of RFC9528}}).
+
+* EDHOC messages are transferred over CoAP {{RFC7252}} using the forward message flow (see {{Section A.2 of RFC9528}}), i.e., the EDHOC Responder acts as a CoAP server and the EDHOC Initiator acts as a CoAP client.
+
+Building on the above, the following holds for the EDHOC Responder.
+
+* If EDHOC message_4 is not used, the Responder completes the EDHOC session after successfully processing the incoming EDHOC message_3. In this case, no further EDHOC messages are supposed to be exchanged in the session.
+
+  Consequently, the Responder can safely set the EDHOC session to ignore any incoming EDHOC error message pertaining to the session from then on, thereby preserving the OSCORE Security Context derived from the session.
+
+* If EDHOC message_4 is used, the Responder completes the EDHOC session after sending EDHOC message_4.
+
+  After that, it remains generally appropriate for the Responder to abort the EDHOC session in the event that the Responder receives an EDHOC error message pertaining to the session. In particular, the EDHOC error message might have been legitimately sent by the Initiator that failed to process EDHOC message_4.
+
+  However, the Responder can safely set the EDHOC session to ignore any incoming EDHOC error message pertaining to the session from then on, after successfully processing an incoming OSCORE-protected message received from the Initiator. Similarly to the case previously discussed, this preserves the OSCORE Security Context derived from the session, in the event that the Responder receives EDHOC error messages.
+
+Also building on the above, the following holds for the EDHOC Initiator.
+
+* If EDHOC message_4 is used, the Initiator completes a session after successfully processing the incoming EDHOC message_4. In this case, no further EDHOC messages are supposed to be exchanged in the session.
+
+  Consequently, the Initiator can safely set the EDHOC session to ignore any incoming EDHOC error message pertaining to the session from then on, thereby preserving the OSCORE Security Context derived from the session.
+
+* If EDHOC message_4 is not used, the Initiator completes a session after sending EDHOC message_3.
+
+  After that, it remains generally appropriate for the Initiator to abort the EDHOC session in the event that the Initiator receives an EDHOC error message pertaining to the session. In particular, the EDHOC error message might have been legitimately sent by the Responder that failed to process EDHOC message_3.
+
+  If an active adversary injects an EDHOC error message intended to the Initiator and pertaining to the EDHOC session, the Initiator would effectively receive and process that message only during a specific time interval, i.e., from when the Initiator sends EDHOC message_3 until when the Initiator frees up the CoAP Token value used in the CoAP request message that conveyed EDHOC message_3.
+
+  However, the Initiator can safely set the EDHOC session to ignore any incoming EDHOC error message pertaining to the session, after successfully processing an incoming OSCORE-protected message received from the Responder. Similarly to the case previously discussed, this preserves the OSCORE Security Context derived from the session, in the event that the Initiator receives EDHOC error messages.
+
+Following the reception and successful verification for the first time of an OSCORE-protected message using the OSCORE Security Context derived from a completed EDHOC session, a recipient EDHOC peer has different ways for setting the session to ignore pertaining EDHOC error messages from then on.
+
+Some approaches can be easier and more appealing to use than others, depending on the specific EDHOC implementation and its integration with the communication stack. As an example, two possible approaches are described below:
+
+* The OSCORE library used or an OSCORE layer that takes part in the communication stack can be aware that an OSCORE Security Context CTX was derived from an EDHOC session S.
+
+  In such a case, after receiving and successfully verifying for the first time an OSCORE-protected message using CTX, the OSCORE library/layer on the recipient EDHOC peer can effectively set the EDHOC session S to ignore any incoming EDHOC error message pertaining to the session from then on.
+
+* When receiving an EDHOC error message pertaining to a completed EDHOC session, EDHOC can check whether the session is set to ignore pertaining EDHOC error messages. If that is the case, the received EDHOC error message is ignored.
+
+  Otherwise, EDHOC checks whether the OSCORE Security Context CTX derived from the EDHOC session has been used at least once for successfully verifying an incoming OSCORE-protected message from the other EDHOC peer (e.g., by checking the Replay Window within the Recipient Context of CTX).
+
+  In the case that CTX has not been used yet, the received EDHOC error message is processed as usual, i.e., the EDHOC session is aborted and CTX is deleted. Instead, in the case that CTX has been used at least once for successfully verifying an incoming OSCORE-protected message from the other EDHOC peer, the EDHOC error message is ignored and EDHOC sets the EDHOC session to ignore pertaining EDHOC error messages from then on.
 
 # Trust Policies for Learning New Authentication Credentials # {#sec-trust-models}
 
@@ -1190,6 +1248,8 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 ## Version -06 to -07 ## {#sec-06-07}
 
 * Discussed retention of completed EDHOC sessions.
+
+* Discussed handling of incoming EDHOC error messages in a completed EDHOC session.
 
 * Clarifications:
 
