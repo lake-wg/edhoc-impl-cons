@@ -84,7 +84,7 @@ In order to prevent multiple, independent re-discoveries and assessments of thos
 
 * Effectively using EDHOC over the Constrained Application Protocol (CoAP) {{RFC7252}} in combination with Block-wise transfers for CoAP {{RFC7959}}, possibly together with the optimized EDHOC execution workflow defined in {{RFC9668}}. This topic is discussed in {{sec-block-wise}}.
 
-The scope of the present implementation considerations only includes the use of EDHOC with the authentication methods specified in {{Section 3.2 of RFC9528}} and based on public key authentication. A future revision of this document can include implementation considerations that consider the use of EDHOC with other authentication methods, such as the one defined in {{I-D.ietf-lake-edhoc-psk}} and based on symmetric pre-shared keys.
+The scope of the present implementation considerations only includes the use of EDHOC with the authentication methods specified in {{Section 3.2 of RFC9528}} and based on public key authentication. A future document can extend the present document and include implementation considerations that consider the use of EDHOC with other authentication methods, such as the one defined in {{I-D.ietf-lake-edhoc-psk}} and based on symmetric pre-shared keys.
 
 ## Terminology ## {#terminology}
 
