@@ -4,8 +4,8 @@
 
 LAKE Working Group                                             M. Tiloca
 Internet-Draft                                                   RISE AB
-Intended status: Informational                               5 June 2026
-Expires: 7 December 2026
+Intended status: Informational                              29 June 2026
+Expires: 31 December 2026
 
 
   Implementation Considerations for Ephemeral Diffie-Hellman Over COSE
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 December 2026.
+   This Internet-Draft will expire on 31 December 2026.
 
 Copyright Notice
 
@@ -163,9 +163,9 @@ Table of Contents
    The scope of the present implementation considerations only includes
    the use of EDHOC with the authentication methods specified in
    Section 3.2 of [RFC9528] and based on public key authentication.  A
-   future revision of this document can include implementation
-   considerations that consider the use of EDHOC with other
-   authentication methods, such as the one defined in
+   future document can extend the present document and include
+   implementation considerations that consider the use of EDHOC with
+   other authentication methods, such as the one defined in
    [I-D.ietf-lake-edhoc-psk] and based on symmetric pre-shared keys.
 
 1.1.  Terminology
@@ -1998,9 +1998,9 @@ Table of Contents
               Lopez-Perez, Selander, G., Mattsson, J. P., Marin-Lopez,
               R., and F. Lopez-Gomez, "EDHOC Authenticated with Pre-
               Shared Keys (PSK)", Work in Progress, Internet-Draft,
-              draft-ietf-lake-edhoc-psk-07, 2 March 2026,
+              draft-ietf-lake-edhoc-psk-08, 16 June 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-lake-
-              edhoc-psk-07>.
+              edhoc-psk-08>.
 
    [RFC2986]  Nystrom, M. and B. Kaliski, "PKCS #10: Certification
               Request Syntax Specification Version 1.7", RFC 2986,
