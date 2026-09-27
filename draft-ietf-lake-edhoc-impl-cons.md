@@ -989,7 +989,7 @@ In either case, if not all the corresponding conditions hold, the CoAP client sh
 
 ## Effectively Using Block-Wise
 
-In order to avoid further fragmentation at lower layers when sending an LAKE + OSCORE request, the CoAP client has to use inner Block-wise if _any_ of the following conditions holds:
+In order to avoid further fragmentation at lower layers when sending a LAKE + OSCORE request, the CoAP client has to use inner Block-wise if _any_ of the following conditions holds:
 
 * COND5: SIZE_BODY > LIMIT
 
