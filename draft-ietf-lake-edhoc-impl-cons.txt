@@ -4,19 +4,18 @@
 
 LAKE Working Group                                             M. Tiloca
 Internet-Draft                                                   RISE AB
-Intended status: Informational                              29 June 2026
-Expires: 31 December 2026
+Intended status: Informational                         27 September 2026
+Expires: 31 March 2027
 
 
-  Implementation Considerations for Ephemeral Diffie-Hellman Over COSE
-                                (EDHOC)
+  Implementation Considerations for the Lightweight Authenticated Key
+                        Exchange (LAKE) Protocol
                  draft-ietf-lake-edhoc-impl-cons-latest
 
 Abstract
 
    This document provides considerations for guiding the implementation
-   of the authenticated key exchange protocol Ephemeral Diffie-Hellman
-   Over COSE (EDHOC).
+   of the Lightweight Authenticated Key Exchange (LAKE) protocol.
 
 Discussion Venues
 
@@ -45,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 December 2026.
+   This Internet-Draft will expire on 31 March 2027.
 
 Copyright Notice
 
@@ -65,31 +64,30 @@ Table of Contents
 
    1.  Introduction
      1.1.  Terminology
-   2.  Handling of Invalid EDHOC Sessions and Application Keys
-     2.1.  EDHOC Sessions Become Invalid
+   2.  Handling of Invalid LAKE Sessions and Application Keys
+     2.1.  LAKE Sessions Become Invalid
      2.2.  Application Keys Become Invalid
      2.3.  Application Keys or Bound Access Rights Become Invalid
-   3.  Retention of Completed EDHOC Sessions
-     3.1.  Handling of Incoming EDHOC Error Messages
+   3.  Retention of Completed LAKE Sessions
+     3.1.  Handling of Incoming LAKE Error Messages
    4.  Trust Policies for Learning New Authentication Credentials
      4.1.  Trust Policy LEARNING
      4.2.  Trust Policy NO-LEARNING
      4.3.  Enforcement of Trust Policies in Specific Scenarios
-       4.3.1.  In the EDHOC and OSCORE Profile of ACE
-       4.3.2.  In the Lightweight Authorization using EDHOC (ELA)
-               Procedure
-   5.  Side Processing of Incoming EDHOC Messages
-     5.1.  EDHOC message_1
-     5.2.  EDHOC message_4
-     5.3.  EDHOC message_2 and message_3
+       4.3.1.  In the ACE Framework
+       4.3.2.  In the ELA Procedure
+   5.  Side Processing of Incoming LAKE Messages
+     5.1.  LAKE message_1
+     5.2.  LAKE message_4
+     5.3.  LAKE message_2 and message_3
        5.3.1.  Pre-Verification Side Processing
        5.3.2.  Post-Verification Side Processing
        5.3.3.  Flowcharts
      5.4.  Consistency Checks of Authentication Credentials from
            ID_CRED and EAD Items
-   6.  Using EDHOC over CoAP with Block-Wise
+   6.  Using LAKE over CoAP with Block-Wise
      6.1.  Notation
-     6.2.  Pre-requirements for the EDHOC + OSCORE Request
+     6.2.  Pre-requirements for the LAKE + OSCORE Request
      6.3.  Effectively Using Block-Wise
    7.  Operational Considerations
    8.  Security Considerations
@@ -98,138 +96,146 @@ Table of Contents
    10. References
      10.1.  Normative References
      10.2.  Informative References
-   Appendix A.  Foreseen Advanced Processing of Incoming EDHOC
+   Appendix A.  Foreseen Advanced Processing of Incoming LAKE
            message_1
    Appendix B.  Document Updates
-     B.1.  Version -06 to -07
-     B.2.  Version -05 to -06
-     B.3.  Version -04 to -05
-     B.4.  Version -03 to -04
-     B.5.  Version -02 to -03
-     B.6.  Version -01 to -02
-     B.7.  Version -00 to -01
+     B.1.  Version -07 to -08
+     B.2.  Version -06 to -07
+     B.3.  Version -05 to -06
+     B.4.  Version -04 to -05
+     B.5.  Version -03 to -04
+     B.6.  Version -02 to -03
+     B.7.  Version -01 to -02
+     B.8.  Version -00 to -01
    Acknowledgments
    Author's Address
 
 1.  Introduction
 
-   Ephemeral Diffie-Hellman Over COSE (EDHOC) [RFC9528] is a lightweight
-   authenticated key exchange protocol, especially intended for use in
+   The specification [RFC9528] defines the Lightweight Authenticated Key
+   Exchange (LAKE) protocol, which is especially intended for use in
    constrained scenarios.
 
-   During the development of EDHOC, a number of side topics were raised
+   During the development of LAKE, a number of side topics were raised
    and discussed, as emerging from reviews of the protocol latest design
    and from implementation activities.  These topics were identified as
-   strongly pertaining to the implementation of EDHOC rather than to the
+   strongly pertaining to the implementation of LAKE rather than to the
    protocol in itself.  Hence, they are not discussed in [RFC9528],
    which rightly focuses on specifying the actual protocol.
 
-   At the same time, implementers of an application using the EDHOC
-   protocol or of an "EDHOC library" enabling its use cannot simply
-   ignore such topics and will have to take them into account throughout
-   their implementation work.
+   At the same time, implementers of an application using the LAKE
+   protocol or of a "LAKE library" enabling its use cannot simply ignore
+   such topics and will have to take them into account throughout their
+   implementation work.
 
    In order to prevent multiple, independent re-discoveries and
    assessments of those topics, as well as to facilitate and guide
    implementation activities, this document collects such topics and
    discusses them through considerations about the implementation of
-   EDHOC.  At a high-level, the topics in question are summarized below:
+   LAKE.  At a high-level, the topics in question are summarized below:
 
-   *  Handling of completed EDHOC sessions when they become invalid and
-      of application keys derived from an EDHOC session when those
-      become invalid.  This topic is discussed in Section 2.
+   *  Handling of completed LAKE sessions when they become invalid and
+      of application keys derived from a LAKE session when those become
+      invalid.  This topic is discussed in Section 2.
 
-   *  Retention of completed EDHOC sessions that are still valid, also
-      in the case that an EDHOC error message is received after their
+   *  Retention of completed LAKE sessions that are still valid, also in
+      the case that a LAKE error message is received after their
       completion.  This topic is discussed in Section 3.
 
    *  Enforcement of different trust policies, with respect to learning
-      new authentication credentials during an execution of EDHOC.  This
+      new authentication credentials during an execution of LAKE.  This
       topic is discussed in Section 4.
 
-   *  Branched-off side processing of incoming EDHOC messages, with
+   *  Branched-off side processing of incoming LAKE messages, with
       particular reference to: i) fetching and validation of
       authentication credentials; and ii) processing of External
       Authorization Data (EAD) items, which in turn might play a role in
       the fetching and validation of authentication credentials.  This
       topic is discussed in Section 5.
 
-   *  Effectively using EDHOC over the Constrained Application Protocol
+   *  Effectively using LAKE over the Constrained Application Protocol
       (CoAP) [RFC7252] in combination with Block-wise transfers for CoAP
-      [RFC7959], possibly together with the optimized EDHOC execution
+      [RFC7959], potentially together with the optimized LAKE execution
       workflow defined in [RFC9668].  This topic is discussed in
       Section 6.
 
    The scope of the present implementation considerations only includes
-   the use of EDHOC with the authentication methods specified in
+   the use of LAKE with the authentication methods specified in
    Section 3.2 of [RFC9528] and based on public key authentication.  A
    future document can extend the present document and include
-   implementation considerations that consider the use of EDHOC with
+   implementation considerations that consider the use of LAKE with
    other authentication methods, such as the one defined in
    [I-D.ietf-lake-edhoc-psk] and based on symmetric pre-shared keys.
 
 1.1.  Terminology
 
    The reader is expected to be familiar with terms and concepts related
-   to the EDHOC protocol [RFC9528], (CoAP) [RFC7252], and Block-wise
+   to the LAKE protocol [RFC9528], (CoAP) [RFC7252], and Block-wise
    transfers for CoAP [RFC7959].
 
-2.  Handling of Invalid EDHOC Sessions and Application Keys
+   This document uses the acronym LAKE, expanded to Lightweight
+   Authenticated Key Exchange, to denote the protocol specified as EDHOC
+   in [RFC9528].  LAKE is also used in place of EDHOC in descriptive
+   terms such as LAKE message_1 or LAKE EAD item.  Identifiers defined
+   literally in [RFC9528] or in IANA registries (e.g., EDHOC_Exporter,
+   the EDHOC registries, media types, and URIs) are unchanged.
+
+2.  Handling of Invalid LAKE Sessions and Application Keys
 
    This section considers the most common situation where, given a
    certain peer, only the application at that peer has visibility and
    control of both:
 
-   *  The EDHOC sessions at that peer; and
+   *  The LAKE sessions at that peer; and
 
    *  The application keys for that application at that peer, including
-      the knowledge of whether they have been derived from an EDHOC
+      the knowledge of whether they have been derived from a LAKE
       session, i.e., by means of the EDHOC_Exporter interface after the
-      successful completion of an execution of EDHOC (see Section 4.2 of
+      successful completion of an execution of LAKE (see Section 4.2 of
       [RFC9528]).
 
    Building on the above, the following expands on three relevant cases
-   concerning the handling of EDHOC sessions and application keys, in
-   the event that any of those becomes invalid.
+   concerning the handling of LAKE sessions and application keys, in the
+   event that any of those becomes invalid.
 
    To provide more concrete guidance, the following considers the case
    where "application keys" stands for the keying material and
    parameters that compose a Security Context for the security protocol
    Object Security for Constrained RESTful Environments (OSCORE)
    [RFC8613], i.e., when specifically those application keys are derived
-   from an EDHOC session (see Appendix A.1 of [RFC9528]).
+   from a LAKE session (see Appendix A.1 of [RFC9528]).
 
-   Nevertheless, the same considerations are applicable if EDHOC is used
+   Nevertheless, the same considerations are applicable if LAKE is used
    to derive other application keys, e.g., when used to key different
    security protocols than OSCORE or to provide the application with
-   secure values that are bound to an EDHOC session.
+   secure values that are bound to a LAKE session.
 
-2.1.  EDHOC Sessions Become Invalid
+2.1.  LAKE Sessions Become Invalid
 
-   The application at a peer P may have learned that a completed EDHOC
+   The application at a peer P may have learned that a completed LAKE
    session S has to be invalidated.  When S is marked as invalid, the
    application at P purges S and deletes each set of application keys
    (e.g., the OSCORE Security Context) that was generated from S.
 
-   Then, the application runs a new execution of the EDHOC protocol with
-   the other peer.  Upon successfully completing the EDHOC execution,
-   the two peers derive and install a new set of application keys from
-   this latest EDHOC session.
+   Then, the application runs a new execution of the LAKE protocol with
+   the other peer.  Upon successfully completing the LAKE execution, the
+   two peers derive and install a new set of application keys from this
+   latest LAKE session.
 
-   The flowchart in Figure 1 shows the handling of an EDHOC session that
+   The flowchart in Figure 1 shows the handling of a LAKE session that
    has become invalid.
 
-  Invalid      Delete the EDHOC session      Rerun      Derive and
-  EDHOC   ---> and the application keys ---> EDHOC ---> install new
+  Invalid      Delete the LAKE session       Rerun      Derive and
+  LAKE    ---> and the application keys ---> LAKE  ---> install new
   session      derived from it                          application keys
 
-     Figure 1: Handling of an EDHOC Session that Has Become Invalid.
+      Figure 1: Handling of a LAKE Session that Has Become Invalid.
 
-   An EDHOC session may have become invalid, for example, because an
+   A LAKE session may have become invalid, for example, because an
    authentication credential CRED_X has expired, or because the peer P
    has learned from a trusted source that CRED_X has been revoked.  This
    effectively invalidates CRED_X, and therefore also invalidates any
-   EDHOC session where CRED_X was used as authentication credential
+   LAKE session where CRED_X was used as authentication credential
    associated with either peer in the session (i.e., P itself or the
    other peer).  In such a case, the application at P has to
    additionally delete CRED_X and any stored, corresponding credential
@@ -262,8 +268,8 @@ Table of Contents
    1.  If the following conditions both hold, then the application moves
        to Step 2.  Otherwise, it moves to Step 3.
 
-       *  Let us define S as the EDHOC session from which the peer P has
-          derived SET or the eldest SET's ancestor set of application
+       *  Let us define S as the LAKE session from which the peer P has
+          derived SET or the oldest SET's ancestor set of application
           keys.  Then, since the completion of S with the other peer,
           the application at P has received from the other peer and
           successfully verified at least one message protected with any
@@ -271,7 +277,7 @@ Table of Contents
           persisted S (see Section 5.4.2 of [RFC9528]).
 
        *  The peer P supports a key update protocol, as an alternative
-          to performing a new execution of EDHOC with the other peer.
+          to performing a new execution of LAKE with the other peer.
           When SET is an OSCORE Security Context, the key update
           protocol supported by the peer P can be KUDOS
           [I-D.ietf-core-oscore-key-update].
@@ -289,16 +295,16 @@ Table of Contents
 
        *  It deletes SET.
 
-       *  It deletes the EDHOC session from which SET was generated, or
-          from which the eldest SET's ancestor set of application keys
+       *  It deletes the LAKE session from which SET was generated, or
+          from which the oldest SET's ancestor set of application keys
           was generated before any key update occurred (e.g., by means
           of the EDHOC_KeyUpdate interface defined in Appendix H of
           [RFC9528] or other key update methods).
 
-       *  It runs a new execution of the EDHOC protocol with the other
-          peer.  Upon successfully completing the EDHOC execution, the
+       *  It runs a new execution of the LAKE protocol with the other
+          peer.  Upon successfully completing the LAKE execution, the
           two peers derive and install a new set of application keys
-          from this latest EDHOC session.
+          from this latest LAKE session.
 
    The flowchart in Figure 2 shows the handling of a set of application
    keys that has become invalid.  In particular, it assumes such a set
@@ -312,7 +318,7 @@ Table of Contents
     v
                     NO
   Are the          ----> Delete the application     ----> Rerun
-  application keys       keys and the EDHOC session       EDHOC
+  application keys       keys and the LAKE session        LAKE
   persisted?
                                ^        ^                   |
     |                          |        |                   |
@@ -349,35 +355,34 @@ Table of Contents
 
    The following considers two peers that use the ACE framework for
    authentication and authorization in constrained environments
-   [RFC9200] and specifically the EDHOC and OSCORE profile of ACE
-   defined in [I-D.ietf-ace-edhoc-oscore-profile].
+   [RFC9200] and specifically the profile of ACE defined in
+   [I-D.ietf-ace-edhoc-oscore-profile].
 
-   When doing so, one of the two peers acts as ACE resource server (RS)
-   hosting protected resources.  The other peer acts as ACE client and
-   requests an access token from an ACE authorization server (AS) that
-   is in a trust relationship with the RS.  The access token specifies
-   access rights for accessing protected resources at the RS as well as
-   the public authentication credential of the client, namely
+   When doing so, one of the two peers acts as an ACE resource server
+   (RS) hosting protected resources.  The other peer acts as an ACE
+   client and requests an access token from an ACE authorization server
+   (AS) that is in a trust relationship with the RS.  The access token
+   specifies access rights for accessing protected resources at the RS
+   as well as the public authentication credential of the client, namely
    AUTH_CRED_C.
 
    After that, C uploads the access token to the RS, by means of an EAD
-   item included in an EDHOC message during the EDHOC execution (see
+   item included in a LAKE message during the LAKE execution (see
    below).  Alternatively, the AS can upload the access token to the RS
    on behalf of the client, as per the alternative Short Distribution
    Chain (SDC) workflow defined in [I-D.ietf-ace-workflow-and-params].
 
-   Consistent with the EDHOC and OSCORE profile of ACE, the two peers
-   run EDHOC in order to specifically derive an OSCORE Security Context
-   as their shared set of application keys (see Appendix A.1 of
-   [RFC9528]).  At the RS, the access token is bound to the successfully
-   completed EDHOC session and to the established OSCORE Security
-   Context.
+   Consistent with the profile of ACE used, the two peers run LAKE in
+   order to specifically derive an OSCORE Security Context as their
+   shared set of application keys (see Appendix A.1 of [RFC9528]).  At
+   the RS, the access token is bound to the successfully completed LAKE
+   session and to the established OSCORE Security Context.
 
-   After that, the peer acting as ACE client can access the protected
-   resources hosted at the other peer acting as RS, according to the
-   access rights specified in the access token.  The communications
-   between the two peers are protected by means of the established
-   OSCORE Security Context.
+   After that, the peer acting as the ACE client can access the
+   protected resources hosted at the other peer acting as the RS,
+   according to the access rights specified in the access token.  The
+   communications between the two peers are protected by means of the
+   established OSCORE Security Context.
 
    Later on, the application at one of the two peers P may have learned
    that the established OSCORE Security Context CTX is not safe to use
@@ -397,8 +402,8 @@ Table of Contents
           has not expired yet and the peer P is not aware that it has
           been revoked.
 
-       *  Let us define S as the EDHOC session from which the peer P has
-          derived CTX or the eldest CTX's ancestor OSCORE Security
+       *  Let us define S as the LAKE session from which the peer P has
+          derived CTX or the oldest CTX's ancestor OSCORE Security
           Context.  Then, since the completion of S with the other peer,
           the application at P has received from the other peer and
           successfully verified at least one message protected with any
@@ -418,43 +423,42 @@ Table of Contents
    3.  The application at the peer P performs the following actions.
 
        *  If the access token is not believed to be valid anymore, the
-          peer P deletes all the EDHOC sessions associated with the
+          peer P deletes all the LAKE sessions associated with the
           access token as well as the OSCORE Security Context derived
           from each of those sessions.
 
-          Note that, when specifically considering the EDHOC and OSCORE
-          profile of ACE, an access token is associated with at most one
-          EDHOC session (see Section 4.2 of
+          Note that, when using the profile of ACE considered in this
+          section, an access token is associated with at most one LAKE
+          session (see Section 4.2 of
           [I-D.ietf-ace-edhoc-oscore-profile]).
 
-          If the peer P acted as ACE client, then P obtains from the ACE
-          AS a new access token, which is uploaded to the other peer
-          acting as ACE RS.
+          If the peer P acted as the ACE client, then P obtains from the
+          ACE AS a new access token, which is uploaded to the other peer
+          acting as the ACE RS.
 
           Finally, the application at P moves to Step 4.
 
        *  If the access token is valid while the OSCORE Security Context
           CTX is not, then the peer P deletes CTX.
 
-          After that, the peer P deletes the EDHOC session from which
-          CTX was generated, or from which the eldest CTX's ancestor
-          OSCORE Security Context was generated before any key update
-          occurred (e.g., by means of KUDOS or other key update
-          methods).
+          After that, the peer P deletes the LAKE session from which CTX
+          was generated, or from which the oldest CTX's ancestor OSCORE
+          Security Context was generated before any key update occurred
+          (e.g., by means of KUDOS or other key update methods).
 
           Finally, the application at P moves to Step 4.
 
-   4.  The peer P runs a new execution of the EDHOC protocol with the
-       other peer.  Upon successfully completing the EDHOC execution,
-       the two peers derive and install a new OSCORE Security Context
-       from this latest EDHOC session.
+   4.  The peer P runs a new execution of the LAKE protocol with the
+       other peer.  Upon successfully completing the LAKE execution, the
+       two peers derive and install a new OSCORE Security Context from
+       this latest LAKE session.
 
-       At the RS, the access token is bound to this latest EDHOC session
+       At the RS, the access token is bound to this latest LAKE session
        and the newly established OSCORE Security Context.
 
    The flowchart in Figure 3 shows the handling of an access token or of
    a set of application keys that have become invalid, when using the
-   EDHOC and OSCORE profile of the ACE framework.
+   profile of ACE defined in [I-D.ietf-ace-edhoc-oscore-profile].
 
  Invalid access token
  specifying AUTH_CRED_C,
@@ -465,7 +469,7 @@ Table of Contents
    v
                NO
  Is the       ----> Delete the associated --> Obtain and --> Rerun ---+
- access token       EDHOC sessions and        upload a       EDHOC    |
+ access token       LAKE sessions and         upload a       LAKE     |
  still believed     the application keys      new access              |
  to be valid?       derived from those        token            ^      |
    |                                                           |      |
@@ -483,7 +487,7 @@ Table of Contents
                                                                |      |
  Are the           NO                                          |      |
  application keys -----> Delete the application keys and ------+      |
- persisted?              the associated EDHOC session                 |
+ persisted?              the associated LAKE session                  |
                                                                       |
    |                             ^        ^                           |
    | YES                         |        |                           |
@@ -515,12 +519,11 @@ Table of Contents
     Figure 3: Handling of an Access Token or of a Set of Application
                      Keys that Have Become Invalid.
 
-3.  Retention of Completed EDHOC Sessions
+3.  Retention of Completed LAKE Sessions
 
-   After successfully completing an EDHOC session S and possibly using
-   the EDHOC_Exporter interface to derive keying material from S, an
-   EDHOC peer is expected to store and retain the latest state of S over
-   time.
+   After successfully completing a LAKE session S and potentially using
+   the EDHOC_Exporter interface to derive keying material from S, a LAKE
+   peer is expected to store and retain the latest state of S over time.
 
    Requirements to fulfill for persistently storing PRK_out or derived
    application keys are defined in Sections 5.4.2 and 5.4.3 of
@@ -529,7 +532,7 @@ Table of Contents
    Retaining the state of S ensures that it is possible to:
 
    *  Update S by updating its associated PRK_out in a more efficient
-      way than re-running EDHOC, e.g., by using the EDHOC_KeyUpdate
+      way than re-running LAKE, e.g., by using the EDHOC_KeyUpdate
       function defined in Appendix H of [RFC9528].
 
    *  Use the EDHOC_Exporter interface for late derivations of keying
@@ -543,173 +546,172 @@ Table of Contents
    *  S has to be deleted due to reasons discussed in Section 2; or
 
    *  S has to be deleted due to memory limitations, in which case the
-      peer ought to delete the oldest completed EDHOC session first.
+      peer ought to delete the oldest completed LAKE session first.
 
-3.1.  Handling of Incoming EDHOC Error Messages
+3.1.  Handling of Incoming LAKE Error Messages
 
-   Section 5.1 of [RFC9528] defines that an EDHOC session is completed
+   Section 5.1 of [RFC9528] defines that a LAKE session is completed
    after having successfully processed the last message, i.e., message_3
    or message_4, depending on the application profile used (see
    Section 3.9 of [RFC9528]).  It follows that:
 
    *  The Responder completes a session after successfully processing
-      the incoming EDHOC message_3, if EDHOC message_4 is not used, or
-      after sending EDHOC message_4 otherwise.
+      the incoming LAKE message_3, if LAKE message_4 is not used, or
+      after sending LAKE message_4 otherwise.
 
    *  The Initiator completes a session after successfully processing
-      the incoming EDHOC message_4, if EDHOC message_4 is used, or after
-      sending EDHOC message_3 otherwise.
+      the incoming LAKE message_4, if LAKE message_4 is used, or after
+      sending LAKE message_3 otherwise.
 
-   Furthermore, Section 6 of [RFC9528] defines EDHOC error messages and
+   Furthermore, Section 6 of [RFC9528] defines LAKE error messages and
    the processing associated with the initial set of error codes.
-   According to Section 5.1 of [RFC9528], after an EDHOC session is
-   completed, no EDHOC error messages are sent, and the EDHOC session
-   output may be maintained even if EDHOC error messages are received.
+   According to Section 5.1 of [RFC9528], after a LAKE session is
+   completed, no LAKE error messages are sent and the LAKE session
+   output may be maintained even if LAKE error messages are received.
 
    That is, an implementation has a lot of latitude about handling
-   incoming EDHOC error messages that pertain to a completed EDHOC
+   incoming LAKE error messages that pertain to a completed LAKE
    session.
 
    In general, a safe approach simply consists in aborting the completed
-   EDHOC session, thereby deleting the corresponding output such as
-   derived application keys.  If the reception of EDHOC error messages
-   at a given peer is still plausible, this is actually an appropriate
+   LAKE session, thereby deleting the corresponding output such as
+   derived application keys.  If the reception of LAKE error messages at
+   a given peer is still plausible, this is actually an appropriate
    course of action for that peer.  An example is the case where the
-   Responder sends EDHOC message_4, and it receives an EDHOC error
-   message as a follow-up from the Initiator that rejected EDHOC
-   message_4.
+   Responder sends LAKE message_4 and then receives a LAKE error message
+   as a follow-up from the Initiator that rejected LAKE message_4.
 
    However, there are indeed cases where it is not plausible anymore to
-   receive EDHOC error messages pertaining to a completed EDHOC session.
-   Such EDHOC error messages can be safely ignored as irrelevant and
-   possibly resulting from an attack, thereby preserving the EDHOC
+   receive LAKE error messages pertaining to a completed LAKE session.
+   Such LAKE error messages can be safely ignored as irrelevant and
+   potentially resulting from an attack, thereby preserving the LAKE
    session output such as derived application keys.  An example is the
-   case where the Responder successfully processes the incoming EDHOC
-   message_3 and, at the same time, EDHOC message_4 is not used.
+   case where the Responder successfully processes the incoming LAKE
+   message_3 and, at the same time, LAKE message_4 is not used.
 
    To provide more concrete guidance, the rest of this section considers
    the case where the following applies:
 
    *  "application keys" stands for the keying material and parameters
       that compose an OSCORE Security Context [RFC8613], i.e., when
-      specifically those application keys are derived from an EDHOC
+      specifically those application keys are derived from a LAKE
       session (see Appendix A.1 of [RFC9528]).
 
-   *  EDHOC messages are transferred over CoAP [RFC7252] using the
+   *  LAKE messages are transferred over CoAP [RFC7252] using the
       forward message flow (see Appendix A.2 of [RFC9528]), i.e., the
-      EDHOC Responder acts as a CoAP server and the EDHOC Initiator acts
+      LAKE Responder acts as a CoAP server and the LAKE Initiator acts
       as a CoAP client.
 
-   Building on the above, the following holds for the EDHOC Responder.
+   Building on the above, the following holds for the LAKE Responder.
 
-   *  If EDHOC message_4 is not used, the Responder completes the EDHOC
-      session after successfully processing the incoming EDHOC
-      message_3.  In this case, no further EDHOC messages are supposed
-      to be exchanged in the session.
+   *  If LAKE message_4 is not used, the Responder completes the LAKE
+      session after successfully processing the incoming LAKE message_3.
+      In this case, no further LAKE messages are supposed to be
+      exchanged in the session.
 
-      Consequently, the Responder can safely set the EDHOC session to
-      ignore any incoming EDHOC error message pertaining to the session
+      Consequently, the Responder can safely set the LAKE session to
+      ignore any incoming LAKE error message pertaining to the session
       from then on, thereby preserving the OSCORE Security Context
       derived from the session.
 
-   *  If EDHOC message_4 is used, the Responder completes the EDHOC
-      session after sending EDHOC message_4.
+   *  If LAKE message_4 is used, the Responder completes the LAKE
+      session after sending LAKE message_4.
 
       After that, it remains generally appropriate for the Responder to
-      abort the EDHOC session in the event that the Responder receives
-      an EDHOC error message pertaining to the session.  In particular,
-      the EDHOC error message might have been legitimately sent by the
-      Initiator that failed to process EDHOC message_4.
+      abort the LAKE session in the event that the Responder receives a
+      LAKE error message pertaining to the session.  In particular, the
+      LAKE error message might have been legitimately sent by the
+      Initiator that failed to process LAKE message_4.
 
-      However, the Responder can safely set the EDHOC session to ignore
-      any incoming EDHOC error message pertaining to the session from
+      However, the Responder can safely set the LAKE session to ignore
+      any incoming LAKE error message pertaining to the session from
       then on, after successfully processing an incoming OSCORE-
       protected message received from the Initiator.  Similarly to the
       case previously discussed, this preserves the OSCORE Security
       Context derived from the session, in the event that the Responder
-      receives EDHOC error messages.
+      receives LAKE error messages.
 
-   Also building on the above, the following holds for the EDHOC
+   Also building on the above, the following holds for the LAKE
    Initiator.
 
-   *  If EDHOC message_4 is used, the Initiator completes a session
-      after successfully processing the incoming EDHOC message_4.  In
-      this case, no further EDHOC messages are supposed to be exchanged
-      in the session.
+   *  If LAKE message_4 is used, the Initiator completes a session after
+      successfully processing the incoming LAKE message_4.  In this
+      case, no further LAKE messages are supposed to be exchanged in the
+      session.
 
-      Consequently, the Initiator can safely set the EDHOC session to
-      ignore any incoming EDHOC error message pertaining to the session
+      Consequently, the Initiator can safely set the LAKE session to
+      ignore any incoming LAKE error message pertaining to the session
       from then on, thereby preserving the OSCORE Security Context
       derived from the session.
 
-   *  If EDHOC message_4 is not used, the Initiator completes a session
-      after sending EDHOC message_3.
+   *  If LAKE message_4 is not used, the Initiator completes a session
+      after sending LAKE message_3.
 
       After that, it remains generally appropriate for the Initiator to
-      abort the EDHOC session in the event that the Initiator receives
-      an EDHOC error message pertaining to the session.  In particular,
-      the EDHOC error message might have been legitimately sent by the
-      Responder that failed to process EDHOC message_3.
+      abort the LAKE session in the event that the Initiator receives a
+      LAKE error message pertaining to the session.  In particular, the
+      LAKE error message might have been legitimately sent by the
+      Responder that failed to process LAKE message_3.
 
-      If an active adversary injects an EDHOC error message intended to
-      the Initiator and pertaining to the EDHOC session, the Initiator
+      If an active adversary injects a LAKE error message intended to
+      the Initiator and pertaining to the LAKE session, the Initiator
       would effectively receive and process that message only during a
-      specific time interval, i.e., from when the Initiator sends EDHOC
+      specific time interval, i.e., from when the Initiator sends LAKE
       message_3 until when the Initiator frees up the CoAP Token value
-      used in the CoAP request message that conveyed EDHOC message_3.
+      used in the CoAP request message that conveyed LAKE message_3.
 
-      However, the Initiator can safely set the EDHOC session to ignore
-      any incoming EDHOC error message pertaining to the session, after
+      However, the Initiator can safely set the LAKE session to ignore
+      any incoming LAKE error message pertaining to the session, after
       successfully processing an incoming OSCORE-protected message
       received from the Responder.  Similarly to the case previously
       discussed, this preserves the OSCORE Security Context derived from
-      the session, in the event that the Initiator receives EDHOC error
+      the session, in the event that the Initiator receives LAKE error
       messages.
 
    Following the reception and successful verification for the first
    time of an OSCORE-protected message using the OSCORE Security Context
-   derived from a completed EDHOC session, a recipient EDHOC peer has
-   different ways for setting the session to ignore pertaining EDHOC
+   derived from a completed LAKE session, a recipient LAKE peer has
+   different ways for setting the session to ignore pertaining LAKE
    error messages from then on.
 
    Some approaches can be easier and more appealing to use than others,
-   depending on the specific EDHOC implementation and its integration
+   depending on the specific LAKE implementation and its integration
    with the communication stack.  As an example, two possible approaches
    are described below:
 
    *  The OSCORE library used or an OSCORE layer that takes part in the
       communication stack can be aware that an OSCORE Security Context
-      CTX was derived from an EDHOC session S.
+      CTX was derived from a LAKE session S.
 
       In such a case, after receiving and successfully verifying for the
       first time an OSCORE-protected message using CTX, the OSCORE
-      library/layer on the recipient EDHOC peer can effectively set the
-      EDHOC session S to ignore any incoming EDHOC error message
+      library/layer on the recipient LAKE peer can effectively set the
+      LAKE session S to ignore any incoming LAKE error message
       pertaining to the session from then on.
 
-   *  When receiving an EDHOC error message pertaining to a completed
-      EDHOC session, EDHOC can check whether the session is set to
-      ignore pertaining EDHOC error messages.  If that is the case, the
-      received EDHOC error message is ignored.
+   *  When receiving a LAKE error message pertaining to a completed LAKE
+      session, LAKE can check whether the session is set to ignore
+      pertaining LAKE error messages.  If that is the case, the received
+      LAKE error message is ignored.
 
-      Otherwise, EDHOC checks whether the OSCORE Security Context CTX
-      derived from the EDHOC session has been used at least once for
+      Otherwise, LAKE checks whether the OSCORE Security Context CTX
+      derived from the LAKE session has been used at least once for
       successfully verifying an incoming OSCORE-protected message from
-      the other EDHOC peer (e.g., by checking the Replay Window within
+      the other LAKE peer (e.g., by checking the Replay Window within
       the Recipient Context of CTX).
 
-      In the case that CTX has not been used yet, the received EDHOC
-      error message is processed as usual, i.e., the EDHOC session is
+      In the case that CTX has not been used yet, the received LAKE
+      error message is processed as usual, i.e., the LAKE session is
       aborted and CTX is deleted.  Instead, in the case that CTX has
       been used at least once for successfully verifying an incoming
-      OSCORE-protected message from the other EDHOC peer, the EDHOC
-      error message is ignored and EDHOC sets the EDHOC session to
-      ignore pertaining EDHOC error messages from then on.
+      OSCORE-protected message from the other LAKE peer, the LAKE error
+      message is ignored and LAKE sets the LAKE session to ignore
+      pertaining LAKE error messages from then on.
 
 4.  Trust Policies for Learning New Authentication Credentials
 
    A peer P relies on authentication credentials associated with other
-   peers, in order to authenticate those peers when running EDHOC with
+   peers, in order to authenticate those peers when running LAKE with
    them.
 
    There are different ways for P to acquire an authentication
@@ -717,20 +719,19 @@ Table of Contents
    be supplied to P out-of-band by a trusted provider.
 
    Alternatively, CRED can be specified by the other peer during the
-   EDHOC execution with P.  This can rely on EDHOC message_2 or
-   message_3, whose respective ID_CRED_R and ID_CRED_I field can specify
-   CRED by value, or instead a URI or other external reference where
-   CRED can be retrieved from (see Section 3.5.3 of [RFC9528]).
+   LAKE execution with P.  This can rely on LAKE message_2 or message_3,
+   whose respective ID_CRED_R and ID_CRED_I field can specify CRED by
+   value, or instead a URI or other external reference where CRED can be
+   retrieved from (see Section 3.5.3 of [RFC9528]).
 
-   Also during the EDHOC execution, an External Authorization Data (EAD)
-   field might include an EAD item that specifies CRED by value, or
-   instead a URI or other external reference where CRED can be retrieved
-   from.  This is the case, e.g., for an EAD item defined by the EDHOC
-   and OSCORE profile of the ACE framework
-   [I-D.ietf-ace-edhoc-oscore-profile].  In particular, the EAD item is
-   used for transporting an access token, which in turn specifies by
+   Also during the LAKE execution, an EAD field might include an EAD
+   item that specifies CRED by value, or instead a URI or other external
+   reference where CRED can be retrieved from.  This is the case, e.g.,
+   for an EAD item specified by the profile of the ACE framework defined
+   in [I-D.ietf-ace-edhoc-oscore-profile].  In particular, the EAD item
+   is used for transporting an access token, which in turn specifies by
    value or by reference the public authentication credential associated
-   with the EDHOC peer acting as ACE client.
+   with the LAKE peer acting as the ACE client.
 
    When obtaining a new credential CRED, the peer P has to validate it
    before storing it.  The validation steps to perform depend on the
@@ -739,7 +740,7 @@ Table of Contents
    authentication credential associated with) a trusted third party
    acting as a trust anchor.
 
-   Upon retrieving a new CRED through the processing of a received EDHOC
+   Upon retrieving a new CRED through the processing of a received LAKE
    message and following the successful validation of CRED, the peer P
    stores CRED only if it assesses CRED to also be (provisionally)
    trusted, while it must not store CRED otherwise.
@@ -747,10 +748,10 @@ Table of Contents
    An exception applies for the two unauthenticated operations described
    in Appendix D.5 of [RFC9528], where a trust relationship with an
    unknown or not-yet-trusted endpoint is established later.  In such a
-   case, CRED is verified out-of-band at a later stage, or an EDHOC
+   case, CRED is verified out-of-band at a later stage, or a LAKE
    session key is bound to an identity out-of-band at a later stage.
 
-   When processing a received EDHOC message M that specifies an
+   When processing a received LAKE message M that specifies an
    authentication credential CRED, the peer P can enforce one of the
    trust policies LEARNING and NO-LEARNING specified in Section 4.1 and
    Section 4.2, in order to determine whether to trust CRED.
@@ -758,11 +759,11 @@ Table of Contents
    Table 1 provides a summary of the behavior of P about accepting CRED,
    for different trust policies.  Provisional trust on CRED has to be
    later confirmed, e.g., by information that vouches for CRED and is
-   conveyed within an EDHOC message received during the EDHOC session
+   conveyed within a LAKE message received during the LAKE session
    (e.g., transported by an EAD item).
 
    +======================+================+==========================+
-   |                      | CRED is not    | CRED is new              |
+   | Trust policy         | CRED is not    | CRED is new              |
    |                      | new (already   | (not already stored)     |
    |                      | stored)        |                          |
    +======================+================+==========================+
@@ -780,20 +781,20 @@ Table of Contents
    +----------------------+----------------+--------------------------+
 
       Table 1: Summary about Accepting the Authentication Credential
-       CRED Associated with the Other Peer in an EDHOC Session, for
+        CRED Associated with the Other Peer in a LAKE Session, for
                         Different Trust Policies.
 
    Irrespective of the adopted trust policy, P actually uses CRED only
    if it is determined to be fine to use in the context of the ongoing
-   EDHOC session, also depending on the specific identity of the other
+   LAKE session, also depending on the specific identity of the other
    peer (see Sections 3.5 and D.2 of [RFC9528]).  If this is not the
-   case, P aborts the EDHOC session with the other peer.
+   case, P aborts the LAKE session with the other peer.
 
    If P stores CRED, then P will consider CRED as valid and trusted
    until:
 
-   *  CRED possibly becomes invalid, e.g., because it expires or because
-      P gains knowledge that it has been revoked; or
+   *  CRED becomes invalid, e.g., because it expires or because P gains
+      knowledge that it has been revoked; or
 
    *  CRED becomes non-trusted, e.g., because P originally assessed CRED
       to be provisionally trusted, and later on failed to obtain an
@@ -811,10 +812,10 @@ Table of Contents
    credential identifier that P supports and that is compatible with
    CRED.
 
-   In future executions of EDHOC with the other peer associated with
+   In future executions of LAKE with the other peer associated with
    CRED, this allows such other peer to specify CRED by reference, e.g.,
    by indicating its credential identifier as ID_CRED_R/ID_CRED_I in the
-   EDHOC message_2 or message_3 addressed to the peer P.  In turn, this
+   LAKE message_2 or message_3 addressed to the peer P.  In turn, this
    allows P to retrieve CRED from its local storage.
 
 4.1.  Trust Policy LEARNING
@@ -830,11 +831,11 @@ Table of Contents
 
    2.  P checks whether CRED is already being stored and if it is still
        valid and trusted.  In such a case, P trusts CRED and can
-       continue the EDHOC execution.  Otherwise, P moves to Step 3.
+       continue the LAKE execution.  Otherwise, P moves to Step 3.
 
    3.  P attempts to validate CRED.  If the validation process is not
-       successful, P aborts the EDHOC session with the other peer.
-       Otherwise, P trusts and stores CRED, and can continue the EDHOC
+       successful, P aborts the LAKE session with the other peer.
+       Otherwise, P trusts and stores CRED, and can continue the LAKE
        execution.
 
 4.2.  Trust Policy NO-LEARNING
@@ -844,8 +845,8 @@ Table of Contents
    where situation-specific exceptions apply and are deliberately
    enforced (see below).
 
-   That is, upon receiving M, the peer P continues the execution of
-   EDHOC only if both the following conditions hold:
+   That is, upon receiving M, the peer P continues the execution of LAKE
+   only if both the following conditions hold:
 
    *  P currently stores CRED, as specified by reference or by value in
       the ID_CRED_I/ID_CRED_R field of M or in the value of an EAD item
@@ -855,50 +856,50 @@ Table of Contents
       revoked) and trusted.
 
    Exceptions may apply and be actually enforced in cases where, during
-   an EDHOC execution, P obtains additional information that allows it
-   to trust and successfully validate CRED, even though P was not
-   already storing CRED when receiving M.
+   a LAKE execution, P obtains additional information that allows it to
+   trust and successfully validate CRED, even though P was not already
+   storing CRED when receiving M.
 
    Such exceptions typically rely on a trusted party that vouches for
    CRED, e.g., in the cases discussed in Section 4.3.  From the point of
    view of the peer P, the trusted party might have been involved in the
    background, so that the vouching information about CRED is conveyed
-   within an EDHOC message received during the EDHOC session (e.g.,
+   within a LAKE message received during the LAKE session (e.g.,
    transported by an EAD item).  Alternatively, P might directly
    interact with the trusted party for retrieving the vouching
    information about CRED, e.g., after having received M and before
-   continuing the EDHOC execution.
+   continuing the LAKE execution.
 
    If the peer P admits such an exception and actually enforces it on an
    authentication credential CRED, then P effectively handles CRED
    according to the trust policy "LEARNING" specified in Section 4.1.
    When doing so, P still attempts to validate CRED, and it aborts the
-   EDHOC session if the validation process is not successful.
+   LAKE session if the validation process is not successful.
 
 4.3.  Enforcement of Trust Policies in Specific Scenarios
 
-   The following subsections discuss how an EDHOC peer enforces the
-   trust policies LEARNING and NO-LEARNING in specific scenarios.
+   The following subsections discuss how a LAKE peer enforces the trust
+   policies LEARNING and NO-LEARNING in specific scenarios.
 
-4.3.1.  In the EDHOC and OSCORE Profile of ACE
+4.3.1.  In the ACE Framework
 
-   As discussed in Section 2.3, two EDHOC peers can be using the ACE
-   framework [RFC9200] and specifically the EDHOC and OSCORE profile of
-   ACE defined in [I-D.ietf-ace-edhoc-oscore-profile].
+   As discussed in Section 2.3, two LAKE peers can be using the ACE
+   framework [RFC9200] and specifically the profile of ACE defined in
+   [I-D.ietf-ace-edhoc-oscore-profile].
 
-   In this case, one of the two EDHOC peers, namely PEER_RS, acts as ACE
-   resource server (RS).  Instead, the other EDHOC peer, namely PEER_C,
-   acts as ACE client and obtains from an ACE authorization server (AS)
-   an access token for accessing protected resources at PEER_RS.  The AS
-   and PEER_RS are in a trust relationship.
+   In this case, one of the two LAKE peers, namely PEER_RS, acts as the
+   ACE resource server (RS).  Instead, the other LAKE peer, namely
+   PEER_C, acts as the ACE client and obtains from an ACE authorization
+   server (AS) an access token for accessing protected resources at
+   PEER_RS.  The AS and PEER_RS are in a trust relationship.
 
    Together with other information, the access token specifies (by value
    or by reference) the public authentication credential AUTH_CRED_C
-   associated with PEER_C that PEER_C is going to use when running EDHOC
+   associated with PEER_C that PEER_C is going to use when running LAKE
    with PEER_RS.  Note that AUTH_CRED_C will be used as either CRED_I or
-   CRED_R in EDHOC, depending on whether the two peers use the EDHOC
-   forward message flow (i.e., PEER_C is the EDHOC Initiator) or the
-   EDHOC reverse message flow (i.e., PEER_C is the EDHOC Responder),
+   CRED_R in LAKE, depending on whether the two peers use the LAKE
+   forward message flow (i.e., PEER_C is the LAKE Initiator) or the LAKE
+   reverse message flow (i.e., PEER_C is the LAKE Responder),
    respectively (see Appendix A.2 of [RFC9528]).
 
    When the AS issues the first access token that specifies AUTH_CRED_C
@@ -911,93 +912,93 @@ Table of Contents
    PEER_C as per the alternative SDC workflow defined in
    [I-D.ietf-ace-workflow-and-params], the access token is typically
    uploaded to PEER_RS by PEER_C through a dedicated EAD item, when
-   running EDHOC with PEER_RS.  The specific EDHOC message that includes
+   running LAKE with PEER_RS.  The specific LAKE message that includes
    the EAD item conveying the access token depends on whether the two
-   peers use the EDHOC forward message flow or the EDHOC reverse message
+   peers use the LAKE forward message flow or the LAKE reverse message
    flow.
 
    Consequently, PEER_RS has to learn AUTH_CRED_C as a new
-   authentication credential during an EDHOC session with PEER_C.
+   authentication credential during a LAKE session with PEER_C.
 
-   At least for its EDHOC resource used for exchanging the EDHOC
-   messages of the EDHOC session in question, this requires PEER_RS to:
+   At least for its LAKE resource used for exchanging the LAKE messages
+   of the LAKE session in question, this requires PEER_RS to:
 
    *  Enforce the trust policy "LEARNING"; or
 
    *  If enforcing the trust policy "NO-LEARNING", additionally enforce
-      an overriding exception when an incoming EDHOC message includes an
+      an overriding exception when an incoming LAKE message includes an
       EAD item specifying a valid access token issued by a trusted AS.
 
       That is, through a successful verification of the access token,
       PEER_RS is able to trust AUTH_CRED_C (if found valid), even though
-      it was not already storing AUTH_CRED_C when receiving the EDHOC
+      it was not already storing AUTH_CRED_C when receiving the LAKE
       message with the EAD item.
 
-4.3.2.  In the Lightweight Authorization using EDHOC (ELA) Procedure
+4.3.2.  In the ELA Procedure
 
-   When the execution of EDHOC embeds the ELA procedure defined in
-   [I-D.ietf-lake-authz], the EDHOC peer U receives an EDHOC message_2
-   (message_3) where ID_CRED_R (ID_CRED_I) specifies by value the
-   authentication credential CRED associated with the other peer V.
+   When the execution of LAKE embeds the ELA procedure for lightweight
+   authorization defined in [I-D.ietf-lake-authz], the LAKE peer U
+   receives a LAKE message_2 (message_3) where ID_CRED_R (ID_CRED_I)
+   specifies by value the authentication credential CRED associated with
+   the other peer V.
 
-   Furthermore, an EDHOC message sent to U includes an EAD item, which
+   Furthermore, a LAKE message sent to U includes an EAD item, which
    specifies a voucher issued by a trusted enrollment server W.  The
    voucher is an assertion to U that W has authorized V and has endorsed
    CRED.
 
-   The specific EDHOC message that includes the EAD item conveying the
-   voucher depends on whether U and V use the EDHOC forward message flow
-   (i.e., U is the EDHOC Initiator) or the EDHOC reverse message flow
-   (i.e., U is the EDHOC Responder).  In particular:
+   The specific LAKE message that includes the EAD item conveying the
+   voucher depends on whether U and V use the LAKE forward message flow
+   (i.e., U is the LAKE Initiator) or the LAKE reverse message flow
+   (i.e., U is the LAKE Responder).  In particular:
 
-   *  When using the EDHOC forward message flow, the EAD item is
-      included in EDHOC message_4, thereby endorsing CRED that was
-      specified by ID_CRED_R in the previous EDHOC message_2.
+   *  When using the LAKE forward message flow, the EAD item is included
+      in LAKE message_4, thereby endorsing CRED that was specified by
+      ID_CRED_R in the previous LAKE message_2.
 
       Since it is indeed expected that U is not already storing CRED
-      upon receiving EDHOC message_2, U can at best provisionally trust
-      CRED (if found valid) when retrieving it from EDHOC message_2.
+      upon receiving LAKE message_2, U can at best provisionally trust
+      CRED (if found valid) when retrieving it from LAKE message_2.
 
-   *  When using the EDHOC reverse message flow, the EAD item is
-      included in EDHOC message_3, thereby endorsing CRED that is
-      specified by ID_CRED_I in the same EDHOC message.
+   *  When using the LAKE reverse message flow, the EAD item is included
+      in LAKE message_3, thereby endorsing CRED that is specified by
+      ID_CRED_I in the same LAKE message.
 
    In either case, through a successful verification of the voucher, U
    is able to ultimately trust CRED (if found valid), even though U was
-   not already storing CRED upon receiving the EDHOC message specifying
+   not already storing CRED upon receiving the LAKE message specifying
    CRED.
 
    Therefore, if U enforces the trust policy "NO-LEARNING", it can
    additionally enforce an overriding exception as below:
 
-   *  When using the EDHOC forward message flow, the exception is
-      enforced when processing an EDHOC message_2, and it is raised by
-      the intention of using the ELA procedure.  That is, U intends to
-      proceed with sending a consistent EDHOC message_3 that indicates
+   *  When using the LAKE forward message flow, the exception is
+      enforced when processing a LAKE message_2, and it is raised by the
+      intention of using the ELA procedure.  That is, U intends to
+      proceed with sending a consistent LAKE message_3 that indicates
       the wish to obtain a voucher issued by W.
 
       At that point in time, the authentication credential CRED is only
       provisionally trusted (if found valid), with the expectation to
-      receive an EDHOC message_4 in the same EDHOC session, conveying a
+      receive a LAKE message_4 in the same LAKE session, conveying a
       valid voucher issued by W and thus confirming that CRED can be
       ultimately trusted.
 
-   *  When using the EDHOC reverse message flow, the exception is
-      enforced when processing an EDHOC message_3, and it is raised by
-      the EDHOC message_3 including an EAD item that conveys a valid
-      voucher issued by W, thus confirming that CRED can be ultimately
-      trusted.
+   *  When using the LAKE reverse message flow, the exception is
+      enforced when processing a LAKE message_3, and it is raised by the
+      LAKE message_3 including an EAD item that conveys a valid voucher
+      issued by W, thus confirming that CRED can be ultimately trusted.
 
-5.  Side Processing of Incoming EDHOC Messages
+5.  Side Processing of Incoming LAKE Messages
 
-   This section describes an approach that EDHOC peers can use upon
-   receiving EDHOC messages, in order to fetch/validate authentication
-   credentials and to process External Authorization Data (EAD) items.
+   This section describes an approach that LAKE peers can use upon
+   receiving LAKE messages, in order to fetch/validate authentication
+   credentials and to process EAD items.
 
-   The transport mechanism provided by EDHOC for conveying EAD items is
-   defined in Section 3.8 of [RFC9528].  In particular, an EDHOC
-   message_x can include one dedicated EAD field EAD_x, for x = 1, 2, 3,
-   or 4.  In turn, an EAD field can include one or more EAD items.
+   The transport mechanism provided by LAKE for conveying EAD items is
+   defined in Section 3.8 of [RFC9528].  In particular, a LAKE message_x
+   can include one dedicated EAD field EAD_x, for x = 1, 2, 3, or 4.  In
+   turn, an EAD field can include one or more EAD items.
 
    As per Section 9.1 of [RFC9528], specifications defining those EAD
    items have to set the ground for "agreeing on the surrounding context
@@ -1006,14 +1007,14 @@ Table of Contents
 
    The approach described in this section aims to help implementers
    navigate the surrounding context mentioned above, irrespective of the
-   specific EAD items conveyed in the EDHOC messages.  In particular,
-   the described approach takes into account the following points:
+   specific EAD items conveyed in the LAKE messages.  In particular, the
+   described approach takes into account the following points:
 
    *  The fetching and validation of the authentication credential
-      associated with the other peer relies on ID_CRED_I in EDHOC
-      message_2, or on ID_CRED_R in EDHOC message_3, or on the value of
-      an EAD item.  When this occurs upon receiving EDHOC message_2 or
-      message_3, the decryption of the EDHOC message has to be completed
+      associated with the other peer relies on ID_CRED_I in LAKE
+      message_2, or on ID_CRED_R in LAKE message_3, or on the value of
+      an EAD item.  When this occurs upon receiving LAKE message_2 or
+      message_3, the decryption of the LAKE message has to be completed
       first.
 
       Validating the authentication credential or assessing whether it
@@ -1021,60 +1022,60 @@ Table of Contents
       in turn has to be validated first.
 
    *  It is possible that some EAD items can be processed only after
-      having successfully verified the EDHOC message, i.e., after a
-      successful verification of the Signature_or_MAC field in EDHOC
+      having successfully verified the LAKE message, i.e., after a
+      successful verification of the Signature_or_MAC field in LAKE
       message_2 or message_3.
 
-      For instance, an EAD item within the EAD_3 field of EDHOC
-      message_3 might contain a Certificate Signing Request (CSR)
-      [RFC2986].  Hence, such an EAD item can be processed only once the
-      recipient peer has attained proof that the other peer possesses
-      its own private key.
+      For instance, an EAD item within the EAD_3 field of LAKE message_3
+      might contain a Certificate Signing Request (CSR) [RFC2986].
+      Hence, such an EAD item can be processed only once the recipient
+      peer has attained proof that the other peer possesses its own
+      private key.
 
    In order to conveniently handle such processing, the application can
    prepare in advance a "side-processor object" (SPO), which takes care
-   of the operations above during the EDHOC execution.
+   of the operations above during the LAKE execution.
 
-   In particular, the application provides EDHOC with the SPO before
-   starting an EDHOC execution, during which EDHOC will temporarily
+   In particular, the application provides LAKE with the SPO before
+   starting a LAKE execution, during which LAKE will temporarily
    transfer control to the SPO at the right point in time, in order to
-   perform the required side-processing of an incoming EDHOC message.
+   perform the required side-processing of an incoming LAKE message.
 
    Furthermore, the application has to instruct the SPO about:
 
    *  How to prepare any EAD item such that: it has to be included in
-      the EAD field of an outgoing EDHOC message, possibly together with
-      other EAD items; and it is independent of the processing of other
-      EAD items included in incoming EDHOC messages.  This includes, for
-      instance, the preparation of padding EAD items (see Section 3.8.1
-      of [RFC9528]).
+      the EAD field of an outgoing LAKE message, potentially together
+      with other EAD items; and it is independent of the processing of
+      other EAD items included in incoming LAKE messages.  This
+      includes, for instance, the preparation of padding EAD items (see
+      Section 3.8.1 of [RFC9528]).
 
    *  The list of one or more EAD items that are expected to be present
-      within the dedicated EAD field of specific, incoming EDHOC
-      messages during the EDHOC session.  This takes into account, for
-      instance, external security applications that will be integrated
-      in the EDHOC session (e.g., see [I-D.ietf-lake-authz]).
+      within the dedicated EAD field of specific, incoming LAKE messages
+      during the LAKE session.  This takes into account, for instance,
+      external security applications that will be integrated in the LAKE
+      session (e.g., see [I-D.ietf-lake-authz]).
 
-      Throughout the EDHOC session, the SPO keeps such a list of
-      expected EAD items up-to-date.  This takes into account, for
-      instance, external security applications that have been run
-      integrated in the EDHOC session, the current status of the
-      session, as well as the EDHOC messages that have been exchanged
-      during the session and the outcome of their processing.
+      Throughout the LAKE session, the SPO keeps such a list of expected
+      EAD items up-to-date.  This takes into account, for instance,
+      external security applications that have been run integrated in
+      the LAKE session, the current status of the session, as well as
+      the LAKE messages that have been exchanged during the session and
+      the outcome of their processing.
 
-   At the right point in time during the processing of an incoming EDHOC
-   message M at the peer P, EDHOC invokes the SPO and provides it with
+   At the right point in time during the processing of an incoming LAKE
+   message M at the peer P, LAKE invokes the SPO and provides it with
    the following input:
 
-   *  When M is EDHOC message_2 or message_3, an indication of whether
+   *  When M is LAKE message_2 or message_3, an indication of whether
       this invocation is happening before or after the message
       verification (i.e., before or after having verified the
       Signature_or_MAC field).
 
-   *  The full set of information related to the current EDHOC session.
+   *  The full set of information related to the current LAKE session.
       This especially includes the selected cipher suite and the
       ephemeral Diffie-Hellman public keys G_X and G_Y that the two
-      peers have exchanged in the EDHOC session.
+      peers have exchanged in the LAKE session.
 
    *  The authentication credentials that the peer P stores as
       associated with other peers.
@@ -1083,45 +1084,45 @@ Table of Contents
 
    *  The EAD items included in M.
 
-      -  Note that EDHOC might do some preliminary work on M before
+      -  Note that LAKE might do some preliminary work on M before
          invoking the SPO, in order to provide the SPO only with
          actually relevant EAD items.  This requires the application to
-         additionally provide EDHOC with the ead_labels of the EAD items
+         additionally provide LAKE with the ead_labels of the EAD items
          that the peer P recognizes (see Section 3.8 of [RFC9528]).
 
-         With such information available, EDHOC can early abort the
+         With such information available, LAKE can early abort the
          current session if M includes any EAD item which is both
          critical and not recognized by the peer P.
 
-         If no such EAD items are found, EDHOC can remove any padding
-         EAD item (see Section 3.8.1 of [RFC9528]), as well as any EAD
-         item which is neither critical nor recognized (since the SPO is
-         going to ignore it anyway).  This results in EDHOC providing
-         the SPO only with EAD items that will be recognized and that
+         If no such EAD items are found, LAKE can remove any padding EAD
+         item (see Section 3.8.1 of [RFC9528]), as well as any EAD item
+         which is neither critical nor recognized (since the SPO is
+         going to ignore it anyway).  This results in LAKE providing the
+         SPO only with EAD items that will be recognized and that
          require actual processing.
 
       -  Note that, after having processed the EAD items, the SPO might
-         actually need to store them throughout the whole EDHOC
+         actually need to store them throughout the whole LAKE
          execution, e.g., in order to refer to them also when processing
-         later EDHOC messages in the current EDHOC session.
+         later LAKE messages in the current LAKE session.
 
-   The SPO performs the following tasks on an incoming EDHOC message M:
+   The SPO performs the following tasks on an incoming LAKE message M:
 
    *  The SPO checks whether M does not include an EAD item whose
       presence was expected, based on the related list maintained
-      throughout the EDHOC session.  If such an EAD item is absent, the
+      throughout the LAKE session.  If such an EAD item is absent, the
       SPO can come to an early determination about whether and how to
       proceed with the processing of M.
 
       In particular, if an EAD item is absent although its presence was
-      strictly required, then the SPO can early abort the EDHOC session,
+      strictly required, then the SPO can early abort the LAKE session,
       thereby avoiding potentially costly operations (e.g., the
       retrieval and validation of the authentication credential
       associated with the other peer).
 
    *  The SPO fetches and/or validates the authentication credential
       CRED associated with the other peer, based on a dedicated EAD item
-      of M or on the ID_CRED field of M (for EDHOC message_2 or
+      of M or on the ID_CRED field of M (for LAKE message_2 or
       message_3).
 
    *  The SPO processes the EAD items conveyed in the EAD field of M.
@@ -1130,8 +1131,8 @@ Table of Contents
       such results available to the application.
 
    *  When the SPO has completed its side processing and transfers
-      control back to EDHOC, the SPO provides EDHOC with the produced
-      EAD items to include in the EAD field of the next outgoing EDHOC
+      control back to LAKE, the SPO provides LAKE with the produced EAD
+      items to include in the EAD field of the next outgoing LAKE
       message.  The production of such EAD items can be triggered, e.g.,
       by:
 
@@ -1142,77 +1143,75 @@ Table of Contents
          of other EAD items included in M.
 
    In the following, Section 5.1 to Section 5.3 describe more in detail
-   the actions performed by the SPO on the different incoming EDHOC
+   the actions performed by the SPO on the different incoming LAKE
    messages.  Then, Section 5.4 describes further special handling of
-   incoming EDHOC messages, as to consistency checks concerning
+   incoming LAKE messages, as to consistency checks concerning
    authentication credentials in particular situations.
 
-   After completing the EDHOC execution, control is transferred back to
+   After completing the LAKE execution, control is transferred back to
    the application.  In particular, the application is provided with the
-   overall outcome of the EDHOC execution (i.e., successful completion
-   or failure), together with possible specific results produced by the
-   SPO throughout the EDHOC execution (e.g., due to the processing of
-   EAD items).
+   overall outcome of the LAKE execution (i.e., successful completion or
+   failure), together with possible specific results produced by the SPO
+   throughout the LAKE execution (e.g., due to the processing of EAD
+   items).
 
    After that, the application might need to perform follow-up actions,
-   depending on the outcome of the EDHOC execution.  For example, the
-   SPO might have preliminarily filled application-level data
-   structures, as a result of processing EAD items.  In the case of a
-   successful EDHOC execution, the application might need to finalize
-   such data structures.  Instead, in the case of an unsuccessful EDHOC
-   execution, the application might need to clean-up or amend such data
-   structures, or even roll back what the SPO did, unless the SPO
-   already performed such actions before control was transferred back to
-   the application.
+   depending on the outcome of the LAKE execution.  For example, the SPO
+   might have preliminarily filled application-level data structures, as
+   a result of processing EAD items.  In the case of a successful LAKE
+   execution, the application might need to finalize such data
+   structures.  Instead, in the case of an unsuccessful LAKE execution,
+   the application might need to clean-up or amend such data structures,
+   or even roll back what the SPO did, unless the SPO already performed
+   such actions before control was transferred back to the application.
 
-5.1.  EDHOC message_1
+5.1.  LAKE message_1
 
-   During the processing of an incoming EDHOC message_1, EDHOC invokes
-   the SPO only once, after the Responder peer has successfully decoded
-   the message and accepted the selected cipher suite.
+   During the processing of an incoming LAKE message_1, LAKE invokes the
+   SPO only once, after the Responder peer has successfully decoded the
+   message and accepted the selected cipher suite.
 
    If the EAD_1 field is present, the SPO processes the EAD items
    included therein.
 
    Once all such EAD items have been processed, the SPO transfers
-   control back to EDHOC.  When doing so, the SPO also provides EDHOC
-   with any produced EAD items to include in the EAD field of the next
-   outgoing EDHOC message.
+   control back to LAKE.  When doing so, the SPO also provides LAKE with
+   any produced EAD items to include in the EAD field of the next
+   outgoing LAKE message.
 
-   Then, EDHOC resumes its execution and advances its protocol state.
+   Then, LAKE resumes its execution and advances its protocol state.
 
-   Future extensions of EDHOC or external security applications
-   integrated into EDHOC might require a processing of EDHOC message_1
+   Future extensions of LAKE or external security applications
+   integrated into LAKE might require a processing of LAKE message_1
    that is more advanced than the currently expected one.  In
-   particular, an EAD item conveyed in EDHOC message_1 might specify the
+   particular, an EAD item conveyed in LAKE message_1 might specify the
    authentication credential CRED associated with the Initiator (by
    value or by reference), as wrapped in a cryptographically protected
-   "envelope".  In such a case, the processing of an incoming EDHOC
-   message_1 shares similarities with that of an incoming EDHOC
-   message_2 or message_3 (see Section 5.3), as it is further elaborated
-   in Appendix A.
+   "envelope".  In such a case, the processing of an incoming LAKE
+   message_1 shares similarities with that of an incoming LAKE message_2
+   or message_3 (see Section 5.3), as it is further elaborated in
+   Appendix A.
 
-5.2.  EDHOC message_4
+5.2.  LAKE message_4
 
-   During the processing of an incoming EDHOC message_4, EDHOC invokes
-   the SPO only once, after the Initiator peer has successfully
-   decrypted the message.
+   During the processing of an incoming LAKE message_4, LAKE invokes the
+   SPO only once, after the Initiator peer has successfully decrypted
+   the message.
 
    If the EAD_4 field is present, the SPO processes the EAD items
    included therein.
 
    Once all such EAD items have been processed, the SPO transfers
-   control back to EDHOC, which resumes its execution and advances its
+   control back to LAKE, which resumes its execution and advances its
    protocol state.
 
-5.3.  EDHOC message_2 and message_3
+5.3.  LAKE message_2 and message_3
 
-   The following refers to "message_X" as an incoming EDHOC message_2 or
+   The following refers to "message_X" as an incoming LAKE message_2 or
    message_3, and to "message verification" as the verification of
    Signature_or_MAC_X in message_X.
 
-   During the processing of a message_X, EDHOC invokes the SPO two
-   times:
+   During the processing of a message_X, LAKE invokes the SPO two times:
 
    *  Right after message_X has been decrypted and before its
       verification starts.  Following this invocation, the SPO performs
@@ -1223,7 +1222,7 @@ Table of Contents
       Section 5.3.2.
 
    The flowcharts in Section 5.3.3 show the high-level interaction
-   between the core EDHOC processing and the SPO, as well as the
+   between the core LAKE processing and the SPO, as well as the
    different steps taken for processing an incoming message_X.
 
 5.3.1.  Pre-Verification Side Processing
@@ -1236,7 +1235,7 @@ Table of Contents
 
    During PHASE_1, the SPO at the recipient peer P determines CRED,
    i.e., the authentication credential associated with the other peer to
-   be used in the ongoing EDHOC session.  In particular, the SPO first
+   be used in the ongoing LAKE session.  In particular, the SPO first
    checks whether expected EAD items are absent in message_X (see
    Section 5), and then performs the following steps.
 
@@ -1255,7 +1254,7 @@ Table of Contents
 
         Performing such a validation might require the SPO to first
         process an EAD item included in message_X.  For example, it can
-        be an EAD item in EDHOC message_2 that confirms or revokes the
+        be an EAD item in LAKE message_2 that confirms or revokes the
         validity of CRED_R specified by ID_CRED_R, as the result of an
         OCSP process [RFC6960].
 
@@ -1296,9 +1295,8 @@ Table of Contents
         If such additional information can be retrieved from message_X
         (e.g., from an EAD item included therein), then P uses it to
         assess if CRED is trusted.  Otherwise, if such additional
-        information is expected later on during the EDHOC session, it
-        can be acceptable for P to consider CRED as provisionally
-        trusted.
+        information is expected later on during the LAKE session, it can
+        be acceptable for P to consider CRED as provisionally trusted.
 
         Section 4.3.2 discusses the ELA procedure defined in
         [I-D.ietf-lake-authz], as a case in point where additional
@@ -1317,21 +1315,21 @@ Table of Contents
         identifiers (see Section 4).  Then, the SPO moves to Step 9.
 
    9.   The SPO checks if CRED is fine to use in the context of the
-        ongoing EDHOC session, also depending on the specific identity
-        of the other peer (see Sections 3.5 and D.2 of [RFC9528]).
+        ongoing LAKE session, also depending on the specific identity of
+        the other peer (see Sections 3.5 and D.2 of [RFC9528]).
 
         If this is the case, the SPO moves to Step 10.  Otherwise, the
         SPO moves to Step 11.
 
    10.  P uses CRED as authentication credential associated with the
-        other peer in the ongoing EDHOC session.
+        other peer in the ongoing LAKE session.
 
         Then, PHASE_1 ends and the pre-verification side processing
         moves to the next PHASE_2 (see Section 5.3.1.2).
 
    11.  The SPO has not found a valid and (provisionally) trusted
         authentication credential associated with the other peer that
-        can be used in the ongoing EDHOC session.  Therefore, the EDHOC
+        can be used in the ongoing LAKE session.  Therefore, the LAKE
         session with the other peer is aborted.
 
 5.3.1.2.  PHASE_2
@@ -1345,9 +1343,9 @@ Table of Contents
       of message_X.
 
    Once all such EAD items have been processed, the SPO transfers
-   control back to EDHOC, which either aborts the ongoing EDHOC session
-   or continues the processing of message_X with its corresponding
-   message verification.
+   control back to LAKE, which either aborts the ongoing LAKE session or
+   continues the processing of message_X with its corresponding message
+   verification.
 
 5.3.2.  Post-Verification Side Processing
 
@@ -1366,26 +1364,26 @@ Table of Contents
    after a successful verification of message_X.
 
    Once all such EAD items have been processed, the SPO transfers
-   control back to EDHOC.  When doing so, the SPO also provides EDHOC
-   with any produced EAD items to include in the EAD field of the next
-   outgoing EDHOC message.
+   control back to LAKE.  When doing so, the SPO also provides LAKE with
+   any produced EAD items to include in the EAD field of the next
+   outgoing LAKE message.
 
-   Then, EDHOC resumes its execution and advances its protocol state.
+   Then, LAKE resumes its execution and advances its protocol state.
 
 5.3.3.  Flowcharts
 
    The flowchart in Figure 4 shows the high-level interaction between
-   the core EDHOC processing and the SPO, with particular reference to
-   an incoming EDHOC message_2 or message_3.
+   the core LAKE processing and the SPO, with particular reference to an
+   incoming LAKE message_2 or message_3.
 
  Incoming
- EDHOC message_X
+ LAKE message_X
  (X = 2 or 3)
 
        |
        |
  +-----|---------------------------------------------------------------+
- |     |                                         Core EDHOC processing |
+ |     |                                          Core LAKE processing |
  |     v                                                               |
  | +-----------+    +----------------+            +----------------+   |
  | | Decode    |--->| Retrieve the   |            | Advance the    |   |
@@ -1394,19 +1392,19 @@ Table of Contents
  |                    |                             ^                  |
  |                    |                             |                  |
  |                    v                             |                  |
- |      +--------------+    +--------------------+  |                  |
- |      | Decrypt      |    | Verify             |  |                  |
- |      | CIPHERTEXT_X |    | Signature_or_MAC_X |  |                  |
- |      +--------------+    +--------------------+  |                  |
+ |       +--------------+   +--------------------+  |                  |
+ |       | Decrypt      |   | Verify             |  |                  |
+ |       | CIPHERTEXT_X |   | Signature_or_MAC_X |  |                  |
+ |       +--------------+   +--------------------+  |                  |
  |                |           ^           |         |                  |
  |                |           |           |         |                  |
  +----------------|-----------|-----------|---------|------------------+
                   |           |           |         |
-                  |           |           |         | .................
-           Divert |      Get  |    Divert |    Get  | : EAD items     :
-                  |      back |           |    back | : for the next  :
-                  |           |           |         | : EDHOC message :
-                  |           |           |         | :...............:
+                  |           |           |         | ................
+           Divert |      Get  |    Divert |    Get  | : EAD items    :
+                  |      back |           |    back | : for the next :
+                  |           |           |         | : LAKE message :
+                  |           |           |         | :..............:
                   |           |           |         |
  +----------------|-----------|-----------|---------|------------------+
  |                |           |           |         |                  |
@@ -1423,22 +1421,22 @@ Table of Contents
  | |    EAD items              |        : EAD items to       :         |
  | |                           |        : unconditionally    :         |
  | | - (b) and (d) might have  |        : produce for the    :         |
- | |   to occur in parallel    |        : next EDHOC message :         |
+ | |   to occur in parallel    |        : next LAKE message  :         |
  | | - (c) depends on the      |        :....................:         |
  | |   trust policy used       |                                       |
  | +---------------------------+                                       |
  |                                         Side-Processor Object (SPO) |
  +---------------------------------------------------------------------+
 
-        Figure 4: High-Level Interaction Between the Core EDHOC
-      Processing and the Side-Processor Object (SPO), for Incoming
-                     EDHOC message_2 and message_3.
+   Figure 4: High-Level Interaction Between the Core LAKE Processing
+   and the Side- Processor Object (SPO), for Incoming LAKE message_2
+                             and message_3.
 
    The flowchart in Figure 5 shows the different steps taken for
-   processing an incoming EDHOC message_2 and message_3.
+   processing an incoming LAKE message_2 and message_3.
 
    Incoming
-   EDHOC message_X
+   LAKE message_X
    (X = 2 or 3)
 
            |
@@ -1451,7 +1449,7 @@ Table of Contents
            |                |
            v                |
   +-------------------+     |
-  | Retrieve the      |     +--- (Core EDHOC Processing)
+  | Retrieve the      |     +--- (Core LAKE Processing)
   | protocol state    |     |
   +-------------------+     |
            |                |
@@ -1491,7 +1489,7 @@ Table of Contents
  |         v                         v                          v      |
  | +-----------------+ NO      +-----------+   YES +-----------------+ |
  | | 2. Is this CRED |-------->| 11. Abort |<------| 5. Is the trust | |
- | | still valid and |         | the EDHOC |       | policy used     | |
+ | | still valid and |         | the LAKE  |       | policy used     | |
  | | trusted?        |         | session   |       | "NO-LEARNING",  | |
  | +-----------------+         |           |       | without any     | |
  |         |                   |           |       | acceptable      | |
@@ -1503,7 +1501,7 @@ Table of Contents
  | | 9. Is this CRED    |----->|           |     "LEARNING", or |      |
  | | good to use in the |      +-----------+     "NO-LEARNING"  |      |
  | | context of this    |               ^        together with  |      |
- | | EDHOC session?     |<-----+        |        an overriding  |      |
+ | | LAKE session?      |<-----+        |        an overriding  |      |
  | +--------------------+      |        |        exception      |      |
  |         |                   |        |                       |      |
  |         |                   |        |                       v      |
@@ -1549,13 +1547,13 @@ Table of Contents
            v
 
   Control transferred back
-  to the core EDHOC processing
+  to the core LAKE processing
 
            |
            |
            v
   +------------------+
-  | Verify message_X | (Core EDHOC processing)
+  | Verify message_X | (Core LAKE processing)
   +------------------+
            |
            |
@@ -1577,7 +1575,7 @@ Table of Contents
  |         v                                        |
  | +--------------------------------------------+   |
  | | Make all the results of the EAD processing |   |
- | | available to build the next EDHOC message  |   |
+ | | available to build the next LAKE message   |   |
  | +--------------------------------------------+   |
  |         |                                        |
  +---------|----------------------------------------+
@@ -1586,55 +1584,54 @@ Table of Contents
            v
 
   Control transferred back
-  to the core EDHOC processing
+  to the core LAKE processing
 
            |
            |
            v
   +----------------+
-  | Advance the    | (Core EDHOC processing)
+  | Advance the    | (Core LAKE processing)
   | protocol state |
   +----------------+
 
-      Figure 5: Processing Steps for Incoming EDHOC message_2 and
-                               message_3.
+ Figure 5: Processing Steps for Incoming LAKE message_2 and message_3.
 
 5.4.  Consistency Checks of Authentication Credentials from ID_CRED and
       EAD Items
 
-   Typically, an EDHOC peer specifies its associated authentication
+   Typically, a LAKE peer specifies its associated authentication
    credential (by value or by reference) only in the ID_CRED field of
-   EDHOC message_2 (if acting as Responder) or EDHOC message_3 (if
-   acting as Initiator).
+   LAKE message_2 (if acting as Responder) or LAKE message_3 (if acting
+   as Initiator).
 
-   In addition to that, there may be cases where an EDHOC peer provides
+   In addition to that, there may be cases where a LAKE peer provides
    the authentication credential also in an EAD item.  In particular,
    such an EAD item can specify a cryptographically protected "envelope"
    (by value or by reference), which in turn specifies the
    authentication credential (by value or by reference).
 
-   A case in point is the EDHOC and OSCORE profile of the ACE framework
+   A case in point is the profile of the ACE framework defined in
    [I-D.ietf-ace-edhoc-oscore-profile], where the envelope in question
    is an access token issued to the ACE client.  In such a case, the ACE
    client can rely on an EAD item specifying the access token, which in
    turn specifies the authentication credential (by value or by
    reference) associated with the client.
 
-   During an EDHOC session, an EDHOC peer P1 might therefore receive the
-   authentication credential CRED associated with the other EDHOC peer
-   P2 as specified by two items:
+   During a LAKE session, a LAKE peer P1 might therefore receive the
+   authentication credential CRED associated with the other LAKE peer P2
+   as specified by two items:
 
-   *  ITEM_A: the ID_CRED field specifying CRED.  If P2 acts as
+   *  ITEM_A: the ID_CRED field specifying CRED.  If P2 acts as the
       Initiator (Responder), then ITEM_A is the ID_CRED_I (ID_CRED_R)
       field.
 
-   *  ITEM_B: the envelope specified in an EAD item within an EDHOC
+   *  ITEM_B: the envelope specified in an EAD item within a LAKE
       message sent by P2.
 
-   As part of the process where P1 validates CRED during the EDHOC
+   As part of the process where P1 validates CRED during the LAKE
    session, P1 must check that both ITEM_A and ITEM_B specify the same
-   authentication credential, and it must abort the EDHOC session if
-   such a consistency check fails.
+   authentication credential, and it must abort the LAKE session if such
+   a consistency check fails.
 
    The consistency check is successful only if one of the following
    conditions holds, and it fails otherwise:
@@ -1655,37 +1652,37 @@ Table of Contents
       VALUE.
 
    The peer P1 performs the consistency check above as soon as it has
-   both ITEM_A and ITEM_B available.  If P1 acts as Responder, that is
-   the case when processing the incoming EDHOC message_3.  If P1 acts as
-   Initiator, that is the case when processing the incoming EDHOC
+   both ITEM_A and ITEM_B available.  If P1 acts as the Responder, that
+   is the case when processing the incoming LAKE message_3.  If P1 acts
+   as the Initiator, that is the case when processing the incoming LAKE
    message_2 or message_4, i.e., whichever of the two messages includes
    ITEM_B in an EAD item of its EAD field.
 
-6.  Using EDHOC over CoAP with Block-Wise
+6.  Using LAKE over CoAP with Block-Wise
 
-   Appendix A.2 of [RFC9528] specifies how to transfer EDHOC over CoAP
-   [RFC7252].  In such a case, EDHOC messages (possibly prepended by an
-   EDHOC connection identifier) are transported in the payload of CoAP
-   requests and responses, according to the EDHOC forward message flow
-   or the EDHOC reverse message flow.  Furthermore, Appendix A.1 of
+   Appendix A.2 of [RFC9528] specifies how to transfer LAKE over CoAP
+   [RFC7252].  In such a case, LAKE messages (potentially prepended by a
+   LAKE connection identifier) are transported in the payload of CoAP
+   requests and responses, according to the LAKE forward message flow or
+   the LAKE reverse message flow.  Furthermore, Appendix A.1 of
    [RFC9528] specifies how to derive an OSCORE Security Context
-   [RFC8613] from an EDHOC session.
+   [RFC8613] from a LAKE session.
 
-   Building on that, [RFC9668] further details the use of EDHOC with
-   CoAP and OSCORE.  In particular, it specifies an optimization
-   approach for the EDHOC forward message flow that combines the EDHOC
-   execution with the first subsequent OSCORE transaction.  This is
-   achieved by means of an "EDHOC + OSCORE request", i.e., a single CoAP
-   request message that conveys both EDHOC message_3 of the ongoing
-   EDHOC session and the OSCORE-protected application data, where the
-   latter is protected with the OSCORE Security Context derived from
-   that EDHOC session.
+   Building on that, [RFC9668] further details the use of LAKE with CoAP
+   and OSCORE.  In particular, it specifies an optimization approach for
+   the LAKE forward message flow that combines the LAKE execution with
+   the first subsequent OSCORE transaction.  This is achieved by means
+   of a "LAKE + OSCORE request" (denoted as "EDHOC + OSCORE request" in
+   [RFC9668]), i.e., a single CoAP request message that conveys both
+   LAKE message_3 of the ongoing LAKE session and the OSCORE-protected
+   application data, where the latter is protected with the OSCORE
+   Security Context derived from that LAKE session.
 
    This section provides guidelines and recommendations for CoAP
    endpoints supporting Block-wise transfers for CoAP [RFC7959] and
-   specifically for CoAP clients supporting the EDHOC + OSCORE request
+   specifically for CoAP clients supporting the LAKE + OSCORE request
    defined in [RFC9668].  The use of Block-wise transfers can be
-   desirable, e.g., for EDHOC messages that include a large ID_CRED_I or
+   desirable, e.g., for LAKE messages that include a large ID_CRED_I or
    ID_CRED_R, or that include a large EAD field.
 
    The following especially considers a CoAP endpoint that may perform
@@ -1704,21 +1701,21 @@ Table of Contents
       "body" to be fragmented into blocks, each of which to be
       transmitted in one CoAP message.
 
-      With the exception pertaining to EDHOC message_3 described in the
-      following paragraph, the considered body can in general be an
-      EDHOC message, possibly prepended by an EDHOC connection
-      identifier encoded as per Section 3.3 of [RFC9528].
+      With the exception pertaining to LAKE message_3 described in the
+      following paragraph, the considered body can in general be a LAKE
+      message, potentially prepended by a LAKE connection identifier
+      encoded as per Section 3.3 of [RFC9528].
 
-      When specifically using the EDHOC + OSCORE request, the considered
+      When specifically using the LAKE + OSCORE request, the considered
       body is the application data to be protected with OSCORE, (whose
-      first block is) to be sent together with EDHOC message_3 as part
-      of the EDHOC + OSCORE request.
+      first block is) to be sent together with LAKE message_3 as part of
+      the LAKE + OSCORE request.
 
-   *  SIZE_EDHOC_M3: the size in bytes of EDHOC message_3, if this is
-      sent as part of the EDHOC + OSCORE request.  Otherwise, the size
-      in bytes of EDHOC message_3, plus, if included, the size in bytes
-      of a prepended EDHOC connection identifier encoded as per
-      Section 3.3 of [RFC9528].
+   *  SIZE_LAKE_M3: the size in bytes of LAKE message_3, if this is sent
+      as part of the LAKE + OSCORE request.  Otherwise, the size in
+      bytes of LAKE message_3, plus, if included, the size in bytes of a
+      prepended LAKE connection identifier encoded as per Section 3.3 of
+      [RFC9528].
 
    *  SIZE_MTU: the maximum amount of transmittable bytes before having
       to use Block-wise.  This is, for example, 64 KiB as maximum
@@ -1736,152 +1733,152 @@ Table of Contents
 
    *  ceil(): the ceiling function.
 
-6.2.  Pre-requirements for the EDHOC + OSCORE Request
+6.2.  Pre-requirements for the LAKE + OSCORE Request
 
-   Before sending an EDHOC + OSCORE request, a CoAP client has to
-   perform the following checks.  Note that, while the CoAP client is
-   able to fragment the plain application data before any OSCORE
-   processing, it cannot fragment the EDHOC + OSCORE request or the
-   EDHOC message_3 added therein.
+   Before sending a LAKE + OSCORE request, a CoAP client has to perform
+   the following checks.  Note that, while the CoAP client is able to
+   fragment the plain application data before any OSCORE processing, it
+   cannot fragment the LAKE + OSCORE request or the LAKE message_3 added
+   therein.
 
    *  If inner Block-wise is not used, hence SIZE_BODY <= LIMIT, the
       CoAP client must verify whether all the following conditions hold:
 
-      -  COND1: SIZE_EDHOC_M3 <= LIMIT
+      -  COND1: SIZE_LAKE_M3 <= LIMIT
 
-      -  COND2: (SIZE_BODY + SIZE_EDHOC_M3) <= LIMIT
+      -  COND2: (SIZE_BODY + SIZE_LAKE_M3) <= LIMIT
 
    *  If inner Block-wise is used, the CoAP client must verify whether
       all the following conditions hold:
 
-      -  COND3: SIZE_EDHOC_M3 <= LIMIT
+      -  COND3: SIZE_LAKE_M3 <= LIMIT
 
-      -  COND4: (SIZE_BLOCK + SIZE_EDHOC_M3) <= LIMIT
+      -  COND4: (SIZE_BLOCK + SIZE_LAKE_M3) <= LIMIT
 
    In either case, if not all the corresponding conditions hold, the
-   CoAP client should not send the EDHOC + OSCORE request.  Instead, the
+   CoAP client should not send the LAKE + OSCORE request.  Instead, the
    CoAP client can continue by switching to the purely sequential,
-   original EDHOC workflow (see Appendix A.2.1 of [RFC9528]).  That is,
-   the CoAP client first sends EDHOC message_3 prepended by the EDHOC
+   original LAKE workflow (see Appendix A.2.1 of [RFC9528]).  That is,
+   the CoAP client first sends LAKE message_3 prepended by the LAKE
    Connection Identifier C_R encoded as per Section 3.3 of [RFC9528] and
-   then sends the OSCORE-protected CoAP request once the EDHOC execution
+   then sends the OSCORE-protected CoAP request once the LAKE execution
    is completed.
 
 6.3.  Effectively Using Block-Wise
 
    In order to avoid further fragmentation at lower layers when sending
-   an EDHOC + OSCORE request, the CoAP client has to use inner Block-
-   wise if _any_ of the following conditions holds:
+   an LAKE + OSCORE request, the CoAP client has to use inner Block-wise
+   if _any_ of the following conditions holds:
 
    *  COND5: SIZE_BODY > LIMIT
 
-   *  COND6: (SIZE_BODY + SIZE_EDHOC_M3) > LIMIT
+   *  COND6: (SIZE_BODY + SIZE_LAKE_M3) > LIMIT
 
    In particular, consistent with Section 6.2, the SIZE_BLOCK used has
    to be such that the following condition also holds:
 
-   *  COND7: (SIZE_BLOCK + SIZE_EDHOC_M3) <= LIMIT
+   *  COND7: (SIZE_BLOCK + SIZE_LAKE_M3) <= LIMIT
 
    Note that the CoAP client might still use Block-wise due to reasons
    different from exceeding the size indicated by LIMIT.
 
    The following shows the number of round trips for completing both the
-   EDHOC execution and the first OSCORE-protected exchange, under the
-   assumption that the exchange of EDHOC message_1 and EDHOC message_2
+   LAKE execution and the first OSCORE-protected exchange, under the
+   assumption that the exchange of LAKE message_1 and LAKE message_2
    does not result in using Block-wise.
 
    If _both_ the conditions COND5 and COND6 hold, the use of Block-wise
    results in the following number of round trips experienced by the
    CoAP client.
 
-   *  If the original EDHOC execution workflow is used (see
+   *  If the original LAKE execution workflow is used (see
       Appendix A.2.1 of [RFC9528]), the number of round trips RT_ORIG is
-      equal to 1 + ceil(SIZE_EDHOC_M3 / SIZE_BLOCK) + ceil(SIZE_BODY /
+      equal to 1 + ceil(SIZE_LAKE_M3 / SIZE_BLOCK) + ceil(SIZE_BODY /
       SIZE_BLOCK).
 
-   *  If the optimized EDHOC execution workflow is used (see Section 3
-      of [RFC9668]), the number of round trips RT_COMB is equal to 1 +
+   *  If the optimized LAKE execution workflow is used (see Section 3 of
+      [RFC9668]), the number of round trips RT_COMB is equal to 1 +
       ceil(SIZE_BODY / SIZE_BLOCK).
 
-   It follows that RT_COMB < RT_ORIG, i.e., the optimized EDHOC
-   execution workflow always yields a lower number of round trips.
+   It follows that RT_COMB < RT_ORIG, i.e., the optimized LAKE execution
+   workflow always yields a lower number of round trips.
 
-   Instead, the convenience of using the optimized EDHOC execution
+   Instead, the convenience of using the optimized LAKE execution
    workflow becomes questionable if _both_ the following conditions
    hold:
 
    *  COND8: SIZE_BODY <= LIMIT
 
-   *  COND9: (SIZE_BODY + SIZE_EDHOC_M3) > LIMIT
+   *  COND9: (SIZE_BODY + SIZE_LAKE_M3) > LIMIT
 
    That is, since SIZE_BODY <= LIMIT, using Block-wise would not be
-   required when using the original EDHOC execution workflow, provided
-   that SIZE_EDHOC_M3 <= LIMIT still holds.
+   required when using the original LAKE execution workflow, provided
+   that SIZE_LAKE_M3 <= LIMIT still holds.
 
    At the same time, using the combined workflow is in itself what
    actually triggers the use of Block-wise, since (SIZE_BODY +
-   SIZE_EDHOC_M3) > LIMIT.
+   SIZE_LAKE_M3) > LIMIT.
 
    Therefore, the following round trips are experienced by the CoAP
    client.
 
-   *  The original EDHOC execution workflow run without using Block-wise
+   *  The original LAKE execution workflow run without using Block-wise
       results in a number of round trips RT_ORIG equal to 3.
 
-   *  The optimized EDHOC execution workflow run using Block-wise
-      results in a number of round trips RT_COMB equal to 1 +
-      ceil(SIZE_BODY / SIZE_BLOCK).
+   *  The optimized LAKE execution workflow run using Block-wise results
+      in a number of round trips RT_COMB equal to 1 + ceil(SIZE_BODY /
+      SIZE_BLOCK).
 
-   It follows that RT_COMB >= RT_ORIG, i.e., the optimized EDHOC
-   execution workflow might still be not worse than the original EDHOC
+   It follows that RT_COMB >= RT_ORIG, i.e., the optimized LAKE
+   execution workflow might still be not worse than the original LAKE
    execution workflow in terms of round trips.  This is the case only if
    the SIZE_BLOCK used is such that ceil(SIZE_BODY / SIZE_BLOCK) is
    equal to 2, i.e., the plain application data is fragmented into only
-   2 inner blocks, and thus the EDHOC + OSCORE request is followed by
+   2 inner blocks, and thus the LAKE + OSCORE request is followed by
    only one more request message transporting the last block of the
    body.
 
    However, even in such a case, there would be no advantage in terms of
    round trips compared to the original workflow, while still requiring
    the CoAP client and the CoAP server to perform the processing due to
-   using the EDHOC + OSCORE request and Block-wise transferring.
+   using the LAKE + OSCORE request and Block-wise transferring.
 
    Therefore, if both the conditions COND8 and COND9 hold, the CoAP
-   client should not send the EDHOC + OSCORE request.  Instead, the CoAP
-   client should continue by switching to the original EDHOC execution
-   workflow.  That is, the CoAP client first sends EDHOC message_3
-   prepended by the EDHOC Connection Identifier C_R encoded as per
+   client should not send the LAKE + OSCORE request.  Instead, the CoAP
+   client should continue by switching to the original LAKE execution
+   workflow.  That is, the CoAP client first sends LAKE message_3
+   prepended by the LAKE Connection Identifier C_R encoded as per
    Section 3.3 of [RFC9528] and then sends the OSCORE-protected CoAP
-   request once the EDHOC execution is completed.
+   request once the LAKE execution is completed.
 
 7.  Operational Considerations
 
    There are no new operations or manageability requirements introduced
    by this document, which provides considerations for implementers of
-   the EDHOC protocol and does not update the protocol or introduce
+   the LAKE protocol and does not update the protocol or introduce
    extensions thereof.
 
 8.  Security Considerations
 
-   This document provides considerations for implementations of the
-   EDHOC protocol.  The security considerations compiled in Section 9 of
+   This document provides considerations for implementations of the LAKE
+   protocol.  The security considerations compiled in Section 9 of
    [RFC9528] and in Section 7 of [RFC9668] apply.  The compliance
    requirements for implementations that are listed in Section 8 of
    [RFC9528] also apply.
 
-   It is foreseeable that the EDHOC protocol will be extended (e.g., in
+   It is foreseeable that the LAKE protocol will be extended (e.g., in
    terms of new cipher suites, new methods, and new types of
    authentication credentials) and that external security applications
-   will be integrated into EDHOC by embedding the transport of their
-   data in EDHOC EAD items.  For implementations that support such
-   extensions and external applications, the related security
-   considerations and compliance requirements also apply.
+   will be integrated into LAKE by embedding the transport of their data
+   in LAKE EAD items.  For implementations that support such extensions
+   and external applications, the related security considerations and
+   compliance requirements also apply.
 
 8.1.  Assessing the Correctness of Implementations
 
    Tools relying on fuzz testing such as EDHOC-Fuzzer [EDHOC-Fuzzer] can
-   help assess the correctness of implementations of the EDHOC protocol
-   and of external security applications integrated into EDHOC.
+   help assess the correctness of implementations of the LAKE protocol
+   and of external security applications integrated into LAKE.
 
    Such tools help finding and amending implementation errors especially
    related to the following points:
@@ -1892,7 +1889,7 @@ Table of Contents
       performance deficiencies.
 
    *  Presence of inappropriate states and state transitions in the
-      modeling of the EDHOC execution, e.g., states that are impossible
+      modeling of the LAKE execution, e.g., states that are impossible
       to reach and traverse or that are not part of the protocol
       specification (which is a particular case of non-conformance).
 
@@ -1951,56 +1948,56 @@ Table of Contents
               Security for Constrained Environments (OSCORE) Profile for
               Authentication and Authorization for Constrained
               Environments (ACE)", Work in Progress, Internet-Draft,
-              draft-ietf-ace-edhoc-oscore-profile-10, 1 March 2026,
+              draft-ietf-ace-edhoc-oscore-profile-11, 6 July 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
-              edhoc-oscore-profile-10>.
+              edhoc-oscore-profile-11>.
 
    [I-D.ietf-ace-workflow-and-params]
               Tiloca, M. and G. Selander, "Short Distribution Chain
               (SDC) Workflow and New OAuth Parameters for the
               Authentication and Authorization for Constrained
               Environments (ACE) Framework", Work in Progress, Internet-
-              Draft, draft-ietf-ace-workflow-and-params-07, 2 March
-              2026, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              ace-workflow-and-params-07>.
+              Draft, draft-ietf-ace-workflow-and-params-08, 6 July 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
+              workflow-and-params-08>.
 
    [I-D.ietf-core-oscore-key-limits]
               Höglund, R. and M. Tiloca, "Key Usage Limits for OSCORE",
               Work in Progress, Internet-Draft, draft-ietf-core-oscore-
-              key-limits-06, 7 January 2026,
+              key-limits-08, 7 September 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-core-
-              oscore-key-limits-06>.
+              oscore-key-limits-08>.
 
    [I-D.ietf-core-oscore-key-update]
               Höglund, R. and M. Tiloca, "Key Update for OSCORE
               (KUDOS)", Work in Progress, Internet-Draft, draft-ietf-
-              core-oscore-key-update-13, 2 March 2026,
+              core-oscore-key-update-14, 6 July 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-core-
-              oscore-key-update-13>.
+              oscore-key-update-14>.
 
    [I-D.ietf-cose-cbor-encoded-cert]
               Mattsson, J. P., Selander, G., Raza, S., Höglund, J.,
               Furuhed, M., and L. Liao, "CBOR Encoded X.509 Certificates
               (C509 Certificates)", Work in Progress, Internet-Draft,
-              draft-ietf-cose-cbor-encoded-cert-19, 11 May 2026,
+              draft-ietf-cose-cbor-encoded-cert-21, 24 September 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-cose-
-              cbor-encoded-cert-19>.
+              cbor-encoded-cert-21>.
 
    [I-D.ietf-lake-authz]
               Selander, G., Mattsson, J. P., Vučinić, M., Fedrecheski,
               G., and M. Richardson, "Lightweight Authorization using
               Ephemeral Diffie-Hellman Over COSE (ELA)", Work in
-              Progress, Internet-Draft, draft-ietf-lake-authz-07, 2
-              March 2026, <https://datatracker.ietf.org/doc/html/draft-
-              ietf-lake-authz-07>.
+              Progress, Internet-Draft, draft-ietf-lake-authz-08, 6 July
+              2026, <https://datatracker.ietf.org/doc/html/draft-ietf-
+              lake-authz-08>.
 
    [I-D.ietf-lake-edhoc-psk]
               Lopez-Perez, Selander, G., Mattsson, J. P., Marin-Lopez,
               R., and F. Lopez-Gomez, "EDHOC Authenticated with Pre-
               Shared Keys (PSK)", Work in Progress, Internet-Draft,
-              draft-ietf-lake-edhoc-psk-08, 16 June 2026,
+              draft-ietf-lake-edhoc-psk-09, 8 September 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-lake-
-              edhoc-psk-08>.
+              edhoc-psk-09>.
 
    [RFC2986]  Nystrom, M. and B. Kaliski, "PKCS #10: Certification
               Request Syntax Specification Version 1.7", RFC 2986,
@@ -2025,23 +2022,23 @@ Table of Contents
               (ACE-OAuth)", RFC 9200, DOI 10.17487/RFC9200, August 2022,
               <https://www.rfc-editor.org/rfc/rfc9200>.
 
-Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
+Appendix A.  Foreseen Advanced Processing of Incoming LAKE message_1
 
-   As mentioned in Section 5.1, future developments in EDHOC and in
+   As mentioned in Section 5.1, future developments in LAKE and in
    related external security applications might rely on an EAD item in
-   EDHOC message_1 that specifies the authentication credential CRED
+   LAKE message_1 that specifies the authentication credential CRED
    associated with the Initiator (by value or by reference), as wrapped
    in a cryptographically protected "envelope".
 
-   In order to handle such a case, the processing of an incoming EDHOC
+   In order to handle such a case, the processing of an incoming LAKE
    message_1 as described in Section 5.1 is extended with additional
    steps performed by the SPO.
 
    Such an extended side processing shares similarities with that of an
-   incoming EDHOC message_2 or message_3 (see Section 5.3).  In
+   incoming LAKE message_2 or message_3 (see Section 5.3).  In
    particular, similarly to what is compiled in Section 5.3.1.1 and
    Section 5.3.1.2, the SPO first checks whether expected EAD items are
-   absent in message_X (see Section 5), and then performs the following
+   absent in message_X (see Section 5) and then performs the following
    steps.
 
    *  (0) The SPO checks the presence of an EAD item that specifies the
@@ -2103,7 +2100,7 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
       If such additional information can be retrieved from message_1
       (e.g., from an EAD item included therein), then P uses it to
       assess if CRED is trusted.  Otherwise, if such additional
-      information is expected later on during the EDHOC session, it can
+      information is expected later on during the LAKE session, it can
       be acceptable for P to consider CRED as provisionally trusted.
 
       After completing the validation and trust assessment of CRED, the
@@ -2118,34 +2115,34 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
       Section 4).  Then, the SPO moves to Step 9.
 
    *  (9) The SPO checks if CRED is fine to use in the context of the
-      ongoing EDHOC session, also depending on the specific identity of
+      ongoing LAKE session, also depending on the specific identity of
       the other peer (see Sections 3.5 and D.2 of [RFC9528]).
 
       If this is the case, the SPO moves to Step 10.  Otherwise, the SPO
       moves to Step 11.
 
    *  (10) P uses CRED as authentication credential associated with the
-      other peer in the ongoing EDHOC session.  Then, the SPO moves to
+      other peer in the ongoing LAKE session.  Then, the SPO moves to
       Step 12.
 
    *  (11) The SPO has not found a valid and (provisionally) trusted
       authentication credential associated with the other peer that can
-      be used in the ongoing EDHOC session.  Therefore, the EDHOC
-      session with the other peer is aborted.
+      be used in the ongoing LAKE session.  Therefore, the LAKE session
+      with the other peer is aborted.
 
    *  (12) The SPO processes any EAD item included in message_1 that has
       not already been processed.
 
       Once all such EAD items have been processed, the SPO transfers
-      control back to EDHOC.  When doing so, the SPO also provides EDHOC
+      control back to LAKE.  When doing so, the SPO also provides LAKE
       with any produced EAD items to include in the EAD field of the
-      next outgoing EDHOC message.
+      next outgoing LAKE message.
 
    The flowchart in Figure 6 shows the different steps taken for the
-   advanced processing of an incoming EDHOC message_1 defined above.
+   advanced processing of an incoming LAKE message_1 defined above.
 
    Incoming
-   EDHOC message_1
+   LAKE message_1
 
             |
             |
@@ -2154,7 +2151,7 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
   | Decode message_1  |     |
   +-------------------+     |
             |               |
-            |               +--- (Core EDHOC Processing)
+            |               +--- (Core LAKE Processing)
             v               |
   +-------------------+     |
   | Accepted selected |     |
@@ -2198,7 +2195,7 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
  |  |       v                        v                          v      |
  |  |  +-----------------+ NO  +-----------+   YES +-----------------+ |
  |  |  | 2. Is this CRED |---->| 11. Abort |<------| 5. Is the trust | |
- |  |  | still valid and |     | the EDHOC |       | policy used     | |
+ |  |  | still valid and |     | the LAKE  |       | policy used     | |
  |  |  | trusted?        |     | session   |       | "NO-LEARNING",  | |
  |  |  +-----------------+     |           |       | without any     | |
  |  |       |                  |           |       | acceptable      | |
@@ -2210,7 +2207,7 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
  |  |  | 9. Is this CRED |---->|           |     "LEARNING", or |      |
  |  |  | good to use in  |     +-----------+     "NO-LEARNING"  |      |
  |  |  | the context of  |              ^        together with  |      |
- |  |  | this EDHOC      |<----+        |        an overriding  |      |
+ |  |  | this LAKE       |<----+        |        an overriding  |      |
  |  |  | session?        |     |        |        exception      |      |
  |  |  +-----------------+     |        |                       |      |
  |  |      |                   |        |                       v      |
@@ -2245,7 +2242,7 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
  | | 12. Process the EAD items that have not been processed yet. |     |
  | |                                                             |     |
  | | Make all the results of the EAD processing available to     |     |
- | | build the next EDHOC message.                               |     |
+ | | build the next LAKE message.                                |     |
  | +-------------------------------------------------------------+     |
  |         |                                                           |
  +---------|-----------------------------------------------------------+
@@ -2254,23 +2251,27 @@ Appendix A.  Foreseen Advanced Processing of Incoming EDHOC message_1
            v
 
   Control transferred back
-  to the core EDHOC processing
+  to the core LAKE processing
 
            |
            |
            v
   +----------------+
-  | Advance the    | (Core EDHOC processing)
+  | Advance the    | (Core LAKE processing)
   | protocol state |
   +----------------+
 
-        Figure 6: Processing Steps for Incoming EDHOC message_1.
+        Figure 6: Processing Steps for Incoming LAKE message_1.
 
 Appendix B.  Document Updates
 
    This section is to be removed before publishing as an RFC.
 
-B.1.  Version -06 to -07
+B.1.  Version -07 to -08
+
+   *  Renamed EDHOC to LAKE as appropriate.
+
+B.2.  Version -06 to -07
 
    *  Discussed retention of completed EDHOC sessions.
 
@@ -2292,7 +2293,7 @@ B.1.  Version -06 to -07
 
    *  Editorial fixes and improvements.
 
-B.2.  Version -05 to -06
+B.3.  Version -05 to -06
 
    *  Generalized trust assessment of authentication credentials.
 
@@ -2306,13 +2307,13 @@ B.2.  Version -05 to -06
 
    *  Editorial fixes and improvements.
 
-B.3.  Version -04 to -05
+B.4.  Version -04 to -05
 
    *  Minor clarifications.
 
    *  Editorial fixes and improvements.
 
-B.4.  Version -03 to -04
+B.5.  Version -03 to -04
 
    *  Clarified and re-positioned exceptions to NO-LEARNING policy.
 
@@ -2323,7 +2324,7 @@ B.4.  Version -03 to -04
 
    *  Clarifications and editorial improvements.
 
-B.5.  Version -02 to -03
+B.6.  Version -02 to -03
 
    *  Consistent use of "trust policy" instead of "trust model".
 
@@ -2345,7 +2346,7 @@ B.5.  Version -02 to -03
 
    *  Clarifications and editorial improvements.
 
-B.6.  Version -01 to -02
+B.7.  Version -01 to -02
 
    *  Improved content on the EDHOC and OSCORE profile of ACE.
 
@@ -2358,7 +2359,7 @@ B.6.  Version -01 to -02
 
    *  Editorial improvements.
 
-B.7.  Version -00 to -01
+B.8.  Version -00 to -01
 
    *  Added considerations on trust policies when using the EDHOC and
       OSCORE profile of the ACE framework.
