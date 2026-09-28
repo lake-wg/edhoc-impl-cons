@@ -1045,7 +1045,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tiloca</td>
-<td class="center">Expires 31 March 2027</td>
+<td class="center">Expires 1 April 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1058,12 +1058,12 @@ svg {
 <dd class="internet-draft">draft-ietf-lake-edhoc-impl-cons-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-09-27" class="published">27 September 2026</time>
+<time datetime="2026-09-28" class="published">28 September 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-03-31">31 March 2027</time></dd>
+<dd class="expires"><time datetime="2027-04-01">1 April 2027</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1108,7 +1108,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 31 March 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 1 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1359,18 +1359,27 @@ svg {
 <a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-lake-sessions-become-invali" class="section-name selfRef">LAKE Sessions Become Invalid</a>
         </h3>
 <p id="section-2.1-1">The application at a peer P may have learned that a completed LAKE session S has to be invalidated. When S is marked as invalid, the application at P purges S and deletes each set of application keys (e.g., the OSCORE Security Context) that was generated from S.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
-<p id="section-2.1-2">Then, the application runs a new execution of the LAKE protocol with the other peer. Upon successfully completing the LAKE execution, the two peers derive and install a new set of application keys from this latest LAKE session.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
+<p id="section-2.1-2">Then, the application runs a new execution of the LAKE protocol with the other peer. If the LAKE execution successfully completes, the two peers derive and install a new set of application keys from this latest LAKE session. If the LAKE execution does not successfully complete, the application makes another attempt and runs a new execution of the LAKE protocol with the other peer, provided that the predetermined maximum number of attempts has not been reached yet.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
 <p id="section-2.1-3">The flowchart in <a href="#fig-flowchart-session-invalid" class="auto internal xref">Figure 1</a> shows the handling of a LAKE session that has become invalid.<a href="#section-2.1-3" class="pilcrow">¶</a></p>
 <span id="name-handling-of-a-lake-session-"></span><div id="fig-flowchart-session-invalid">
 <figure id="figure-1">
           <div id="section-2.1-4.1">
             <div class="alignCenter art-svg artwork" id="section-2.1-4.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="80" width="568" viewBox="0 0 568 80" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="432" width="432" viewBox="0 0 432 432" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 144,96 L 144,128" fill="none" stroke="black"></path>
+                <path d="M 144,192 L 144,224" fill="none" stroke="black"></path>
+                <path d="M 144,304 L 144,352" fill="none" stroke="black"></path>
+                <path d="M 336,160 L 336,224" fill="none" stroke="black"></path>
+                <path d="M 336,320 L 336,352" fill="none" stroke="black"></path>
                 <path d="M 72,48 L 96,48" fill="none" stroke="black"></path>
-                <path d="M 312,48 L 336,48" fill="none" stroke="black"></path>
-                <path d="M 400,48 L 424,48" fill="none" stroke="black"></path>
-                <polygon class="arrowhead" points="432,48 420,42.4 420,53.6" fill="black" transform="rotate(0,424,48)"></polygon>
-                <polygon class="arrowhead" points="344,48 332,42.4 332,53.6" fill="black" transform="rotate(0,336,48)"></polygon>
+                <path d="M 200,160 L 336,160" fill="none" stroke="black"></path>
+                <path d="M 200,256 L 272,256" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="344,352 332,346.4 332,357.6" fill="black" transform="rotate(90,336,352)"></polygon>
+                <polygon class="arrowhead" points="280,256 268,250.4 268,261.6" fill="black" transform="rotate(0,272,256)"></polygon>
+                <polygon class="arrowhead" points="208,160 196,154.4 196,165.6" fill="black" transform="rotate(180,200,160)"></polygon>
+                <polygon class="arrowhead" points="152,352 140,346.4 140,357.6" fill="black" transform="rotate(90,144,352)"></polygon>
+                <polygon class="arrowhead" points="152,224 140,218.4 140,229.6" fill="black" transform="rotate(90,144,224)"></polygon>
+                <polygon class="arrowhead" points="152,128 140,122.4 140,133.6" fill="black" transform="rotate(90,144,128)"></polygon>
                 <polygon class="arrowhead" points="104,48 92,42.4 92,53.6" fill="black" transform="rotate(0,96,48)"></polygon>
                 <g class="text">
                   <text x="32" y="36">Invalid</text>
@@ -1378,23 +1387,42 @@ svg {
                   <text x="176" y="36">the</text>
                   <text x="212" y="36">LAKE</text>
                   <text x="264" y="36">session</text>
-                  <text x="368" y="36">Rerun</text>
-                  <text x="460" y="36">Derive</text>
-                  <text x="504" y="36">and</text>
                   <text x="20" y="52">LAKE</text>
                   <text x="120" y="52">and</text>
                   <text x="152" y="52">the</text>
                   <text x="216" y="52">application</text>
                   <text x="284" y="52">keys</text>
-                  <text x="364" y="52">LAKE</text>
-                  <text x="464" y="52">install</text>
-                  <text x="512" y="52">new</text>
                   <text x="32" y="68">session</text>
                   <text x="136" y="68">derived</text>
                   <text x="188" y="68">from</text>
                   <text x="220" y="68">it</text>
-                  <text x="480" y="68">application</text>
-                  <text x="548" y="68">keys</text>
+                  <text x="128" y="164">Rerun</text>
+                  <text x="172" y="164">LAKE</text>
+                  <text x="356" y="212">NO</text>
+                  <text x="212" y="244">NO</text>
+                  <text x="120" y="260">Has</text>
+                  <text x="156" y="260">LAKE</text>
+                  <text x="296" y="260">Has</text>
+                  <text x="328" y="260">the</text>
+                  <text x="376" y="260">maximum</text>
+                  <text x="148" y="276">succeeded?</text>
+                  <text x="308" y="276">number</text>
+                  <text x="348" y="276">of</text>
+                  <text x="396" y="276">attempts</text>
+                  <text x="300" y="292">been</text>
+                  <text x="356" y="292">reached?</text>
+                  <text x="168" y="340">YES</text>
+                  <text x="360" y="340">YES</text>
+                  <text x="132" y="388">Derive</text>
+                  <text x="176" y="388">and</text>
+                  <text x="340" y="388">Consider</text>
+                  <text x="136" y="404">install</text>
+                  <text x="184" y="404">new</text>
+                  <text x="344" y="404">rerunning</text>
+                  <text x="152" y="420">application</text>
+                  <text x="220" y="420">keys</text>
+                  <text x="324" y="420">LAKE</text>
+                  <text x="368" y="420">later</text>
                 </g>
               </svg><a href="#section-2.1-4.1.1" class="pilcrow">¶</a>
 </div>
@@ -1452,7 +1480,7 @@ If the key update protocol terminates successfully, the updated application keys
                 <p id="section-2.2-5.3.2.2.1">It deletes the LAKE session from which SET was generated, or from which the oldest SET's ancestor set of application keys was generated before any key update occurred (e.g., by means of the EDHOC_KeyUpdate interface defined in <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-H" class="relref">Appendix H</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span> or other key update methods).<a href="#section-2.2-5.3.2.2.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-2.2-5.3.2.3">
-                <p id="section-2.2-5.3.2.3.1">It runs a new execution of the LAKE protocol with the other peer. Upon successfully completing the LAKE execution, the two peers derive and install a new set of application keys from this latest LAKE session.<a href="#section-2.2-5.3.2.3.1" class="pilcrow">¶</a></p>
+                <p id="section-2.2-5.3.2.3.1">It runs a new execution of the LAKE protocol with the other peer. If the LAKE execution successfully completes, the two peers derive and install a new set of application keys from this latest LAKE session. If the LAKE execution does not successfully complete, the application makes another attempt and runs a new execution of the LAKE protocol with the other peer, provided that the predetermined maximum number of attempts has not been reached yet.<a href="#section-2.2-5.3.2.3.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
@@ -1462,73 +1490,101 @@ If the key update protocol terminates successfully, the updated application keys
 <figure id="figure-2">
           <div id="section-2.2-7.1">
             <div class="alignCenter art-svg artwork" id="section-2.2-7.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="608" width="568" viewBox="0 0 568 608" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="672" width="552" viewBox="0 0 552 672" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 24,64 L 24,96" fill="none" stroke="black"></path>
-                <path d="M 24,192 L 24,224" fill="none" stroke="black"></path>
-                <path d="M 24,304 L 24,336" fill="none" stroke="black"></path>
-                <path d="M 24,400 L 24,432" fill="none" stroke="black"></path>
-                <path d="M 24,512 L 24,544" fill="none" stroke="black"></path>
-                <path d="M 240,176 L 240,272" fill="none" stroke="black"></path>
-                <path d="M 312,176 L 312,480" fill="none" stroke="black"></path>
-                <path d="M 472,176 L 472,208" fill="none" stroke="black"></path>
-                <path d="M 144,128 L 176,128" fill="none" stroke="black"></path>
-                <path d="M 408,128 L 440,128" fill="none" stroke="black"></path>
-                <path d="M 96,272 L 240,272" fill="none" stroke="black"></path>
-                <path d="M 96,480 L 312,480" fill="none" stroke="black"></path>
-                <polygon class="arrowhead" points="480,208 468,202.4 468,213.6" fill="black" transform="rotate(90,472,208)"></polygon>
-                <polygon class="arrowhead" points="448,128 436,122.4 436,133.6" fill="black" transform="rotate(0,440,128)"></polygon>
-                <polygon class="arrowhead" points="320,176 308,170.4 308,181.6" fill="black" transform="rotate(270,312,176)"></polygon>
-                <polygon class="arrowhead" points="248,176 236,170.4 236,181.6" fill="black" transform="rotate(270,240,176)"></polygon>
-                <polygon class="arrowhead" points="184,128 172,122.4 172,133.6" fill="black" transform="rotate(0,176,128)"></polygon>
-                <polygon class="arrowhead" points="32,544 20,538.4 20,549.6" fill="black" transform="rotate(90,24,544)"></polygon>
-                <polygon class="arrowhead" points="32,432 20,426.4 20,437.6" fill="black" transform="rotate(90,24,432)"></polygon>
-                <polygon class="arrowhead" points="32,336 20,330.4 20,341.6" fill="black" transform="rotate(90,24,336)"></polygon>
-                <polygon class="arrowhead" points="32,224 20,218.4 20,229.6" fill="black" transform="rotate(90,24,224)"></polygon>
+                <path d="M 24,192 L 24,288" fill="none" stroke="black"></path>
+                <path d="M 24,368 L 24,400" fill="none" stroke="black"></path>
+                <path d="M 24,464 L 24,496" fill="none" stroke="black"></path>
+                <path d="M 24,576 L 24,608" fill="none" stroke="black"></path>
+                <path d="M 200,192 L 200,336" fill="none" stroke="black"></path>
+                <path d="M 232,192 L 232,544" fill="none" stroke="black"></path>
+                <path d="M 304,192 L 304,224" fill="none" stroke="black"></path>
+                <path d="M 304,288 L 304,320" fill="none" stroke="black"></path>
+                <path d="M 304,400 L 304,448" fill="none" stroke="black"></path>
+                <path d="M 464,256 L 464,320" fill="none" stroke="black"></path>
+                <path d="M 464,416 L 464,448" fill="none" stroke="black"></path>
+                <path d="M 136,144 L 168,144" fill="none" stroke="black"></path>
+                <path d="M 376,256 L 464,256" fill="none" stroke="black"></path>
+                <path d="M 96,336 L 200,336" fill="none" stroke="black"></path>
+                <path d="M 360,352 L 392,352" fill="none" stroke="black"></path>
+                <path d="M 96,544 L 232,544" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="472,448 460,442.4 460,453.6" fill="black" transform="rotate(90,464,448)"></polygon>
+                <polygon class="arrowhead" points="400,352 388,346.4 388,357.6" fill="black" transform="rotate(0,392,352)"></polygon>
+                <polygon class="arrowhead" points="384,256 372,250.4 372,261.6" fill="black" transform="rotate(180,376,256)"></polygon>
+                <polygon class="arrowhead" points="312,448 300,442.4 300,453.6" fill="black" transform="rotate(90,304,448)"></polygon>
+                <polygon class="arrowhead" points="312,320 300,314.4 300,325.6" fill="black" transform="rotate(90,304,320)"></polygon>
+                <polygon class="arrowhead" points="312,224 300,218.4 300,229.6" fill="black" transform="rotate(90,304,224)"></polygon>
+                <polygon class="arrowhead" points="240,192 228,186.4 228,197.6" fill="black" transform="rotate(270,232,192)"></polygon>
+                <polygon class="arrowhead" points="208,192 196,186.4 196,197.6" fill="black" transform="rotate(270,200,192)"></polygon>
+                <polygon class="arrowhead" points="176,144 164,138.4 164,149.6" fill="black" transform="rotate(0,168,144)"></polygon>
+                <polygon class="arrowhead" points="32,608 20,602.4 20,613.6" fill="black" transform="rotate(90,24,608)"></polygon>
+                <polygon class="arrowhead" points="32,496 20,490.4 20,501.6" fill="black" transform="rotate(90,24,496)"></polygon>
+                <polygon class="arrowhead" points="32,400 20,394.4 20,405.6" fill="black" transform="rotate(90,24,400)"></polygon>
+                <polygon class="arrowhead" points="32,288 20,282.4 20,293.6" fill="black" transform="rotate(90,24,288)"></polygon>
                 <polygon class="arrowhead" points="32,96 20,90.4 20,101.6" fill="black" transform="rotate(90,24,96)"></polygon>
                 <g class="text">
                   <text x="32" y="36">Invalid</text>
                   <text x="112" y="36">application</text>
                   <text x="180" y="36">keys</text>
-                  <text x="156" y="116">NO</text>
                   <text x="16" y="132">Are</text>
                   <text x="48" y="132">the</text>
-                  <text x="212" y="132">Delete</text>
-                  <text x="256" y="132">the</text>
-                  <text x="320" y="132">application</text>
-                  <text x="472" y="132">Rerun</text>
+                  <text x="148" y="132">NO</text>
+                  <text x="204" y="132">Delete</text>
+                  <text x="248" y="132">the</text>
                   <text x="48" y="148">application</text>
-                  <text x="116" y="148">keys</text>
-                  <text x="204" y="148">keys</text>
-                  <text x="240" y="148">and</text>
-                  <text x="272" y="148">the</text>
-                  <text x="308" y="148">LAKE</text>
-                  <text x="360" y="148">session</text>
-                  <text x="468" y="148">LAKE</text>
-                  <text x="44" y="164">persisted?</text>
-                  <text x="48" y="212">YES</text>
-                  <text x="428" y="244">Derive</text>
-                  <text x="472" y="244">and</text>
-                  <text x="520" y="244">install</text>
-                  <text x="12" y="260">Is</text>
-                  <text x="48" y="260">KUDOS</text>
-                  <text x="108" y="260">NO</text>
-                  <text x="416" y="260">new</text>
-                  <text x="480" y="260">application</text>
-                  <text x="548" y="260">keys</text>
-                  <text x="44" y="276">supported?</text>
-                  <text x="48" y="324">YES</text>
-                  <text x="16" y="372">Run</text>
-                  <text x="56" y="372">KUDOS</text>
-                  <text x="16" y="468">Has</text>
-                  <text x="56" y="468">KUDOS</text>
-                  <text x="108" y="468">NO</text>
-                  <text x="44" y="484">succeeded?</text>
-                  <text x="48" y="532">YES</text>
-                  <text x="32" y="580">Install</text>
-                  <text x="80" y="580">the</text>
-                  <text x="128" y="580">updated</text>
-                  <text x="48" y="596">application</text>
-                  <text x="116" y="596">keys</text>
+                  <text x="224" y="148">application</text>
+                  <text x="292" y="148">keys</text>
+                  <text x="20" y="164">keys</text>
+                  <text x="84" y="164">persisted?</text>
+                  <text x="192" y="164">and</text>
+                  <text x="224" y="164">the</text>
+                  <text x="260" y="164">LAKE</text>
+                  <text x="312" y="164">session</text>
+                  <text x="304" y="260">Rerun</text>
+                  <text x="348" y="260">LAKE</text>
+                  <text x="48" y="276">YES</text>
+                  <text x="484" y="308">NO</text>
+                  <text x="12" y="324">Is</text>
+                  <text x="48" y="324">KUDOS</text>
+                  <text x="108" y="324">NO</text>
+                  <text x="44" y="340">supported?</text>
+                  <text x="372" y="340">NO</text>
+                  <text x="280" y="356">Has</text>
+                  <text x="316" y="356">LAKE</text>
+                  <text x="416" y="356">Has</text>
+                  <text x="448" y="356">the</text>
+                  <text x="496" y="356">maximum</text>
+                  <text x="308" y="372">succeeded?</text>
+                  <text x="428" y="372">number</text>
+                  <text x="468" y="372">of</text>
+                  <text x="516" y="372">attempts</text>
+                  <text x="48" y="388">YES</text>
+                  <text x="420" y="388">been</text>
+                  <text x="476" y="388">reached?</text>
+                  <text x="16" y="436">Run</text>
+                  <text x="56" y="436">KUDOS</text>
+                  <text x="328" y="436">YES</text>
+                  <text x="488" y="436">YES</text>
+                  <text x="292" y="484">Derive</text>
+                  <text x="336" y="484">and</text>
+                  <text x="468" y="484">Consider</text>
+                  <text x="296" y="500">install</text>
+                  <text x="344" y="500">new</text>
+                  <text x="472" y="500">rerunning</text>
+                  <text x="312" y="516">application</text>
+                  <text x="380" y="516">keys</text>
+                  <text x="452" y="516">LAKE</text>
+                  <text x="496" y="516">later</text>
+                  <text x="16" y="532">Has</text>
+                  <text x="56" y="532">KUDOS</text>
+                  <text x="108" y="532">NO</text>
+                  <text x="44" y="548">succeeded?</text>
+                  <text x="48" y="596">YES</text>
+                  <text x="32" y="644">Install</text>
+                  <text x="80" y="644">the</text>
+                  <text x="128" y="644">updated</text>
+                  <text x="48" y="660">application</text>
+                  <text x="116" y="660">keys</text>
                 </g>
               </svg><a href="#section-2.2-7.1.1" class="pilcrow">¶</a>
 </div>
@@ -1590,9 +1646,9 @@ Finally, the application at P moves to Step 4.<a href="#section-2.3-8.3.2.2.3" c
             </ul>
 </li>
           <li id="section-2.3-8.4">
-            <p id="section-2.3-8.4.1">The peer P runs a new execution of the LAKE protocol with the other peer. Upon successfully completing the LAKE execution, the two peers derive and install a new OSCORE Security Context from this latest LAKE session.<a href="#section-2.3-8.4.1" class="pilcrow">¶</a></p>
+            <p id="section-2.3-8.4.1">The peer P runs a new execution of the LAKE protocol with the other peer. If the LAKE execution successfully completes, the two peers derive and install a new OSCORE Security Context from this latest LAKE session. At the RS, the access token is bound to this latest LAKE session and the newly established OSCORE Security Context.<a href="#section-2.3-8.4.1" class="pilcrow">¶</a></p>
 <p id="section-2.3-8.4.2">
-At the RS, the access token is bound to this latest LAKE session and the newly established OSCORE Security Context.<a href="#section-2.3-8.4.2" class="pilcrow">¶</a></p>
+If the LAKE execution does not successfully complete, the peer P makes another attempt and runs a new execution of the LAKE protocol with the other peer, provided that the predetermined maximum number of attempts has not been reached yet.<a href="#section-2.3-8.4.2" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <p id="section-2.3-9">The flowchart in <a href="#fig-flowchart-keys-token-invalid" class="auto internal xref">Figure 3</a> shows the handling of an access token or of a set of application keys that have become invalid, when using the profile of ACE defined in <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>.<a href="#section-2.3-9" class="pilcrow">¶</a></p>
@@ -1600,38 +1656,46 @@ At the RS, the access token is bound to this latest LAKE session and the newly e
 <figure id="figure-3">
           <div id="section-2.3-10.1">
             <div class="alignCenter art-svg artwork" id="section-2.3-10.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="912" width="576" viewBox="0 0 576 912" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="1024" width="576" viewBox="0 0 576 1024" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 24,96 L 24,128" fill="none" stroke="black"></path>
                 <path d="M 24,224 L 24,288" fill="none" stroke="black"></path>
                 <path d="M 24,368 L 24,400" fill="none" stroke="black"></path>
-                <path d="M 24,496 L 24,528" fill="none" stroke="black"></path>
-                <path d="M 24,608 L 24,640" fill="none" stroke="black"></path>
-                <path d="M 24,704 L 24,736" fill="none" stroke="black"></path>
+                <path d="M 24,496 L 24,640" fill="none" stroke="black"></path>
+                <path d="M 24,720 L 24,752" fill="none" stroke="black"></path>
                 <path d="M 24,816 L 24,848" fill="none" stroke="black"></path>
-                <path d="M 264,496 L 264,576" fill="none" stroke="black"></path>
-                <path d="M 336,496 L 336,784" fill="none" stroke="black"></path>
-                <path d="M 504,208 L 504,448" fill="none" stroke="black"></path>
-                <path d="M 560,160 L 560,576" fill="none" stroke="black"></path>
+                <path d="M 24,928 L 24,960" fill="none" stroke="black"></path>
+                <path d="M 200,544 L 200,688" fill="none" stroke="black"></path>
+                <path d="M 232,544 L 232,896" fill="none" stroke="black"></path>
+                <path d="M 328,448 L 328,544" fill="none" stroke="black"></path>
+                <path d="M 328,608 L 328,640" fill="none" stroke="black"></path>
+                <path d="M 328,720 L 328,768" fill="none" stroke="black"></path>
+                <path d="M 376,208 L 376,544" fill="none" stroke="black"></path>
+                <path d="M 488,576 L 488,640" fill="none" stroke="black"></path>
+                <path d="M 488,736 L 488,768" fill="none" stroke="black"></path>
                 <path d="M 112,160 L 144,160" fill="none" stroke="black"></path>
                 <path d="M 336,160 L 352,160" fill="none" stroke="black"></path>
-                <path d="M 456,160 L 472,160" fill="none" stroke="black"></path>
-                <path d="M 536,160 L 560,160" fill="none" stroke="black"></path>
-                <path d="M 144,448 L 184,448" fill="none" stroke="black"></path>
-                <path d="M 456,448 L 504,448" fill="none" stroke="black"></path>
-                <path d="M 96,576 L 264,576" fill="none" stroke="black"></path>
-                <path d="M 96,784 L 336,784" fill="none" stroke="black"></path>
-                <polygon class="arrowhead" points="568,576 556,570.4 556,581.6" fill="black" transform="rotate(90,560,576)"></polygon>
-                <polygon class="arrowhead" points="512,208 500,202.4 500,213.6" fill="black" transform="rotate(270,504,208)"></polygon>
-                <polygon class="arrowhead" points="480,160 468,154.4 468,165.6" fill="black" transform="rotate(0,472,160)"></polygon>
+                <path d="M 136,448 L 168,448" fill="none" stroke="black"></path>
+                <path d="M 288,448 L 328,448" fill="none" stroke="black"></path>
+                <path d="M 400,576 L 488,576" fill="none" stroke="black"></path>
+                <path d="M 384,672 L 416,672" fill="none" stroke="black"></path>
+                <path d="M 96,688 L 200,688" fill="none" stroke="black"></path>
+                <path d="M 96,896 L 232,896" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="496,768 484,762.4 484,773.6" fill="black" transform="rotate(90,488,768)"></polygon>
+                <polygon class="arrowhead" points="424,672 412,666.4 412,677.6" fill="black" transform="rotate(0,416,672)"></polygon>
+                <polygon class="arrowhead" points="408,576 396,570.4 396,581.6" fill="black" transform="rotate(180,400,576)"></polygon>
+                <polygon class="arrowhead" points="384,544 372,538.4 372,549.6" fill="black" transform="rotate(90,376,544)"></polygon>
                 <polygon class="arrowhead" points="360,160 348,154.4 348,165.6" fill="black" transform="rotate(0,352,160)"></polygon>
-                <polygon class="arrowhead" points="344,496 332,490.4 332,501.6" fill="black" transform="rotate(270,336,496)"></polygon>
-                <polygon class="arrowhead" points="272,496 260,490.4 260,501.6" fill="black" transform="rotate(270,264,496)"></polygon>
-                <polygon class="arrowhead" points="192,448 180,442.4 180,453.6" fill="black" transform="rotate(0,184,448)"></polygon>
+                <polygon class="arrowhead" points="336,768 324,762.4 324,773.6" fill="black" transform="rotate(90,328,768)"></polygon>
+                <polygon class="arrowhead" points="336,640 324,634.4 324,645.6" fill="black" transform="rotate(90,328,640)"></polygon>
+                <polygon class="arrowhead" points="336,544 324,538.4 324,549.6" fill="black" transform="rotate(90,328,544)"></polygon>
+                <polygon class="arrowhead" points="240,544 228,538.4 228,549.6" fill="black" transform="rotate(270,232,544)"></polygon>
+                <polygon class="arrowhead" points="208,544 196,538.4 196,549.6" fill="black" transform="rotate(270,200,544)"></polygon>
+                <polygon class="arrowhead" points="176,448 164,442.4 164,453.6" fill="black" transform="rotate(0,168,448)"></polygon>
                 <polygon class="arrowhead" points="152,160 140,154.4 140,165.6" fill="black" transform="rotate(0,144,160)"></polygon>
+                <polygon class="arrowhead" points="32,960 20,954.4 20,965.6" fill="black" transform="rotate(90,24,960)"></polygon>
                 <polygon class="arrowhead" points="32,848 20,842.4 20,853.6" fill="black" transform="rotate(90,24,848)"></polygon>
-                <polygon class="arrowhead" points="32,736 20,730.4 20,741.6" fill="black" transform="rotate(90,24,736)"></polygon>
+                <polygon class="arrowhead" points="32,752 20,746.4 20,757.6" fill="black" transform="rotate(90,24,752)"></polygon>
                 <polygon class="arrowhead" points="32,640 20,634.4 20,645.6" fill="black" transform="rotate(90,24,640)"></polygon>
-                <polygon class="arrowhead" points="32,528 20,522.4 20,533.6" fill="black" transform="rotate(90,24,528)"></polygon>
                 <polygon class="arrowhead" points="32,400 20,394.4 20,405.6" fill="black" transform="rotate(90,24,400)"></polygon>
                 <polygon class="arrowhead" points="32,288 20,282.4 20,293.6" fill="black" transform="rotate(90,24,288)"></polygon>
                 <polygon class="arrowhead" points="32,128 20,122.4 20,133.6" fill="black" transform="rotate(90,24,128)"></polygon>
@@ -1653,29 +1717,27 @@ At the RS, the access token is bound to this latest LAKE session and the newly e
                   <text x="284" y="164">associated</text>
                   <text x="388" y="164">Obtain</text>
                   <text x="432" y="164">and</text>
-                  <text x="504" y="164">Rerun</text>
+                  <text x="476" y="164">upload</text>
                   <text x="28" y="180">access</text>
                   <text x="80" y="180">token</text>
                   <text x="172" y="180">LAKE</text>
                   <text x="228" y="180">sessions</text>
                   <text x="280" y="180">and</text>
-                  <text x="388" y="180">upload</text>
-                  <text x="424" y="180">a</text>
-                  <text x="500" y="180">LAKE</text>
+                  <text x="368" y="180">a</text>
+                  <text x="392" y="180">new</text>
+                  <text x="436" y="180">access</text>
+                  <text x="488" y="180">token</text>
                   <text x="24" y="196">still</text>
                   <text x="84" y="196">believed</text>
                   <text x="168" y="196">the</text>
                   <text x="232" y="196">application</text>
                   <text x="300" y="196">keys</text>
-                  <text x="376" y="196">new</text>
-                  <text x="420" y="196">access</text>
                   <text x="12" y="212">to</text>
                   <text x="36" y="212">be</text>
                   <text x="76" y="212">valid?</text>
                   <text x="184" y="212">derived</text>
                   <text x="236" y="212">from</text>
                   <text x="280" y="212">those</text>
-                  <text x="384" y="212">token</text>
                   <text x="48" y="276">YES</text>
                   <text x="16" y="324">The</text>
                   <text x="80" y="324">application</text>
@@ -1686,43 +1748,64 @@ At the RS, the access token is bound to this latest LAKE session and the newly e
                   <text x="144" y="340">anymore</text>
                   <text x="16" y="436">Are</text>
                   <text x="48" y="436">the</text>
-                  <text x="156" y="436">NO</text>
+                  <text x="148" y="436">NO</text>
                   <text x="48" y="452">application</text>
-                  <text x="116" y="452">keys</text>
-                  <text x="220" y="452">Delete</text>
-                  <text x="264" y="452">the</text>
-                  <text x="328" y="452">application</text>
-                  <text x="396" y="452">keys</text>
-                  <text x="432" y="452">and</text>
-                  <text x="44" y="468">persisted?</text>
-                  <text x="208" y="468">the</text>
-                  <text x="268" y="468">associated</text>
-                  <text x="332" y="468">LAKE</text>
-                  <text x="384" y="468">session</text>
-                  <text x="48" y="516">YES</text>
-                  <text x="12" y="564">Is</text>
-                  <text x="48" y="564">KUDOS</text>
-                  <text x="124" y="564">NO</text>
-                  <text x="44" y="580">supported?</text>
-                  <text x="452" y="612">Derive</text>
-                  <text x="496" y="612">and</text>
-                  <text x="544" y="612">install</text>
+                  <text x="204" y="452">Delete</text>
+                  <text x="248" y="452">the</text>
+                  <text x="20" y="468">keys</text>
+                  <text x="84" y="468">persisted?</text>
+                  <text x="224" y="468">application</text>
+                  <text x="196" y="484">keys</text>
+                  <text x="232" y="484">and</text>
+                  <text x="264" y="484">the</text>
+                  <text x="220" y="500">associated</text>
+                  <text x="196" y="516">LAKE</text>
+                  <text x="248" y="516">session</text>
+                  <text x="328" y="580">Rerun</text>
+                  <text x="372" y="580">LAKE</text>
                   <text x="48" y="628">YES</text>
-                  <text x="424" y="628">new</text>
-                  <text x="488" y="628">application</text>
-                  <text x="556" y="628">keys</text>
-                  <text x="16" y="676">Run</text>
-                  <text x="56" y="676">KUDOS</text>
-                  <text x="16" y="772">Has</text>
-                  <text x="56" y="772">KUDOS</text>
-                  <text x="124" y="772">NO</text>
-                  <text x="44" y="788">succeeded?</text>
-                  <text x="48" y="836">YES</text>
-                  <text x="32" y="884">Install</text>
-                  <text x="80" y="884">the</text>
-                  <text x="128" y="884">updated</text>
-                  <text x="48" y="900">application</text>
-                  <text x="116" y="900">keys</text>
+                  <text x="508" y="628">NO</text>
+                  <text x="396" y="660">NO</text>
+                  <text x="12" y="676">Is</text>
+                  <text x="48" y="676">KUDOS</text>
+                  <text x="124" y="676">NO</text>
+                  <text x="304" y="676">Has</text>
+                  <text x="340" y="676">LAKE</text>
+                  <text x="440" y="676">Has</text>
+                  <text x="472" y="676">the</text>
+                  <text x="520" y="676">maximum</text>
+                  <text x="44" y="692">supported?</text>
+                  <text x="332" y="692">succeeded?</text>
+                  <text x="452" y="692">number</text>
+                  <text x="492" y="692">of</text>
+                  <text x="540" y="692">attempts</text>
+                  <text x="444" y="708">been</text>
+                  <text x="500" y="708">reached?</text>
+                  <text x="48" y="740">YES</text>
+                  <text x="352" y="756">YES</text>
+                  <text x="512" y="756">YES</text>
+                  <text x="16" y="788">Run</text>
+                  <text x="56" y="788">KUDOS</text>
+                  <text x="316" y="804">Derive</text>
+                  <text x="360" y="804">and</text>
+                  <text x="492" y="804">Consider</text>
+                  <text x="320" y="820">install</text>
+                  <text x="368" y="820">new</text>
+                  <text x="496" y="820">rerunning</text>
+                  <text x="336" y="836">application</text>
+                  <text x="404" y="836">keys</text>
+                  <text x="476" y="836">LAKE</text>
+                  <text x="520" y="836">later</text>
+                  <text x="16" y="884">Has</text>
+                  <text x="56" y="884">KUDOS</text>
+                  <text x="124" y="884">NO</text>
+                  <text x="44" y="900">succeeded?</text>
+                  <text x="48" y="948">YES</text>
+                  <text x="32" y="996">Install</text>
+                  <text x="80" y="996">the</text>
+                  <text x="128" y="996">updated</text>
+                  <text x="48" y="1012">application</text>
+                  <text x="116" y="1012">keys</text>
                 </g>
               </svg><a href="#section-2.3-10.1.1" class="pilcrow">¶</a>
 </div>
@@ -3655,6 +3738,9 @@ Once all such EAD items have been processed, the SPO transfers control back to L
 <ul class="normal">
 <li class="normal" id="appendix-B.1-1.1">
             <p id="appendix-B.1-1.1.1">Renamed EDHOC to LAKE as appropriate.<a href="#appendix-B.1-1.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-B.1-1.2">
+            <p id="appendix-B.1-1.2.1">Updated text and figures on what happens if rerunning LAKE fails.<a href="#appendix-B.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
