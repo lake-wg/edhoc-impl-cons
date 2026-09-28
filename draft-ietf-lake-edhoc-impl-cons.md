@@ -110,14 +110,36 @@ Nevertheless, the same considerations are applicable if LAKE is used to derive o
 
 The application at a peer P may have learned that a completed LAKE session S has to be invalidated. When S is marked as invalid, the application at P purges S and deletes each set of application keys (e.g., the OSCORE Security Context) that was generated from S.
 
-Then, the application runs a new execution of the LAKE protocol with the other peer. Upon successfully completing the LAKE execution, the two peers derive and install a new set of application keys from this latest LAKE session.
+Then, the application runs a new execution of the LAKE protocol with the other peer. If the LAKE execution successfully completes, the two peers derive and install a new set of application keys from this latest LAKE session. If the LAKE execution does not successfully complete, the application makes another attempt and runs a new execution of the LAKE protocol with the other peer, provided that the predetermined maximum number of attempts has not been reached yet.
 
 The flowchart in {{fig-flowchart-session-invalid}} shows the handling of a LAKE session that has become invalid.
 
 ~~~~~~~~~~~ aasvg
-Invalid      Delete the LAKE session       Rerun      Derive and
-LAKE    ---> and the application keys ---> LAKE  ---> install new
-session      derived from it                          application keys
+Invalid      Delete the LAKE session
+LAKE    ---> and the application keys
+session      derived from it
+
+                 |
+                 |
+                 v
+
+             Rerun LAKE <----------------+
+                                         |
+                 |                       |
+                 |                       | NO
+                 v                       |
+                         NO
+             Has LAKE   ---------> Has the maximum
+             succeeded?            number of attempts
+                                   been reached?
+                 |
+                 |                       |
+                 | YES                   | YES
+                 v                       v
+
+             Derive and               Consider
+             install new              rerunning
+             application keys         LAKE later
 ~~~~~~~~~~~
 {: #fig-flowchart-session-invalid title="Handling of a LAKE Session that Has Become Invalid." artwork-align="center"}
 
@@ -153,7 +175,7 @@ When this happens, the application at the peer P proceeds as follows:
 
    * It deletes the LAKE session from which SET was generated, or from which the oldest SET's ancestor set of application keys was generated before any key update occurred (e.g., by means of the EDHOC_KeyUpdate interface defined in {{Section H of RFC9528}} or other key update methods).
 
-   * It runs a new execution of the LAKE protocol with the other peer. Upon successfully completing the LAKE execution, the two peers derive and install a new set of application keys from this latest LAKE session.
+   * It runs a new execution of the LAKE protocol with the other peer. If the LAKE execution successfully completes, the two peers derive and install a new set of application keys from this latest LAKE session. If the LAKE execution does not successfully complete, the application makes another attempt and runs a new execution of the LAKE protocol with the other peer, provided that the predetermined maximum number of attempts has not been reached yet.
 
 The flowchart in {{fig-flowchart-keys-invalid}} shows the handling of a set of application keys that has become invalid. In particular, it assumes such a set to be an OSCORE Security Context and the key update protocol to be KUDOS.
 
@@ -163,30 +185,34 @@ Invalid application keys
   |
   |
   v
-                  NO
-Are the          ----> Delete the application     ----> Rerun
-application keys       keys and the LAKE session        LAKE
-persisted?
-                             ^        ^                   |
-  |                          |        |                   |
-  | YES                      |        |                   v
-  v                          |        |
-                             |        |           Derive and install
-Is KUDOS    NO               |        |           new application keys
-supported? ------------------+        |
-                                      |
-  |                                   |
-  | YES                               |
-  v                                   |
-                                      |
-Run KUDOS                             |
-                                      |
-  |                                   |
-  |                                   |
-  v                                   |
-                                      |
-Has KUDOS   NO                        |
-succeeded? ---------------------------+
+
+Are the          NO   Delete the
+application     ----> application keys
+keys persisted?       and the LAKE session
+
+  |                     ^   ^        |
+  |                     |   |        |
+  |                     |   |        v
+  |                     |   |
+  |                     |   |      Rerun LAKE <----------+
+  | YES                 |   |                            |
+  v                     |   |        |                   |
+                        |   |        |                   | NO
+Is KUDOS    NO          |   |        v                   |
+supported? -------------+   |                NO
+                            |    Has LAKE   ----> Has the maximum
+  |                         |    succeeded?       number of attempts
+  | YES                     |                     been reached?
+  v                         |        |
+                            |        |                   |
+Run KUDOS                   |        | YES               | YES
+                            |        v                   v
+  |                         |
+  |                         |    Derive and           Consider
+  v                         |    install new          rerunning
+                            |    application keys     LAKE later
+Has KUDOS   NO              |
+succeeded? -----------------+
 
   |
   | YES
@@ -239,9 +265,9 @@ When this happens, the application at the peer P proceeds as follows.
 
      Finally, the application at P moves to Step 4.
 
-4. The peer P runs a new execution of the LAKE protocol with the other peer. Upon successfully completing the LAKE execution, the two peers derive and install a new OSCORE Security Context from this latest LAKE session.
+4. The peer P runs a new execution of the LAKE protocol with the other peer. If the LAKE execution successfully completes, the two peers derive and install a new OSCORE Security Context from this latest LAKE session. At the RS, the access token is bound to this latest LAKE session and the newly established OSCORE Security Context.
 
-   At the RS, the access token is bound to this latest LAKE session and the newly established OSCORE Security Context.
+   If the LAKE execution does not successfully complete, the peer P makes another attempt and runs a new execution of the LAKE protocol with the other peer, provided that the predetermined maximum number of attempts has not been reached yet.
 
 The flowchart in {{fig-flowchart-keys-token-invalid}} shows the handling of an access token or of a set of application keys that have become invalid, when using the profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
 
@@ -254,46 +280,53 @@ or invalid application keys
   |
   v
               NO
-Is the       ----> Delete the associated --> Obtain and --> Rerun ---+
-access token       LAKE sessions and         upload a       LAKE     |
-still believed     the application keys      new access              |
-to be valid?       derived from those        token            ^      |
-  |                                                           |      |
-  |                                                           |      |
-  |                                                           |      |
-  | YES                                                       |      |
-  v                                                           |      |
-                                                              |      |
-The application keys                                          |      |
-are not valid anymore                                         |      |
-                                                              |      |
-  |                                                           |      |
-  |                                                           |      |
-  v                                                           |      |
-                                                              |      |
-Are the           NO                                          |      |
-application keys -----> Delete the application keys and ------+      |
-persisted?              the associated LAKE session                  |
-                                                                     |
-  |                             ^        ^                           |
-  | YES                         |        |                           |
-  v                             |        |                           |
-                                |        |                           |
-Is KUDOS      NO                |        |                           |
-supported? ---------------------+        |                           v
-                                         |
-  |                                      |           Derive and install
-  | YES                                  |         new application keys
-  v                                      |
-                                         |
-Run KUDOS                                |
-                                         |
-  |                                      |
-  |                                      |
-  v                                      |
-                                         |
-Has KUDOS     NO                         |
-succeeded? ------------------------------+
+Is the       ----> Delete the associated --> Obtain and upload
+access token       LAKE sessions and         a new access token
+still believed     the application keys
+to be valid?       derived from those         |
+  |                                           |
+  |                                           |
+  |                                           |
+  | YES                                       |
+  v                                           |
+                                              |
+The application keys                          |
+are not valid anymore                         |
+                                              |
+  |                                           |
+  |                                           |
+  v                                           |
+                                              |
+Are the          NO                           |
+application     ----> Delete the   -----+     |
+keys persisted?       application       |     |
+                      keys and the      |     |
+  |                   associated        |     |
+  |                   LAKE session      |     |
+  |                                     |     |
+  |                     ^   ^           v     v
+  |                     |   |
+  |                     |   |         Rerun LAKE <----------+
+  |                     |   |                               |
+  |                     |   |           |                   |
+  | YES                 |   |           |                   | NO
+  v                     |   |           v                   |
+                        |   |                   NO
+Is KUDOS      NO        |   |       Has LAKE   ----> Has the maximum
+supported? -------------+   |       succeeded?       number of attempts
+                            |                        been reached?
+  |                         |           |
+  | YES                     |           |                   |
+  v                         |           | YES               | YES
+                            |           v                   v
+Run KUDOS                   |
+                            |       Derive and           Consider
+  |                         |       install new          rerunning
+  |                         |       application keys     LAKE later
+  v                         |
+                            |
+Has KUDOS     NO            |
+succeeded? -----------------+
 
   |
   | YES
@@ -1250,6 +1283,8 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 ## Version -07 to -08 ## {#sec-07-08}
 
 * Renamed EDHOC to LAKE as appropriate.
+
+* Updated text and figures on what happens if rerunning LAKE fails.
 
 ## Version -06 to -07 ## {#sec-06-07}
 
