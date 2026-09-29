@@ -182,64 +182,67 @@ The flowchart in {{fig-flowchart-keys-invalid}} shows the handling of a set of a
 ~~~~~~~~~~~ aasvg
 Invalid application keys
 
-  |
-  |
-  v
-
-Are the          NO   Delete the application keys
-application     ----> and the associated LAKE session
-keys persisted?
-                        ^   ^        |
-  |                     |   |        |
-  |                     |   |        |
-  |                     |   |        v
-  |                     |   |
-  |                     |   |      Rerun LAKE <----------+
-  | YES                 |   |                            |
-  v                     |   |        |                   |
-                        |   |        |                   | NO
-Is KUDOS    NO          |   |        v                   |
-supported? -------------+   |                NO
-                            |    Has LAKE   ----> Has the maximum
-  |                         |    succeeded?       number of attempts
-  | YES                     |                     been reached?
-  v                         |        |
-                            |        |                   |
-Run KUDOS                   |        | YES               | YES
-                            |        v                   v
-  |                         |
-  |                         |    Derive and           Consider
-  v                         |    install new          rerunning
-                            |    application keys     LAKE later
-Has KUDOS   NO              |
-succeeded? -----------------+
-
-  |
-  | YES
-  v
-
-Install the updated
-application keys
+     |
+     |
+     |       Handling of invalid application keys
++----|----------------------------------------------------------------+
+|    |                                                                |
+|    v                                                                |
+|                                                                     |
+| Are the          NO   Delete the application keys                   |
+| application     ----> and the associated LAKE session               |
+| keys persisted?                                                     |
+|                        ^  ^        |                                |
+|                        |  |        |                                |
+|   |                    |  |        |     Re-execution of LAKE       |
+|   |                    |  |   +----|----------------------------+   |
+|   |                    |  |   |    |                            |   |
+|   |                    |  |   |    |                            |   |
+|   |                    |  |   |    v                            |   |
+|   |                    |  |   |                                 |   |
+|   |                    |  |   | Rerun LAKE <----------+         |   |
+|   |                    |  |   |                       |         |   |
+|   | YES                |  |   |    |                  |         |   |
+|   v                    |  |   |    |                  | NO      |   |
+|                        |  |   |    v                  |         |   |
+| Is KUDOS    NO         |  |   |            NO                   |   |
+| supported? ------------+  |   | Has LAKE   ----> Has the        |   |
+|                           |   | succeeded?       maximum number |   |
+|   |                       |   |                  of attempts    |   |
+|   | YES                   |   |    |             been reached?  |   |
+|   v                       |   |    |                            |   |
+|                           |   |    |                  |         |   |
+| Run KUDOS                 |   |    | YES              | YES     |   |
+|                           |   |    v                  v         |   |
+|   |                       |   |                                 |   |
+|   |                       |   | Derive and          Consider    |   |
+|   v                       |   | install new         rerunning   |   |
+|                           |   | application keys    LAKE later  |   |
+| Has KUDOS   NO            |   |                                 |   |
+| succeeded? ---------------+   +---------------------------------+   |
+|                                                                     |
+|   |                                                                 |
+|   | YES                                                             |
+|   v                                                                 |
+|                                                                     |
+| Install the updated                                                 |
+| application keys                                                    |
+|                                                                     |
++---------------------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-flowchart-keys-invalid title="Handling of a Set of Application Keys that Has Become Invalid." artwork-align="center"}
 
 ## Application Keys or Bound Access Rights Become Invalid ## {#sec-keys-token-invalid}
 
-The following considers two peers that use the ACE framework for authentication and authorization in constrained environments {{RFC9200}} and specifically the profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
+The following considers two peers that use the Authentication and Authorization for Constrained Environments (ACE) framework {{RFC9200}} and specifically the profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}. One of the two peers acts as an ACE resource server (RS). The other peer acts as an ACE client (C) and requests an access token from an ACE authorization server (AS) that is in a trust relationship with the RS. The access token specifies the access rights of C for accessing protected resources hosted at the RS.
 
-When doing so, one of the two peers acts as an ACE resource server (RS) hosting protected resources. The other peer acts as an ACE client and requests an access token from an ACE authorization server (AS) that is in a trust relationship with the RS. The access token specifies access rights for accessing protected resources at the RS as well as the public authentication credential of the client, namely AUTH_CRED_C.
-
-After that, C uploads the access token to the RS, by means of an EAD item included in a LAKE message during the LAKE execution (see below). Alternatively, the AS can upload the access token to the RS on behalf of the client, as per the alternative Short Distribution Chain (SDC) workflow defined in {{I-D.ietf-ace-workflow-and-params}}.
-
-Consistent with the profile of ACE used, the two peers run LAKE in order to specifically derive an OSCORE Security Context as their shared set of application keys (see {{Section A.1 of RFC9528}}). At the RS, the access token is bound to the successfully completed LAKE session and to the established OSCORE Security Context.
-
-After that, the peer acting as the ACE client can access the protected resources hosted at the other peer acting as the RS, according to the access rights specified in the access token. The communications between the two peers are protected by means of the established OSCORE Security Context.
+Per the considered profile of ACE, the two peers run LAKE to derive an OSCORE Security Context as their shared set of application keys (see {{Section A.1 of RFC9528}}). During the LAKE execution, the peer acting as the ACE client uploads the access token at the RS, by means of an EAD item included in a LAKE message (see {{Section 3.8 of RFC9528}}). At the RS, the access token is bound to the successfully completed LAKE session and to the established OSCORE Security Context, which is used to protect the subsequent communications between the two peers.
 
 Later on, the application at one of the two peers P may have learned that the established OSCORE Security Context CTX is not safe to use anymore, e.g., from the OSCORE library used or from an OSCORE layer that takes part in the communication stack. The reasons that make CTX not safe to use anymore are the same ones discussed in {{sec-keys-invalid}} when considering a set of application keys in general, plus the event that the access token bound to CTX becomes invalid (e.g., it has expired or it has been revoked).
 
-When this happens, the application at the peer P proceeds as follows.
+When this happens, the application at the peer P proceeds as follows. The handling below builds on and extends the handling defined in {{sec-keys-invalid}}, by additionally considering the event where the access token becomes invalid.
 
-1. If the following conditions both hold, then the application moves to Step 2. Otherwise, it moves to Step 3:
+1. If the following conditions both hold, then the application moves to Step 2. Otherwise, it moves to Step 3.
 
    * The access token is still believed to be valid. That is, it has not expired yet and the peer P is not aware that it has been revoked.
 
@@ -249,13 +252,11 @@ When this happens, the application at the peer P proceeds as follows.
 
    If the execution of KUDOS does not terminate successfully or if the peer P does not support KUDOS altogether, then the application at P moves to Step 3.
 
-3. The application at the peer P performs the following actions.
+3. The application at the peer P performs the following actions:
 
-   * If the access token is not believed to be valid anymore, the peer P deletes all the LAKE sessions associated with the access token as well as the OSCORE Security Context derived from each of those sessions.
+   * If the access token is not believed to be valid anymore, the peer P deletes all the LAKE sessions associated with the access token as well as the OSCORE Security Context derived from each of those sessions. Note that, in the considered profile of ACE, an access token is associated with at most one LAKE session (see {{Section 4.2 of I-D.ietf-ace-edhoc-oscore-profile}}).
 
-     Note that, when using the profile of ACE considered in this section, an access token is associated with at most one LAKE session (see {{Section 4.2 of I-D.ietf-ace-edhoc-oscore-profile}}).
-
-     If the peer P acted as the ACE client, then P obtains from the ACE AS a new access token, which is uploaded to the other peer acting as the ACE RS.
+     In the case that the peer P acts as the ACE client, P obtains from the ACE AS a new access token to upload at the other peer.
 
      Finally, the application at P moves to Step 4.
 
@@ -269,71 +270,66 @@ When this happens, the application at the peer P proceeds as follows.
 
    If the LAKE execution does not successfully complete, the peer P makes another attempt and runs a new execution of the LAKE protocol with the other peer, provided that the predetermined maximum number of attempts has not been reached yet.
 
-The flowchart in {{fig-flowchart-keys-token-invalid}} shows the handling of an access token or of a set of application keys that have become invalid, when using the profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
+   Per the considered profile of ACE, the peer acting as the ACE client takes the first step to start an execution of LAKE with the other peer, i.e., as LAKE Initiator (Responder) according to the LAKE forward (reverse) message flow (see {{Section A.2 of RFC9528}}).
+
+The flowchart in {{fig-flowchart-keys-token-invalid}} shows the handling of an access token or of a set of application keys that have become invalid, when using the profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}. Note that some details within the frame "Handling of invalid application keys" are replaced by ellipses, as they are identical to what is shown in {{fig-flowchart-keys-invalid}}.
 
 ~~~~~~~~~~~ aasvg
-Invalid access token
-specifying AUTH_CRED_C,
-or invalid application keys
+Invalid access token or
+invalid application keys
 
-  |
-  |
-  v
-              NO
-Is the       ----> Delete the associated --> Obtain and upload
-access token       LAKE sessions and         a new access token
-still believed     the application keys
-to be valid?       derived from those         |
-  |                                           |
-  |                                           |
-  |                                           |
-  | YES                                       |
-  v                                           |
-                                              |
-The application keys                          |
-are not valid anymore                         |
-                                              |
-  |                                           |
-  |                                           |
-  v                                           |
-                                              |
-Are the          NO                           |
-application     ----> Delete the   -----+     |
-keys persisted?       application       |     |
-                      keys and the      |     |
-  |                   associated        |     |
-  |                   LAKE session      |     |
-  |                                     |     |
-  |                     ^   ^           v     v
-  |                     |   |
-  |                     |   |         Rerun LAKE <----------+
-  |                     |   |                               |
-  |                     |   |           |                   |
-  | YES                 |   |           |                   | NO
-  v                     |   |           v                   |
-                        |   |                   NO
-Is KUDOS      NO        |   |       Has LAKE   ----> Has the maximum
-supported? -------------+   |       succeeded?       number of attempts
-                            |                        been reached?
-  |                         |           |
-  | YES                     |           |                   |
-  v                         |           | YES               | YES
-                            |           v                   v
-Run KUDOS                   |
-                            |       Derive and           Consider
-  |                         |       install new          rerunning
-  |                         |       application keys     LAKE later
-  v                         |
-                            |
-Has KUDOS     NO            |
-succeeded? -----------------+
-
-  |
-  | YES
-  v
-
-Install the updated
-application keys
+     |
+     |
+     v
+                NO
+Is the         --------> Delete the associated -----> Is this peer
+access token             LAKE sessions and            the ACE client?
+still believed           the application keys
+to be valid?             derived from those               |
+                                                          |     NO
+                                                          +--------+
+     |                                                    |        |
+     |                                                    |        |
+     |                                                    | YES    |
+     |                                                    v        |
+     | YES                                                         |
+     v                                              Obtain a new   |
+                                                    access token   |
+The application keys                                to upoload at  |
+are not valid anymore                               the ACE RS     |
+                                                                   |
+     |                                                    |        |
+     |                                                    |        |
+     |       Handling of invalid application keys         |        |
++----|----------------------------------------------------|--------|--+
+|    |                                                    |        |  |
+|    v                                                    |        |  |
+|                                                         |        |  |
+| Are the          NO   Delete the application keys       |        |  |
+| application     ----> and the associated LAKE session   |        |  |
+| keys persisted?                                         |        |  |
+|                                    |                    |        |  |
+|    |                               |                    |        |  |
+|    |                               v                    v        |  |
+|    |                               o<-------------------o<-------+  |
+|    |                               |                                |
+|    |                               |                                |
+|    | YES                           |     Re-execution of LAKE       |
+|    v                          +----|----------------------------+   |
+|                               |    |                            |   |
+|                               |    v                            |   |
+|   ...                         |                                 |   |
+|                               | Rerun LAKE  <--- ...            |   |
+|                               |                                 |   |
+|                               |    |                            |   |
+|                               |    |                            |   |
+|   ...                         |    v                            |   |
+|                               |                                 |   |
+|                               |   ...                           |   |
+|                               |                                 |   |
+|   ...                         +---------------------------------+   |
+|                                                                     |
++---------------------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-flowchart-keys-token-invalid title="Handling of an Access Token or of a Set of Application Keys that Have Become Invalid." artwork-align="center"}
 
@@ -1285,6 +1281,8 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 * Renamed EDHOC to LAKE as appropriate.
 
 * Updated text and figures on what happens if rerunning LAKE fails.
+
+* Revised handling of invalid application keys or bound access rights become invalid.
 
 ## Version -06 to -07 ## {#sec-06-07}
 
