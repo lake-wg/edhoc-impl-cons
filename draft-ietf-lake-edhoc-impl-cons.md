@@ -186,11 +186,11 @@ Invalid application keys
   |
   v
 
-Are the          NO   Delete the
-application     ----> application keys
-keys persisted?       and the LAKE session
-
-  |                     ^   ^        |
+Are the          NO   Delete the application keys
+application     ----> and the associated LAKE session
+keys persisted?
+                        ^   ^        |
+  |                     |   |        |
   |                     |   |        |
   |                     |   |        v
   |                     |   |
