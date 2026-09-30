@@ -4,8 +4,8 @@
 
 LAKE Working Group                                             M. Tiloca
 Internet-Draft                                                   RISE AB
-Intended status: Informational                         29 September 2026
-Expires: 2 April 2027
+Intended status: Informational                         30 September 2026
+Expires: 3 April 2027
 
 
   Implementation Considerations for the Lightweight Authenticated Key
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 April 2027.
+   This Internet-Draft will expire on 3 April 2027.
 
 Copyright Notice
 
@@ -570,14 +570,17 @@ Table of Contents
    the EDHOC_Exporter interface to derive keying material from S, a LAKE
    peer is expected to store and retain the latest state of S over time.
 
-   Requirements to fulfill for persistently storing PRK_out or derived
-   application keys are defined in Sections 5.4.2 and 5.4.3 of
+   The latest state of S can be stored in volatile memory, although a
+   reboot would result in a loss of that state and the need to rerun
+   LAKE with the other peer that participated in the session S.  Note
+   that requirements to fulfill for persistently storing PRK_out or
+   derived application keys are defined in Sections 5.4.2 and 5.4.3 of
    [RFC9528].
 
    Retaining the state of S ensures that it is possible to:
 
    *  Update S by updating its associated PRK_out in a more efficient
-      way than re-running LAKE, e.g., by using the EDHOC_KeyUpdate
+      way than rerunning LAKE, e.g., by using the EDHOC_KeyUpdate
       function defined in Appendix H of [RFC9528].
 
    *  Use the EDHOC_Exporter interface for late derivations of keying
@@ -2320,6 +2323,9 @@ B.1.  Version -07 to -08
 
    *  Revised handling of invalid application keys or bound access
       rights become invalid.
+
+   *  Retaining the latest state of completed sessions does not need
+      persistent storage.
 
 B.2.  Version -06 to -07
 
