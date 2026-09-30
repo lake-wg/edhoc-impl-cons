@@ -337,11 +337,11 @@ are not valid anymore                               the ACE RS     |
 
 After successfully completing a LAKE session S and potentially using the EDHOC_Exporter interface to derive keying material from S, a LAKE peer is expected to store and retain the latest state of S over time.
 
-Requirements to fulfill for persistently storing PRK_out or derived application keys are defined in {{Sections 5.4.2 and 5.4.3 of RFC9528}}.
+The latest state of S can be stored in volatile memory, although a reboot would result in a loss of that state and the need to rerun LAKE with the other peer that participated in the session S. Note that requirements to fulfill for persistently storing PRK_out or derived application keys are defined in {{Sections 5.4.2 and 5.4.3 of RFC9528}}.
 
 Retaining the state of S ensures that it is possible to:
 
-* Update S by updating its associated PRK_out in a more efficient way than re-running LAKE, e.g., by using the EDHOC_KeyUpdate function defined in {{Section H of RFC9528}}.
+* Update S by updating its associated PRK_out in a more efficient way than rerunning LAKE, e.g., by using the EDHOC_KeyUpdate function defined in {{Section H of RFC9528}}.
 
 * Use the EDHOC_Exporter interface for late derivations of keying material from S that cannot be performed shortly after the session completion or according to a predictable schedule.
 
@@ -1283,6 +1283,8 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 * Updated text and figures on what happens if rerunning LAKE fails.
 
 * Revised handling of invalid application keys or bound access rights become invalid.
+
+* Retaining the latest state of completed sessions does not need persistent storage.
 
 ## Version -06 to -07 ## {#sec-06-07}
 
