@@ -4,8 +4,8 @@
 
 LAKE Working Group                                             M. Tiloca
 Internet-Draft                                                   RISE AB
-Intended status: Informational                         30 September 2026
-Expires: 3 April 2027
+Intended status: Informational                            2 October 2026
+Expires: 5 April 2027
 
 
   Implementation Considerations for the Lightweight Authenticated Key
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 April 2027.
+   This Internet-Draft will expire on 5 April 2027.
 
 Copyright Notice
 
@@ -76,6 +76,7 @@ Table of Contents
      4.3.  Enforcement of Trust Policies in Specific Scenarios
        4.3.1.  In the ACE Framework
        4.3.2.  In the ELA Procedure
+     4.4.  Unauthenticated Operation
    5.  Side Processing of Incoming LAKE Messages
      5.1.  LAKE message_1
      5.2.  LAKE message_4
@@ -792,13 +793,8 @@ Table of Contents
    Upon retrieving a new CRED through the processing of a received LAKE
    message and following the successful validation of CRED, the peer P
    stores CRED only if it assesses CRED to also be (provisionally)
-   trusted, while it must not store CRED otherwise.
-
-   An exception applies for the two unauthenticated operations described
-   in Appendix D.5 of [RFC9528], where a trust relationship with an
-   unknown or not-yet-trusted endpoint is established later.  In such a
-   case, CRED is verified out-of-band at a later stage, or a LAKE
-   session key is bound to an identity out-of-band at a later stage.
+   trusted, while it must not store CRED otherwise.  A narrow exception
+   is discussed in Section 4.4.
 
    When processing a received LAKE message M that specifies an
    authentication credential CRED, the peer P can enforce one of the
@@ -1037,6 +1033,19 @@ Table of Contents
       enforced when processing a LAKE message_3, and it is raised by the
       LAKE message_3 including an EAD item that conveys a valid voucher
       issued by W, thus confirming that CRED can be ultimately trusted.
+
+4.4.  Unauthenticated Operation
+
+   When a peer P runs LAKE with another peer, it could be the case that
+   P retrieves a new CRED of that other peer through the processing of a
+   received LAKE message.
+
+   A very specific use of LAKE described in Appendix D.5 of [RFC9528]
+   allows P to temporarily accept the other peer as an unknown or not-
+   yet-trusted endpoint, and to establish a trust relationship with the
+   other peer later on.  To this end, P can take different approaches:
+   For example, CRED is verified out-of-band at a later stage, or a LAKE
+   session key is bound to an identity out-of-band at a later stage.
 
 5.  Side Processing of Incoming LAKE Messages
 
@@ -2327,6 +2336,9 @@ B.1.  Version -07 to -08
 
    *  Retaining the latest state of completed sessions does not need
       persistent storage.
+
+   *  Exception on unauthenticated operation moved to separate
+      subsection.
 
 B.2.  Version -06 to -07
 
