@@ -425,9 +425,7 @@ Also during the LAKE execution, an EAD field might include an EAD item that spec
 
 When obtaining a new credential CRED, the peer P has to validate it before storing it. The validation steps to perform depend on the specific type of CRED (e.g., a public key certificate {{RFC5280}}{{I-D.ietf-cose-cbor-encoded-cert}}) and can rely on (the authentication credential associated with) a trusted third party acting as a trust anchor.
 
-Upon retrieving a new CRED through the processing of a received LAKE message and following the successful validation of CRED, the peer P stores CRED only if it assesses CRED to also be (provisionally) trusted, while it must not store CRED otherwise.
-
-An exception applies for the two unauthenticated operations described in {{Section D.5 of RFC9528}}, where a trust relationship with an unknown or not-yet-trusted endpoint is established later. In such a case, CRED is verified out-of-band at a later stage, or a LAKE session key is bound to an identity out-of-band at a later stage.
+Upon retrieving a new CRED through the processing of a received LAKE message and following the successful validation of CRED, the peer P stores CRED only if it assesses CRED to also be (provisionally) trusted, while it must not store CRED otherwise. A narrow exception is discussed in {{sec-unauth-operation}}.
 
 When processing a received LAKE message M that specifies an authentication credential CRED, the peer P can enforce one of the trust policies LEARNING and NO-LEARNING specified in {{sec-policy-learning}} and {{sec-policy-no-learning}}, in order to determine whether to trust CRED.
 
@@ -534,6 +532,12 @@ Therefore, if U enforces the trust policy "NO-LEARNING", it can additionally enf
   At that point in time, the authentication credential CRED is only provisionally trusted (if found valid), with the expectation to receive a LAKE message_4 in the same LAKE session, conveying a valid voucher issued by W and thus confirming that CRED can be ultimately trusted.
 
 * When using the LAKE reverse message flow, the exception is enforced when processing a LAKE message_3, and it is raised by the LAKE message_3 including an EAD item that conveys a valid voucher issued by W, thus confirming that CRED can be ultimately trusted.
+
+## Unauthenticated Operation {#sec-unauth-operation}
+
+When a peer P runs LAKE with another peer, it could be the case that P retrieves a new CRED of that other peer through the processing of a received LAKE message.
+
+A very specific use of LAKE described in {{Section D.5 of RFC9528}} allows P to temporarily accept the other peer as an unknown or not-yet-trusted endpoint, and to establish a trust relationship with the other peer later on. To this end, P can take different approaches: For example, CRED is verified out-of-band at a later stage, or a LAKE session key is bound to an identity out-of-band at a later stage.
 
 # Side Processing of Incoming LAKE Messages # {#sec-message-side-processing}
 
@@ -1285,6 +1289,8 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 * Revised handling of invalid application keys or bound access rights become invalid.
 
 * Retaining the latest state of completed sessions does not need persistent storage.
+
+* Exception on unauthenticated operation moved to separate subsection.
 
 ## Version -06 to -07 ## {#sec-06-07}
 
