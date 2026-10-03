@@ -355,19 +355,25 @@ Absent application policies defining more restrictive lifetimes, the peer is exp
 
 {{Section 5.1 of RFC9528}} defines that a LAKE session is completed after having successfully processed the last message, i.e., message_3 or message_4, depending on the application profile used (see {{Section 3.9 of RFC9528}}). It follows that:
 
-* The Responder completes a session after successfully processing the incoming LAKE message_3, if LAKE message_4 is not used, or after sending LAKE message_4 otherwise.
+* When a peer sends the last message in a session, that peer completes the session after successfully building and sending such message.
 
-* The Initiator completes a session after successfully processing the incoming LAKE message_4, if LAKE message_4 is used, or after sending LAKE message_3 otherwise.
+* When a peer receives the last message in a session, that peer completes the session after receiving and successfully processing such message.
 
 Furthermore, {{Section 6 of RFC9528}} defines LAKE error messages and the processing associated with the initial set of error codes. According to {{Section 5.1 of RFC9528}}, after a LAKE session is completed, no LAKE error messages are sent and the LAKE session output may be maintained even if LAKE error messages are received.
 
 That is, an implementation has a lot of latitude about handling incoming LAKE error messages that pertain to a completed LAKE session.
 
-In general, a safe approach simply consists in aborting the completed LAKE session, thereby deleting the corresponding output such as derived application keys. If the reception of LAKE error messages at a given peer is still plausible, this is actually an appropriate course of action for that peer. An example is the case where the Responder sends LAKE message_4 and then receives a LAKE error message as a follow-up from the Initiator that rejected LAKE message_4.
+In general, a safe approach simply consists in aborting the completed LAKE session, thereby deleting the corresponding output such as derived application keys. If the reception of LAKE error messages at a given peer P is still plausible, this is actually an appropriate course of action for P. In particular, this applies if P is the sender of the last message and therefore could receive a LAKE error message as a follow-up from the other peer that rejected the last message.
 
-However, there are indeed cases where it is not plausible anymore to receive LAKE error messages pertaining to a completed LAKE session. Such LAKE error messages can be safely ignored as irrelevant and potentially resulting from an attack, thereby preserving the LAKE session output such as derived application keys. An example is the case where the Responder successfully processes the incoming LAKE message_3 and, at the same time, LAKE message_4 is not used.
+However, there are indeed cases where it is not plausible anymore to receive LAKE error messages pertaining to a completed LAKE session. Such LAKE error messages can be safely ignored as irrelevant and potentially resulting from an attack, thereby preserving the LAKE session output such as derived application keys. In particular, it is possible to safely ignore incoming LAKE error messages for:
 
-To provide more concrete guidance, the rest of this section considers the case where the following applies:
+* The peer that receives and successfully processes the last message in the session.
+
+* The peer that successfully builds and sends the last message in the session, after it has received and successfully verified a message from the other peer that is protected with an application key derived from the session.
+
+### Detailed Guidance for CoAP and OSCORE
+
+The rest of this section considers the specific case where:
 
 * "application keys" stands for the keying material and parameters that compose an OSCORE Security Context {{RFC8613}}, i.e., when specifically those application keys are derived from a LAKE session (see {{Section A.1 of RFC9528}}).
 
@@ -375,11 +381,11 @@ To provide more concrete guidance, the rest of this section considers the case w
 
 Building on the above, the following holds for the LAKE Responder.
 
-* If LAKE message_4 is not used, the Responder completes the LAKE session after successfully processing the incoming LAKE message_3. In this case, no further LAKE messages are supposed to be exchanged in the session.
+* If LAKE message_3 is the last message in the LAKE session (i.e., LAKE message_4 is not used), the Responder completes the session after receiving and successfully processing the incoming LAKE message_3.
 
   Consequently, the Responder can safely set the LAKE session to ignore any incoming LAKE error message pertaining to the session from then on, thereby preserving the OSCORE Security Context derived from the session.
 
-* If LAKE message_4 is used, the Responder completes the LAKE session after sending LAKE message_4.
+* If LAKE message_4 is used and thus is the last message in the LAKE session, the Responder completes the session after successfully building and sending LAKE message_4.
 
   After that, it remains generally appropriate for the Responder to abort the LAKE session in the event that the Responder receives a LAKE error message pertaining to the session. In particular, the LAKE error message might have been legitimately sent by the Initiator that failed to process LAKE message_4.
 
@@ -387,11 +393,11 @@ Building on the above, the following holds for the LAKE Responder.
 
 Also building on the above, the following holds for the LAKE Initiator.
 
-* If LAKE message_4 is used, the Initiator completes a session after successfully processing the incoming LAKE message_4. In this case, no further LAKE messages are supposed to be exchanged in the session.
+* If LAKE message_4 is used and thus is the last message in the LAKE session, the Initiator completes the session after successfully processing the incoming LAKE message_4.
 
   Consequently, the Initiator can safely set the LAKE session to ignore any incoming LAKE error message pertaining to the session from then on, thereby preserving the OSCORE Security Context derived from the session.
 
-* If LAKE message_4 is not used, the Initiator completes a session after sending LAKE message_3.
+* If LAKE message_3 is the last message in the LAKE session (i.e., LAKE message_4 is not used), the Initiator completes the session after successfully building and sending LAKE message_3.
 
   After that, it remains generally appropriate for the Initiator to abort the LAKE session in the event that the Initiator receives a LAKE error message pertaining to the session. In particular, the LAKE error message might have been legitimately sent by the Responder that failed to process LAKE message_3.
 
@@ -401,7 +407,7 @@ Also building on the above, the following holds for the LAKE Initiator.
 
 Following the reception and successful verification for the first time of an OSCORE-protected message using the OSCORE Security Context derived from a completed LAKE session, a recipient LAKE peer has different ways for setting the session to ignore pertaining LAKE error messages from then on.
 
-Some approaches can be easier and more appealing to use than others, depending on the specific LAKE implementation and its integration with the communication stack. As an example, two possible approaches are described below:
+Some approaches can be easier and more appealing to use than others, depending on the specific LAKE implementation and its integration with the communication stack. As an example, the following describes two possible approaches, which are applicable to either message flow and also when other protocols than CoAP are used to transfer LAKE messages:
 
 * The OSCORE library used or an OSCORE layer that takes part in the communication stack can be aware that an OSCORE Security Context CTX was derived from a LAKE session S.
 
@@ -1289,6 +1295,8 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 * Revised handling of invalid application keys or bound access rights become invalid.
 
 * Retaining the latest state of completed sessions does not need persistent storage.
+
+* Generalized handling of incoming error messages.
 
 * Exception on unauthenticated operation moved to separate subsection.
 
