@@ -14,18 +14,18 @@
 <meta content="draft-ietf-lake-edhoc-impl-cons-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.34.1
-    Python 3.14.7
-    ConfigArgParse 1.7.7
+    Python 3.14.8
+    ConfigArgParse 1.8.0
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.11.10
+    platformdirs 4.12.2
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.8.4
+    wcwidth 0.9.1
 -->
 <link href="draft-ietf-lake-edhoc-impl-cons.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1045,7 +1045,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tiloca</td>
-<td class="center">Expires 5 April 2027</td>
+<td class="center">Expires 6 April 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1058,12 +1058,12 @@ svg {
 <dd class="internet-draft">draft-ietf-lake-edhoc-impl-cons-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-10-02" class="published">2 October 2026</time>
+<time datetime="2026-10-03" class="published">3 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-04-05">5 April 2027</time></dd>
+<dd class="expires"><time datetime="2027-04-06">6 April 2027</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1108,7 +1108,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 5 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 6 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1164,6 +1164,11 @@ svg {
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
                 <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-handling-of-incoming-lake-e" class="internal xref">Handling of Incoming LAKE Error Messages</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.1">
+                    <p id="section-toc.1-1.3.2.1.2.1.1"><a href="#section-3.1.1" class="auto internal xref">3.1.1</a>.  <a href="#name-detailed-guidance-for-coap-" class="internal xref">Detailed Guidance for CoAP and OSCORE</a></p>
+</li>
+                </ul>
 </li>
             </ul>
 </li>
@@ -1854,73 +1859,88 @@ Per the considered profile of ACE, the peer acting as the ACE client takes the f
 <p id="section-3.1-1"><span><a href="https://rfc-editor.org/rfc/rfc9528#section-5.1" class="relref">Section 5.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span> defines that a LAKE session is completed after having successfully processed the last message, i.e., message_3 or message_4, depending on the application profile used (see <span><a href="https://rfc-editor.org/rfc/rfc9528#section-3.9" class="relref">Section 3.9</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>). It follows that:<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1-2.1">
-            <p id="section-3.1-2.1.1">The Responder completes a session after successfully processing the incoming LAKE message_3, if LAKE message_4 is not used, or after sending LAKE message_4 otherwise.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.1-2.1.1">When a peer sends the last message in a session, that peer completes the session after successfully building and sending such message.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.1-2.2">
-            <p id="section-3.1-2.2.1">The Initiator completes a session after successfully processing the incoming LAKE message_4, if LAKE message_4 is used, or after sending LAKE message_3 otherwise.<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.1-2.2.1">When a peer receives the last message in a session, that peer completes the session after receiving and successfully processing such message.<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-3.1-3">Furthermore, <span><a href="https://rfc-editor.org/rfc/rfc9528#section-6" class="relref">Section 6</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span> defines LAKE error messages and the processing associated with the initial set of error codes. According to <span><a href="https://rfc-editor.org/rfc/rfc9528#section-5.1" class="relref">Section 5.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>, after a LAKE session is completed, no LAKE error messages are sent and the LAKE session output may be maintained even if LAKE error messages are received.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 <p id="section-3.1-4">That is, an implementation has a lot of latitude about handling incoming LAKE error messages that pertain to a completed LAKE session.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
-<p id="section-3.1-5">In general, a safe approach simply consists in aborting the completed LAKE session, thereby deleting the corresponding output such as derived application keys. If the reception of LAKE error messages at a given peer is still plausible, this is actually an appropriate course of action for that peer. An example is the case where the Responder sends LAKE message_4 and then receives a LAKE error message as a follow-up from the Initiator that rejected LAKE message_4.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
-<p id="section-3.1-6">However, there are indeed cases where it is not plausible anymore to receive LAKE error messages pertaining to a completed LAKE session. Such LAKE error messages can be safely ignored as irrelevant and potentially resulting from an attack, thereby preserving the LAKE session output such as derived application keys. An example is the case where the Responder successfully processes the incoming LAKE message_3 and, at the same time, LAKE message_4 is not used.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
-<p id="section-3.1-7">To provide more concrete guidance, the rest of this section considers the case where the following applies:<a href="#section-3.1-7" class="pilcrow">¶</a></p>
+<p id="section-3.1-5">In general, a safe approach simply consists in aborting the completed LAKE session, thereby deleting the corresponding output such as derived application keys. If the reception of LAKE error messages at a given peer P is still plausible, this is actually an appropriate course of action for P. In particular, this applies if P is the sender of the last message and therefore could receive a LAKE error message as a follow-up from the other peer that rejected the last message.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.1-6">However, there are indeed cases where it is not plausible anymore to receive LAKE error messages pertaining to a completed LAKE session. Such LAKE error messages can be safely ignored as irrelevant and potentially resulting from an attack, thereby preserving the LAKE session output such as derived application keys. In particular, it is possible to safely ignore incoming LAKE error messages for:<a href="#section-3.1-6" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.1-8.1">
-            <p id="section-3.1-8.1.1">"application keys" stands for the keying material and parameters that compose an OSCORE Security Context <span>[<a href="#RFC8613" class="cite xref">RFC8613</a>]</span>, i.e., when specifically those application keys are derived from a LAKE session (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.1" class="relref">Appendix A.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-3.1-8.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.1-7.1">
+            <p id="section-3.1-7.1.1">The peer that receives and successfully processes the last message in the session.<a href="#section-3.1-7.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-3.1-8.2">
-            <p id="section-3.1-8.2.1">LAKE messages are transferred over CoAP <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span> using the forward message flow (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.2" class="relref">Appendix A.2</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>), i.e., the LAKE Responder acts as a CoAP server and the LAKE Initiator acts as a CoAP client.<a href="#section-3.1-8.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-3.1-7.2">
+            <p id="section-3.1-7.2.1">The peer that successfully builds and sends the last message in the session, after it has received and successfully verified a message from the other peer that is protected with an application key derived from the session.<a href="#section-3.1-7.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.1-9">Building on the above, the following holds for the LAKE Responder.<a href="#section-3.1-9" class="pilcrow">¶</a></p>
+<div id="detailed-guidance-for-coap-and-oscore">
+<section id="section-3.1.1">
+          <h4 id="name-detailed-guidance-for-coap-">
+<a href="#section-3.1.1" class="section-number selfRef">3.1.1. </a><a href="#name-detailed-guidance-for-coap-" class="section-name selfRef">Detailed Guidance for CoAP and OSCORE</a>
+          </h4>
+<p id="section-3.1.1-1">The rest of this section considers the specific case where:<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.1-10.1">
-            <p id="section-3.1-10.1.1">If LAKE message_4 is not used, the Responder completes the LAKE session after successfully processing the incoming LAKE message_3. In this case, no further LAKE messages are supposed to be exchanged in the session.<a href="#section-3.1-10.1.1" class="pilcrow">¶</a></p>
-<p id="section-3.1-10.1.2">
-Consequently, the Responder can safely set the LAKE session to ignore any incoming LAKE error message pertaining to the session from then on, thereby preserving the OSCORE Security Context derived from the session.<a href="#section-3.1-10.1.2" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.1.1-2.1">
+              <p id="section-3.1.1-2.1.1">"application keys" stands for the keying material and parameters that compose an OSCORE Security Context <span>[<a href="#RFC8613" class="cite xref">RFC8613</a>]</span>, i.e., when specifically those application keys are derived from a LAKE session (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.1" class="relref">Appendix A.1</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>).<a href="#section-3.1.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-3.1-10.2">
-            <p id="section-3.1-10.2.1">If LAKE message_4 is used, the Responder completes the LAKE session after sending LAKE message_4.<a href="#section-3.1-10.2.1" class="pilcrow">¶</a></p>
-<p id="section-3.1-10.2.2">
-After that, it remains generally appropriate for the Responder to abort the LAKE session in the event that the Responder receives a LAKE error message pertaining to the session. In particular, the LAKE error message might have been legitimately sent by the Initiator that failed to process LAKE message_4.<a href="#section-3.1-10.2.2" class="pilcrow">¶</a></p>
-<p id="section-3.1-10.2.3">
-However, the Responder can safely set the LAKE session to ignore any incoming LAKE error message pertaining to the session from then on, after successfully processing an incoming OSCORE-protected message received from the Initiator. Similarly to the case previously discussed, this preserves the OSCORE Security Context derived from the session, in the event that the Responder receives LAKE error messages.<a href="#section-3.1-10.2.3" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.1.1-2.2">
+              <p id="section-3.1.1-2.2.1">LAKE messages are transferred over CoAP <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span> using the forward message flow (see <span><a href="https://rfc-editor.org/rfc/rfc9528#appendix-A.2" class="relref">Appendix A.2</a> of [<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>), i.e., the LAKE Responder acts as a CoAP server and the LAKE Initiator acts as a CoAP client.<a href="#section-3.1.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
-        </ul>
-<p id="section-3.1-11">Also building on the above, the following holds for the LAKE Initiator.<a href="#section-3.1-11" class="pilcrow">¶</a></p>
+          </ul>
+<p id="section-3.1.1-3">Building on the above, the following holds for the LAKE Responder.<a href="#section-3.1.1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.1-12.1">
-            <p id="section-3.1-12.1.1">If LAKE message_4 is used, the Initiator completes a session after successfully processing the incoming LAKE message_4. In this case, no further LAKE messages are supposed to be exchanged in the session.<a href="#section-3.1-12.1.1" class="pilcrow">¶</a></p>
-<p id="section-3.1-12.1.2">
-Consequently, the Initiator can safely set the LAKE session to ignore any incoming LAKE error message pertaining to the session from then on, thereby preserving the OSCORE Security Context derived from the session.<a href="#section-3.1-12.1.2" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.1.1-4.1">
+              <p id="section-3.1.1-4.1.1">If LAKE message_3 is the last message in the LAKE session (i.e., LAKE message_4 is not used), the Responder completes the session after receiving and successfully processing the incoming LAKE message_3.<a href="#section-3.1.1-4.1.1" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-4.1.2">
+Consequently, the Responder can safely set the LAKE session to ignore any incoming LAKE error message pertaining to the session from then on, thereby preserving the OSCORE Security Context derived from the session.<a href="#section-3.1.1-4.1.2" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-3.1-12.2">
-            <p id="section-3.1-12.2.1">If LAKE message_4 is not used, the Initiator completes a session after sending LAKE message_3.<a href="#section-3.1-12.2.1" class="pilcrow">¶</a></p>
-<p id="section-3.1-12.2.2">
-After that, it remains generally appropriate for the Initiator to abort the LAKE session in the event that the Initiator receives a LAKE error message pertaining to the session. In particular, the LAKE error message might have been legitimately sent by the Responder that failed to process LAKE message_3.<a href="#section-3.1-12.2.2" class="pilcrow">¶</a></p>
-<p id="section-3.1-12.2.3">
-If an active adversary injects a LAKE error message intended to the Initiator and pertaining to the LAKE session, the Initiator would effectively receive and process that message only during a specific time interval, i.e., from when the Initiator sends LAKE message_3 until when the Initiator frees up the CoAP Token value used in the CoAP request message that conveyed LAKE message_3.<a href="#section-3.1-12.2.3" class="pilcrow">¶</a></p>
-<p id="section-3.1-12.2.4">
-However, the Initiator can safely set the LAKE session to ignore any incoming LAKE error message pertaining to the session, after successfully processing an incoming OSCORE-protected message received from the Responder. Similarly to the case previously discussed, this preserves the OSCORE Security Context derived from the session, in the event that the Initiator receives LAKE error messages.<a href="#section-3.1-12.2.4" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.1.1-4.2">
+              <p id="section-3.1.1-4.2.1">If LAKE message_4 is used and thus is the last message in the LAKE session, the Responder completes the session after successfully building and sending LAKE message_4.<a href="#section-3.1.1-4.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-4.2.2">
+After that, it remains generally appropriate for the Responder to abort the LAKE session in the event that the Responder receives a LAKE error message pertaining to the session. In particular, the LAKE error message might have been legitimately sent by the Initiator that failed to process LAKE message_4.<a href="#section-3.1.1-4.2.2" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-4.2.3">
+However, the Responder can safely set the LAKE session to ignore any incoming LAKE error message pertaining to the session from then on, after successfully processing an incoming OSCORE-protected message received from the Initiator. Similarly to the case previously discussed, this preserves the OSCORE Security Context derived from the session, in the event that the Responder receives LAKE error messages.<a href="#section-3.1.1-4.2.3" class="pilcrow">¶</a></p>
 </li>
-        </ul>
-<p id="section-3.1-13">Following the reception and successful verification for the first time of an OSCORE-protected message using the OSCORE Security Context derived from a completed LAKE session, a recipient LAKE peer has different ways for setting the session to ignore pertaining LAKE error messages from then on.<a href="#section-3.1-13" class="pilcrow">¶</a></p>
-<p id="section-3.1-14">Some approaches can be easier and more appealing to use than others, depending on the specific LAKE implementation and its integration with the communication stack. As an example, two possible approaches are described below:<a href="#section-3.1-14" class="pilcrow">¶</a></p>
+          </ul>
+<p id="section-3.1.1-5">Also building on the above, the following holds for the LAKE Initiator.<a href="#section-3.1.1-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.1-15.1">
-            <p id="section-3.1-15.1.1">The OSCORE library used or an OSCORE layer that takes part in the communication stack can be aware that an OSCORE Security Context CTX was derived from a LAKE session S.<a href="#section-3.1-15.1.1" class="pilcrow">¶</a></p>
-<p id="section-3.1-15.1.2">
-In such a case, after receiving and successfully verifying for the first time an OSCORE-protected message using CTX, the OSCORE library/layer on the recipient LAKE peer can effectively set the LAKE session S to ignore any incoming LAKE error message pertaining to the session from then on.<a href="#section-3.1-15.1.2" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.1.1-6.1">
+              <p id="section-3.1.1-6.1.1">If LAKE message_4 is used and thus is the last message in the LAKE session, the Initiator completes the session after successfully processing the incoming LAKE message_4.<a href="#section-3.1.1-6.1.1" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-6.1.2">
+Consequently, the Initiator can safely set the LAKE session to ignore any incoming LAKE error message pertaining to the session from then on, thereby preserving the OSCORE Security Context derived from the session.<a href="#section-3.1.1-6.1.2" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-3.1-15.2">
-            <p id="section-3.1-15.2.1">When receiving a LAKE error message pertaining to a completed LAKE session, LAKE can check whether the session is set to ignore pertaining LAKE error messages. If that is the case, the received LAKE error message is ignored.<a href="#section-3.1-15.2.1" class="pilcrow">¶</a></p>
-<p id="section-3.1-15.2.2">
-Otherwise, LAKE checks whether the OSCORE Security Context CTX derived from the LAKE session has been used at least once for successfully verifying an incoming OSCORE-protected message from the other LAKE peer (e.g., by checking the Replay Window within the Recipient Context of CTX).<a href="#section-3.1-15.2.2" class="pilcrow">¶</a></p>
-<p id="section-3.1-15.2.3">
-In the case that CTX has not been used yet, the received LAKE error message is processed as usual, i.e., the LAKE session is aborted and CTX is deleted. Instead, in the case that CTX has been used at least once for successfully verifying an incoming OSCORE-protected message from the other LAKE peer, the LAKE error message is ignored and LAKE sets the LAKE session to ignore pertaining LAKE error messages from then on.<a href="#section-3.1-15.2.3" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.1.1-6.2">
+              <p id="section-3.1.1-6.2.1">If LAKE message_3 is the last message in the LAKE session (i.e., LAKE message_4 is not used), the Initiator completes the session after successfully building and sending LAKE message_3.<a href="#section-3.1.1-6.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-6.2.2">
+After that, it remains generally appropriate for the Initiator to abort the LAKE session in the event that the Initiator receives a LAKE error message pertaining to the session. In particular, the LAKE error message might have been legitimately sent by the Responder that failed to process LAKE message_3.<a href="#section-3.1.1-6.2.2" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-6.2.3">
+If an active adversary injects a LAKE error message intended to the Initiator and pertaining to the LAKE session, the Initiator would effectively receive and process that message only during a specific time interval, i.e., from when the Initiator sends LAKE message_3 until when the Initiator frees up the CoAP Token value used in the CoAP request message that conveyed LAKE message_3.<a href="#section-3.1.1-6.2.3" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-6.2.4">
+However, the Initiator can safely set the LAKE session to ignore any incoming LAKE error message pertaining to the session, after successfully processing an incoming OSCORE-protected message received from the Responder. Similarly to the case previously discussed, this preserves the OSCORE Security Context derived from the session, in the event that the Initiator receives LAKE error messages.<a href="#section-3.1.1-6.2.4" class="pilcrow">¶</a></p>
 </li>
-        </ul>
+          </ul>
+<p id="section-3.1.1-7">Following the reception and successful verification for the first time of an OSCORE-protected message using the OSCORE Security Context derived from a completed LAKE session, a recipient LAKE peer has different ways for setting the session to ignore pertaining LAKE error messages from then on.<a href="#section-3.1.1-7" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-8">Some approaches can be easier and more appealing to use than others, depending on the specific LAKE implementation and its integration with the communication stack. As an example, the following describes two possible approaches, which are applicable to either message flow and also when other protocols than CoAP are used to transfer LAKE messages:<a href="#section-3.1.1-8" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1.1-9.1">
+              <p id="section-3.1.1-9.1.1">The OSCORE library used or an OSCORE layer that takes part in the communication stack can be aware that an OSCORE Security Context CTX was derived from a LAKE session S.<a href="#section-3.1.1-9.1.1" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-9.1.2">
+In such a case, after receiving and successfully verifying for the first time an OSCORE-protected message using CTX, the OSCORE library/layer on the recipient LAKE peer can effectively set the LAKE session S to ignore any incoming LAKE error message pertaining to the session from then on.<a href="#section-3.1.1-9.1.2" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.1.1-9.2">
+              <p id="section-3.1.1-9.2.1">When receiving a LAKE error message pertaining to a completed LAKE session, LAKE can check whether the session is set to ignore pertaining LAKE error messages. If that is the case, the received LAKE error message is ignored.<a href="#section-3.1.1-9.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-9.2.2">
+Otherwise, LAKE checks whether the OSCORE Security Context CTX derived from the LAKE session has been used at least once for successfully verifying an incoming OSCORE-protected message from the other LAKE peer (e.g., by checking the Replay Window within the Recipient Context of CTX).<a href="#section-3.1.1-9.2.2" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-9.2.3">
+In the case that CTX has not been used yet, the received LAKE error message is processed as usual, i.e., the LAKE session is aborted and CTX is deleted. Instead, in the case that CTX has been used at least once for successfully verifying an incoming OSCORE-protected message from the other LAKE peer, the LAKE error message is ignored and LAKE sets the LAKE session to ignore pertaining LAKE error messages from then on.<a href="#section-3.1.1-9.2.3" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
 </section>
 </div>
 </section>
@@ -3760,7 +3780,10 @@ Once all such EAD items have been processed, the SPO transfers control back to L
             <p id="appendix-B.1-1.4.1">Retaining the latest state of completed sessions does not need persistent storage.<a href="#appendix-B.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-B.1-1.5">
-            <p id="appendix-B.1-1.5.1">Exception on unauthenticated operation moved to separate subsection.<a href="#appendix-B.1-1.5.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.1-1.5.1">Generalized handling of incoming error messages.<a href="#appendix-B.1-1.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-B.1-1.6">
+            <p id="appendix-B.1-1.6.1">Exception on unauthenticated operation moved to separate subsection.<a href="#appendix-B.1-1.6.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
