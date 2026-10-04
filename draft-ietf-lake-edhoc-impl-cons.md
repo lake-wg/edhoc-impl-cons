@@ -293,10 +293,10 @@ to be valid?             derived from those               |
      |                                                    | YES    |
      |                                                    v        |
      | YES                                                         |
-     v                                              Obtain a new   |
-                                                    access token   |
-The application keys                                to upoload at  |
-are not valid anymore                               the ACE RS     |
+     v                                               Obtain a new  |
+                                                     access token  |
+The application keys                                 to upload at  |
+are not valid anymore                                the ACE RS    |
                                                                    |
      |                                                    |        |
      |                                                    |        |
@@ -547,15 +547,15 @@ A very specific use of LAKE described in {{Section D.5 of RFC9528}} allows P to 
 
 # Side Processing of Incoming LAKE Messages # {#sec-message-side-processing}
 
-This section describes an approach that LAKE peers can use upon receiving LAKE messages, in order to fetch/validate authentication credentials and to process EAD items.
+This section describes a possible approach that LAKE peers can use upon receiving LAKE messages, in order to fetch/validate authentication credentials and to process EAD items.
 
 The transport mechanism provided by LAKE for conveying EAD items is defined in {{Section 3.8 of RFC9528}}. In particular, a LAKE message_x can include one dedicated EAD field EAD_x, for x = 1, 2, 3, or 4. In turn, an EAD field can include one or more EAD items.
 
 As per {{Section 9.1 of RFC9528}}, specifications defining those EAD items have to set the ground for "agreeing on the surrounding context and the meaning of the information passed to and from the application".
 
-The approach described in this section aims to help implementers navigate the surrounding context mentioned above, irrespective of the specific EAD items conveyed in the LAKE messages. In particular, the described approach takes into account the following points:
+The approach described in this section aims to help implementers navigate the surrounding context mentioned above, irrespective of the specific EAD items conveyed in the LAKE messages. In particular, the described approach takes into account the following two points:
 
-* The fetching and validation of the authentication credential associated with the other peer relies on ID_CRED_I in LAKE message_2, or on ID_CRED_R in LAKE message_3, or on the value of an EAD item. When this occurs upon receiving LAKE message_2 or message_3, the decryption of the LAKE message has to be completed first.
+* Fetching and validating the authentication credential associated with the other peer rely on ID_CRED_I in LAKE message_2, or on ID_CRED_R in LAKE message_3, or on the value of an EAD item. When this occurs upon receiving LAKE message_2 or message_3, the decryption of the LAKE message has to be completed first.
 
   Validating the authentication credential or assessing whether it is trusted might depend on using the value of an EAD item, which in turn has to be validated first.
 
@@ -567,7 +567,11 @@ In order to conveniently handle such processing, the application can prepare in 
 
 In particular, the application provides LAKE with the SPO before starting a LAKE execution, during which LAKE will temporarily transfer control to the SPO at the right point in time, in order to perform the required side-processing of an incoming LAKE message.
 
-Furthermore, the application has to instruct the SPO about:
+The following subsections provide a high-level description of the SPO in terms of expected features and services. Building on that, {{sec-example-spo}} provides a detailed example of how the SPO can be implemented.
+
+## Instructing the Side-Processor Object # {#sec-instructing-spo}
+
+From a high-level perspective, the application instructs the SPO about:
 
 * How to prepare any EAD item such that: it has to be included in the EAD field of an outgoing LAKE message, potentially together with other EAD items; and it is independent of the processing of other EAD items included in incoming LAKE messages. This includes, for instance, the preparation of padding EAD items (see {{Section 3.8.1 of RFC9528}}).
 
@@ -575,7 +579,21 @@ Furthermore, the application has to instruct the SPO about:
 
   Throughout the LAKE session, the SPO keeps such a list of expected EAD items up-to-date. This takes into account, for instance, external security applications that have been run integrated in the LAKE session, the current status of the session, as well as the LAKE messages that have been exchanged during the session and the outcome of their processing.
 
-At the right point in time during the processing of an incoming LAKE message M at the peer P, LAKE invokes the SPO and provides it with the following input:
+## Invoking the Side-Processor Object # {#sec-invoking-spo}
+
+At the right point in time during the processing of an incoming LAKE message M at the peer P, LAKE invokes the SPO. In particular:
+
+* If M is LAKE message_1, LAKE invokes the SPO after the Responder peer has successfully decoded M and accepted the selected cipher suite.
+
+* If M is LAKE message_2 or message_3, LAKE invokes the SPO:
+
+  * Right after M has been decrypted and before starting its verification, i.e., before verifying the Signature_or_MAC field of M; and
+
+  * Right after M has been successfully verified, i.e., after having verified the Signature_or_MAC field of M.
+
+* If M is LAKE message_4, LAKE invokes the SPO after the Initiator peer has successfully decrypted M.
+
+When invoking the SPO for processing message M, LAKE provides the SPO with the following input:
 
 * When M is LAKE message_2 or message_3, an indication of whether this invocation is happening before or after the message verification (i.e., before or after having verified the Signature_or_MAC field).
 
@@ -587,37 +605,250 @@ At the right point in time during the processing of an incoming LAKE message M a
 
 * The EAD items included in M.
 
-   - Note that LAKE might do some preliminary work on M before invoking the SPO, in order to provide the SPO only with actually relevant EAD items. This requires the application to additionally provide LAKE with the ead_labels of the EAD items that the peer P recognizes (see {{Section 3.8 of RFC9528}}).
+   - Note that LAKE could do some preliminary work on M before invoking the SPO, in order to provide the SPO only with actually relevant EAD items. This requires the application to additionally provide LAKE with the ead_labels of the EAD items that the peer P recognizes (see {{Section 3.8 of RFC9528}}).
 
      With such information available, LAKE can early abort the current session if M includes any EAD item which is both critical and not recognized by the peer P.
 
-     If no such EAD items are found, LAKE can remove any padding EAD item (see {{Section 3.8.1 of RFC9528}}), as well as any EAD item which is neither critical nor recognized (since the SPO is going to ignore it anyway). This results in LAKE providing the SPO only with EAD items that will be recognized and that require actual processing.
+     If no such EAD items are found, LAKE can remove any padding EAD item (see {{Section 3.8.1 of RFC9528}}) and any EAD item which is neither critical nor recognized (since the SPO is going to ignore it anyway). This results in LAKE providing the SPO only with EAD items that will be recognized and that require actual processing.
 
    - Note that, after having processed the EAD items, the SPO might actually need to store them throughout the whole LAKE execution, e.g., in order to refer to them also when processing later LAKE messages in the current LAKE session.
 
-The SPO performs the following tasks on an incoming LAKE message M:
+The SPO performs the following tasks on the incoming message M:
 
 * The SPO checks whether M does not include an EAD item whose presence was expected, based on the related list maintained throughout the LAKE session. If such an EAD item is absent, the SPO can come to an early determination about whether and how to proceed with the processing of M.
 
   In particular, if an EAD item is absent although its presence was strictly required, then the SPO can early abort the LAKE session, thereby avoiding potentially costly operations (e.g., the retrieval and validation of the authentication credential associated with the other peer).
 
-* The SPO fetches and/or validates the authentication credential CRED associated with the other peer, based on a dedicated EAD item of M or on the ID_CRED field of M (for LAKE message_2 or message_3).
+* The SPO fetches and/or validates the authentication credential CRED associated with the other peer, based on a dedicated EAD item of M or on the ID_CRED field of M (for LAKE message_2 or message_3). Furthermore, the SPO assesses whether CRED can be trusted, in accordance with the trust policy used (see {{sec-trust-models}}).
+
+  {{sec-consistency-checks-auth-creds}} describes special handling of incoming LAKE messages, as to consistency checks concerning authentication credentials in particular situations.
 
 * The SPO processes the EAD items conveyed in the EAD field of M.
 
 * The SPO stores the results of the performed operations and makes such results available to the application.
 
-* When the SPO has completed its side processing and transfers control back to LAKE, the SPO provides LAKE with the produced EAD items to include in the EAD field of the next outgoing LAKE message. The production of such EAD items can be triggered, e.g., by:
+When the SPO has completed its side processing and transfers control back to LAKE, the SPO provides LAKE with the produced EAD items to include in the EAD field of the next outgoing LAKE message. The production of such EAD items can be triggered, for example, by:
 
-   * The consumption of EAD items included in M.
+* The completed consumption of EAD items that were included in M.
 
-   * The execution of instructions that the SPO has received from the application, concerning EAD items to produce irrespective of other EAD items included in M.
+* The completed execution of instructions that the SPO received from the application, concerning EAD items to produce irrespective of other EAD items included in M.
 
-In the following, {{sec-message-side-processing-m1}} to {{sec-message-side-processing-m2-m3}} describe more in detail the actions performed by the SPO on the different incoming LAKE messages. Then, {{sec-consistency-checks-auth-creds}} describes further special handling of incoming LAKE messages, as to consistency checks concerning authentication credentials in particular situations.
+The flowchart in {{fig-flowchart-spo-high-level}} shows the high-level interactions between the core LAKE processing and the SPO, with particular reference to an incoming LAKE message_2 or message_3.
+
+~~~~~~~~~~~ aasvg
+Incoming
+LAKE message_X
+(X = 2 or 3)
+
+      |
+      |
++-----|---------------------------------------------------------------+
+|     |                                          Core LAKE processing |
+|     v                                                               |
+| +-----------+    +----------------+            +----------------+   |
+| | Decode    |--->| Retrieve the   |            | Advance the    |   |
+| | message_X |    | protocol state |            | protocol state |   |
+| +-----------+    +----------------+            +----------------+   |
+|                    |                             ^                  |
+|                    |                             |                  |
+|                    v                             |                  |
+|       +--------------+   +--------------------+  |                  |
+|       | Decrypt      |   | Verify             |  |                  |
+|       | CIPHERTEXT_X |   | Signature_or_MAC_X |  |                  |
+|       +--------------+   +--------------------+  |                  |
+|                |           ^           |         |                  |
+|                |           |           |         |                  |
++----------------|-----------|-----------|---------|------------------+
+                 |           |           |         |
+                 |           |           |         | ................
+          Divert |      Get  |    Divert |    Get  | : EAD items    :
+                 |      back |           |    back | : for the next :
+                 |           |           |         | : LAKE message :
+                 |           |           |         | :..............:
+                 |           |           |         |
++----------------|-----------|-----------|---------|------------------+
+|                |           |           |         |                  |
+|                v           |           v         |                  |
+| +---------------------------+     +-----------------------------+   |
+| | a) Check whether expected |     | Processing of               |   |
+| |    EAD items are absent   |     | post-verification EAD items |   |
+| | b) Retrieval and          |     +-----------------------o-----+   |
+| |    validation of CRED_X;  |                             |         |
+| | c) Trust assessment       o-------- Shared state -------o         |
+| |    of CRED_X;             |                                       |
+| | d) Processing of          |        ......................         |
+| |    pre-verification       |        : Instructions about :         |
+| |    EAD items              |        : EAD items to       :         |
+| |                           |        : unconditionally    :         |
+| | - (b) and (d) might have  |        : produce for the    :         |
+| |   to occur in parallel    |        : next LAKE message  :         |
+| | - (c) depends on the      |        :....................:         |
+| |   trust policy used       |                                       |
+| +---------------------------+                                       |
+|                                         Side-Processor Object (SPO) |
++---------------------------------------------------------------------+
+~~~~~~~~~~~
+{: #fig-flowchart-spo-high-level title="High-Level Interaction Between the Core LAKE Processing and the Side-Processor Object (SPO), for Incoming LAKE message_2 and message_3." artwork-align="center"}
+
+## After a LAKE Session # {#sec-after-lake-spo}
 
 After completing the LAKE execution, control is transferred back to the application. In particular, the application is provided with the overall outcome of the LAKE execution (i.e., successful completion or failure), together with possible specific results produced by the SPO throughout the LAKE execution (e.g., due to the processing of EAD items).
 
 After that, the application might need to perform follow-up actions, depending on the outcome of the LAKE execution. For example, the SPO might have preliminarily filled application-level data structures, as a result of processing EAD items. In the case of a successful LAKE execution, the application might need to finalize such data structures. Instead, in the case of an unsuccessful LAKE execution, the application might need to clean-up or amend such data structures, or even roll back what the SPO did, unless the SPO already performed such actions before control was transferred back to the application.
+
+## Consistency Checks of Authentication Credentials from ID\_CRED and EAD Items ## {#sec-consistency-checks-auth-creds}
+
+Typically, a LAKE peer specifies its associated authentication credential (by value or by reference) only in the ID_CRED field of LAKE message_2 (if acting as Responder) or LAKE message_3 (if acting as Initiator).
+
+In addition to that, there may be cases where a LAKE peer provides the authentication credential also in an EAD item. In particular, such an EAD item can specify a cryptographically protected "envelope" (by value or by reference), which in turn specifies the authentication credential (by value or by reference).
+
+A case in point is the profile of the ACE framework defined in {{I-D.ietf-ace-edhoc-oscore-profile}}, where the envelope in question is an access token issued to the ACE client. In such a case, the ACE client can rely on an EAD item specifying the access token, which in turn specifies the authentication credential (by value or by reference) associated with the client.
+
+During a LAKE session, a LAKE peer P1 might therefore receive the authentication credential CRED associated with the other LAKE peer P2 as specified by two items:
+
+* ITEM_A: the ID_CRED field specifying CRED. If P2 acts as the Initiator (Responder), then ITEM_A is the ID_CRED_I (ID_CRED_R) field.
+
+* ITEM_B: the envelope specified in an EAD item within a LAKE message sent by P2.
+
+As part of the process where P1 validates CRED during the LAKE session, P1 must check that both ITEM_A and ITEM_B specify the same authentication credential, and it must abort the LAKE session if such a consistency check fails.
+
+The consistency check is successful only if one of the following conditions holds, and it fails otherwise:
+
+* If both ITEM_A and ITEM_B specify an authentication credential by value, then both ITEM_A and ITEM_B specify the same value.
+
+* If one among ITEM_A and ITEM_B specifies an authentication credential by value VALUE while the other one specifies an authentication credential by reference REF, then REF is a valid reference for VALUE.
+
+* If ITEM_A specifies an authentication credential by reference REF_A and ITEM_B specifies an authentication credential by reference REF_B, then REF_A or REF_B allows to retrieving the value VALUE of an authentication credential from a local or remote storage, such that both REF_A and REF_B are a valid reference for VALUE.
+
+The peer P1 performs the consistency check above as soon as it has both ITEM_A and ITEM_B available. If P1 acts as the Responder, that is the case when processing the incoming LAKE message_3. If P1 acts as the Initiator, that is the case when processing the incoming LAKE message_2 or message_4, i.e., whichever of the two messages includes ITEM_B in an EAD item of its EAD field.
+
+# Using LAKE over CoAP with Block-Wise # {#sec-block-wise}
+
+{{Section A.2 of RFC9528}} specifies how to transfer LAKE over CoAP {{RFC7252}}. In such a case, LAKE messages (potentially prepended by a LAKE connection identifier) are transported in the payload of CoAP requests and responses, according to the LAKE forward message flow or the LAKE reverse message flow. Furthermore, {{Section A.1 of RFC9528}} specifies how to derive an OSCORE Security Context {{RFC8613}} from a LAKE session.
+
+Building on that, {{RFC9668}} further details the use of LAKE with CoAP and OSCORE. In particular, it specifies an optimization approach for the LAKE forward message flow that combines the LAKE execution with the first subsequent OSCORE transaction. This is achieved by means of a "LAKE + OSCORE request" (denoted as "EDHOC + OSCORE request" in {{RFC9668}}), i.e., a single CoAP request message that conveys both LAKE message_3 of the ongoing LAKE session and the OSCORE-protected application data, where the latter is protected with the OSCORE Security Context derived from that LAKE session.
+
+This section provides guidelines and recommendations for CoAP endpoints supporting Block-wise transfers for CoAP {{RFC7959}} and specifically for CoAP clients supporting the LAKE + OSCORE request defined in {{RFC9668}}. The use of Block-wise transfers can be desirable, e.g., for LAKE messages that include a large ID_CRED_I or ID_CRED_R, or that include a large EAD field.
+
+The following especially considers a CoAP endpoint that may perform only "inner" Block-wise, but not "outer" Block-wise operations (see {{Section 4.1.3.4 of RFC8613}}). That is, the considered CoAP endpoint does not (further) split an OSCORE-protected message like an intermediary (e.g., a proxy) might do. This is the typical case for CoAP endpoints using OSCORE (see {{Section 4.1.3.4 of RFC8613}}).
+
+## Notation
+
+The rest of this section refers to the following notation:
+
+* SIZE_BODY: the size in bytes of the data to be transmitted with CoAP. When Block-wise is used, such data is referred to as the "body" to be fragmented into blocks, each of which to be transmitted in one CoAP message.
+
+  With the exception pertaining to LAKE message_3 described in the following paragraph, the considered body can in general be a LAKE message, potentially prepended by a LAKE connection identifier encoded as per {{Section 3.3 of RFC9528}}.
+
+  When specifically using the LAKE + OSCORE request, the considered body is the application data to be protected with OSCORE, (whose first block is) to be sent together with LAKE message_3 as part of the LAKE + OSCORE request.
+
+* SIZE_LAKE_M3: the size in bytes of LAKE message_3, if this is sent as part of the LAKE + OSCORE request. Otherwise, the size in bytes of LAKE message_3, plus, if included, the size in bytes of a prepended LAKE connection identifier encoded as per {{Section 3.3 of RFC9528}}.
+
+* SIZE_MTU: the maximum amount of transmittable bytes before having to use Block-wise. This is, for example, 64 KiB as maximum datagram size when using UDP, or 1280 bytes as the maximum size for an IPv6 MTU.
+
+* SIZE_OH: the size in bytes of the overall overhead due to all the communication layers underlying the application. This takes into account also the overhead introduced by the OSCORE processing.
+
+* LIMIT = (SIZE_MTU - SIZE_OH): the practical maximum size in bytes to be considered by the application before using Block-wise.
+
+* SIZE_BLOCK: the size in bytes of inner blocks.
+
+* ceil(): the ceiling function.
+
+## Pre-requirements for the LAKE + OSCORE Request # {#sec-block-wise-pre-req}
+
+Before sending a LAKE + OSCORE request, a CoAP client has to perform the following checks. Note that, while the CoAP client is able to fragment the plain application data before any OSCORE processing, it cannot fragment the LAKE + OSCORE request or the LAKE message_3 added therein.
+
+* If inner Block-wise is not used, hence SIZE_BODY <= LIMIT, the CoAP client must verify whether all the following conditions hold:
+
+  - COND1: SIZE_LAKE_M3 <= LIMIT
+
+  - COND2: (SIZE_BODY + SIZE_LAKE_M3) <= LIMIT
+
+* If inner Block-wise is used, the CoAP client must verify whether all the following conditions hold:
+
+  - COND3: SIZE_LAKE_M3 <= LIMIT
+
+  - COND4: (SIZE_BLOCK + SIZE_LAKE_M3) <= LIMIT
+
+In either case, if not all the corresponding conditions hold, the CoAP client should not send the LAKE + OSCORE request. Instead, the CoAP client can continue by switching to the purely sequential, original LAKE workflow (see {{Section A.2.1 of RFC9528}}). That is, the CoAP client first sends LAKE message_3 prepended by the LAKE Connection Identifier C_R encoded as per {{Section 3.3 of RFC9528}} and then sends the OSCORE-protected CoAP request once the LAKE execution is completed.
+
+## Effectively Using Block-Wise
+
+In order to avoid further fragmentation at lower layers when sending a LAKE + OSCORE request, the CoAP client has to use inner Block-wise if _any_ of the following conditions holds:
+
+* COND5: SIZE_BODY > LIMIT
+
+* COND6: (SIZE_BODY + SIZE_LAKE_M3) > LIMIT
+
+In particular, consistent with {{sec-block-wise-pre-req}}, the SIZE_BLOCK used has to be such that the following condition also holds:
+
+* COND7: (SIZE_BLOCK + SIZE_LAKE_M3) <= LIMIT
+
+Note that the CoAP client might still use Block-wise due to reasons different from exceeding the size indicated by LIMIT.
+
+The following shows the number of round trips for completing both the LAKE execution and the first OSCORE-protected exchange, under the assumption that the exchange of LAKE message_1 and LAKE message_2 does not result in using Block-wise.
+
+If _both_ the conditions COND5 and COND6 hold, the use of Block-wise results in the following number of round trips experienced by the CoAP client.
+
+* If the original LAKE execution workflow is used (see {{Section A.2.1 of RFC9528}}), the number of round trips RT_ORIG is equal to 1 + ceil(SIZE_LAKE_M3 / SIZE_BLOCK) + ceil(SIZE_BODY / SIZE_BLOCK).
+
+* If the optimized LAKE execution workflow is used (see {{Section 3 of RFC9668}}), the number of round trips RT_COMB is equal to 1 + ceil(SIZE_BODY / SIZE_BLOCK).
+
+It follows that RT_COMB < RT_ORIG, i.e., the optimized LAKE execution workflow always yields a lower number of round trips.
+
+Instead, the convenience of using the optimized LAKE execution workflow becomes questionable if _both_ the following conditions hold:
+
+* COND8: SIZE_BODY <= LIMIT
+
+* COND9: (SIZE_BODY + SIZE_LAKE_M3) > LIMIT
+
+That is, since SIZE_BODY <= LIMIT, using Block-wise would not be required when using the original LAKE execution workflow, provided that SIZE_LAKE_M3 <= LIMIT still holds.
+
+At the same time, using the combined workflow is in itself what actually triggers the use of Block-wise, since (SIZE_BODY + SIZE_LAKE_M3) > LIMIT.
+
+Therefore, the following round trips are experienced by the CoAP client.
+
+*  The original LAKE execution workflow run without using Block-wise results in a number of round trips RT_ORIG equal to 3.
+
+*  The optimized LAKE execution workflow run using Block-wise results in a number of round trips RT_COMB equal to 1 + ceil(SIZE_BODY / SIZE_BLOCK).
+
+It follows that RT_COMB >= RT_ORIG, i.e., the optimized LAKE execution workflow might still be not worse than the original LAKE execution workflow in terms of round trips. This is the case only if the SIZE_BLOCK used is such that ceil(SIZE_BODY / SIZE_BLOCK) is equal to 2, i.e., the plain application data is fragmented into only 2 inner blocks, and thus the LAKE + OSCORE request is followed by only one more request message transporting the last block of the body.
+
+However, even in such a case, there would be no advantage in terms of round trips compared to the original workflow, while still requiring the CoAP client and the CoAP server to perform the processing due to using the LAKE + OSCORE request and Block-wise transferring.
+
+Therefore, if both the conditions COND8 and COND9 hold, the CoAP client should not send the LAKE + OSCORE request. Instead, the CoAP client should continue by switching to the original LAKE execution workflow. That is, the CoAP client first sends LAKE message_3 prepended by the LAKE Connection Identifier C_R encoded as per {{Section 3.3 of RFC9528}} and then sends the OSCORE-protected CoAP request once the LAKE execution is completed.
+
+# Operational Considerations
+
+There are no new operations or manageability requirements introduced by this document, which provides considerations for implementers of the LAKE protocol and does not update the protocol or introduce extensions thereof.
+
+# Security Considerations # {#sec-security-considerations}
+
+This document provides considerations for implementations of the LAKE protocol. The security considerations compiled in {{Section 9 of RFC9528}} and in {{Section 7 of RFC9668}} apply. The compliance requirements for implementations that are listed in {{Section 8 of RFC9528}} also apply.
+
+It is foreseeable that the LAKE protocol will be extended (e.g., in terms of new cipher suites, new methods, and new types of authentication credentials) and that external security applications will be integrated into LAKE by embedding the transport of their data in LAKE EAD items. For implementations that support such extensions and external applications, the related security considerations and compliance requirements also apply.
+
+## Assessing the Correctness of Implementations
+
+Tools relying on fuzz testing such as EDHOC-Fuzzer {{EDHOC-Fuzzer}} can help assess the correctness of implementations of the LAKE protocol and of external security applications integrated into LAKE.
+
+Such tools help finding and amending implementation errors especially related to the following points:
+
+* Non-conformance with the protocol specification (e.g., unintended deviations in performing the protocol steps), which can be a potential source of security vulnerabilities in addition to performance deficiencies.
+
+* Presence of inappropriate states and state transitions in the modeling of the LAKE execution, e.g., states that are impossible to reach and traverse or that are not part of the protocol specification (which is a particular case of non-conformance).
+
+  These states and transitions should be amended or removed, in order to reduce the memory footprint and code complexity and to simplify the implementation, thus reducing the risks of bugs and related security vulnerabilities.
+
+# IANA Considerations
+
+This document has no actions for IANA.
+
+--- back
+
+# Example of Side-Processor Object # {#sec-example-spo}
+
+This appendix builds on {{sec-message-side-processing}} and provides a detailed example of how the SPO can be implemented to perform the side processing of incoming LAKE messages.
 
 ## LAKE message_1 ## {#sec-message-side-processing-m1}
 
@@ -649,7 +880,7 @@ During the processing of a message_X, LAKE invokes the SPO two times:
 
 * Right after message_X has been successfully verified. Following this invocation, the SPO performs the actions described in {{sec-post-verif}}.
 
-The flowcharts in {{sec-m2-m3-flowcharts}} show the high-level interaction between the core LAKE processing and the SPO, as well as the different steps taken for processing an incoming message_X.
+The flowchart in {{sec-m2-m3-flowchart}} shows the different steps taken for processing an incoming message_X.
 
 ### Pre-Verification Side Processing # {#sec-pre-verif}
 
@@ -727,64 +958,7 @@ Once all such EAD items have been processed, the SPO transfers control back to L
 
 Then, LAKE resumes its execution and advances its protocol state.
 
-### Flowcharts # {#sec-m2-m3-flowcharts}
-
-The flowchart in {{fig-flowchart-spo-high-level}} shows the high-level interaction between the core LAKE processing and the SPO, with particular reference to an incoming LAKE message_2 or message_3.
-
-~~~~~~~~~~~ aasvg
-Incoming
-LAKE message_X
-(X = 2 or 3)
-
-      |
-      |
-+-----|---------------------------------------------------------------+
-|     |                                          Core LAKE processing |
-|     v                                                               |
-| +-----------+    +----------------+            +----------------+   |
-| | Decode    |--->| Retrieve the   |            | Advance the    |   |
-| | message_X |    | protocol state |            | protocol state |   |
-| +-----------+    +----------------+            +----------------+   |
-|                    |                             ^                  |
-|                    |                             |                  |
-|                    v                             |                  |
-|       +--------------+   +--------------------+  |                  |
-|       | Decrypt      |   | Verify             |  |                  |
-|       | CIPHERTEXT_X |   | Signature_or_MAC_X |  |                  |
-|       +--------------+   +--------------------+  |                  |
-|                |           ^           |         |                  |
-|                |           |           |         |                  |
-+----------------|-----------|-----------|---------|------------------+
-                 |           |           |         |
-                 |           |           |         | ................
-          Divert |      Get  |    Divert |    Get  | : EAD items    :
-                 |      back |           |    back | : for the next :
-                 |           |           |         | : LAKE message :
-                 |           |           |         | :..............:
-                 |           |           |         |
-+----------------|-----------|-----------|---------|------------------+
-|                |           |           |         |                  |
-|                v           |           v         |                  |
-| +---------------------------+     +-----------------------------+   |
-| | a) Check whether expected |     | Processing of               |   |
-| |    EAD items are absent   |     | post-verification EAD items |   |
-| | b) Retrieval and          |     +-----------------------o-----+   |
-| |    validation of CRED_X;  |                             |         |
-| | c) Trust assessment       o-------- Shared state -------o         |
-| |    of CRED_X;             |                                       |
-| | d) Processing of          |        ......................         |
-| |    pre-verification       |        : Instructions about :         |
-| |    EAD items              |        : EAD items to       :         |
-| |                           |        : unconditionally    :         |
-| | - (b) and (d) might have  |        : produce for the    :         |
-| |   to occur in parallel    |        : next LAKE message  :         |
-| | - (c) depends on the      |        :....................:         |
-| |   trust policy used       |                                       |
-| +---------------------------+                                       |
-|                                         Side-Processor Object (SPO) |
-+---------------------------------------------------------------------+
-~~~~~~~~~~~
-{: #fig-flowchart-spo-high-level title="High-Level Interaction Between the Core LAKE Processing and the Side-Processor Object (SPO), for Incoming LAKE message_2 and message_3." artwork-align="center"}
+### Flowchart # {#sec-m2-m3-flowchart}
 
 The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken for processing an incoming LAKE message_2 and message_3.
 
@@ -950,157 +1124,7 @@ The flowchart in {{fig-flowchart-spo-low-level}} shows the different steps taken
 ~~~~~~~~~~~
 {: #fig-flowchart-spo-low-level title="Processing Steps for Incoming LAKE message_2 and message_3." artwork-align="center"}
 
-## Consistency Checks of Authentication Credentials from ID\_CRED and EAD Items ## {#sec-consistency-checks-auth-creds}
-
-Typically, a LAKE peer specifies its associated authentication credential (by value or by reference) only in the ID_CRED field of LAKE message_2 (if acting as Responder) or LAKE message_3 (if acting as Initiator).
-
-In addition to that, there may be cases where a LAKE peer provides the authentication credential also in an EAD item. In particular, such an EAD item can specify a cryptographically protected "envelope" (by value or by reference), which in turn specifies the authentication credential (by value or by reference).
-
-A case in point is the profile of the ACE framework defined in {{I-D.ietf-ace-edhoc-oscore-profile}}, where the envelope in question is an access token issued to the ACE client. In such a case, the ACE client can rely on an EAD item specifying the access token, which in turn specifies the authentication credential (by value or by reference) associated with the client.
-
-During a LAKE session, a LAKE peer P1 might therefore receive the authentication credential CRED associated with the other LAKE peer P2 as specified by two items:
-
-* ITEM_A: the ID_CRED field specifying CRED. If P2 acts as the Initiator (Responder), then ITEM_A is the ID_CRED_I (ID_CRED_R) field.
-
-* ITEM_B: the envelope specified in an EAD item within a LAKE message sent by P2.
-
-As part of the process where P1 validates CRED during the LAKE session, P1 must check that both ITEM_A and ITEM_B specify the same authentication credential, and it must abort the LAKE session if such a consistency check fails.
-
-The consistency check is successful only if one of the following conditions holds, and it fails otherwise:
-
-* If both ITEM_A and ITEM_B specify an authentication credential by value, then both ITEM_A and ITEM_B specify the same value.
-
-* If one among ITEM_A and ITEM_B specifies an authentication credential by value VALUE while the other one specifies an authentication credential by reference REF, then REF is a valid reference for VALUE.
-
-* If ITEM_A specifies an authentication credential by reference REF_A and ITEM_B specifies an authentication credential by reference REF_B, then REF_A or REF_B allows to retrieving the value VALUE of an authentication credential from a local or remote storage, such that both REF_A and REF_B are a valid reference for VALUE.
-
-The peer P1 performs the consistency check above as soon as it has both ITEM_A and ITEM_B available. If P1 acts as the Responder, that is the case when processing the incoming LAKE message_3. If P1 acts as the Initiator, that is the case when processing the incoming LAKE message_2 or message_4, i.e., whichever of the two messages includes ITEM_B in an EAD item of its EAD field.
-
-# Using LAKE over CoAP with Block-Wise # {#sec-block-wise}
-
-{{Section A.2 of RFC9528}} specifies how to transfer LAKE over CoAP {{RFC7252}}. In such a case, LAKE messages (potentially prepended by a LAKE connection identifier) are transported in the payload of CoAP requests and responses, according to the LAKE forward message flow or the LAKE reverse message flow. Furthermore, {{Section A.1 of RFC9528}} specifies how to derive an OSCORE Security Context {{RFC8613}} from a LAKE session.
-
-Building on that, {{RFC9668}} further details the use of LAKE with CoAP and OSCORE. In particular, it specifies an optimization approach for the LAKE forward message flow that combines the LAKE execution with the first subsequent OSCORE transaction. This is achieved by means of a "LAKE + OSCORE request" (denoted as "EDHOC + OSCORE request" in {{RFC9668}}), i.e., a single CoAP request message that conveys both LAKE message_3 of the ongoing LAKE session and the OSCORE-protected application data, where the latter is protected with the OSCORE Security Context derived from that LAKE session.
-
-This section provides guidelines and recommendations for CoAP endpoints supporting Block-wise transfers for CoAP {{RFC7959}} and specifically for CoAP clients supporting the LAKE + OSCORE request defined in {{RFC9668}}. The use of Block-wise transfers can be desirable, e.g., for LAKE messages that include a large ID_CRED_I or ID_CRED_R, or that include a large EAD field.
-
-The following especially considers a CoAP endpoint that may perform only "inner" Block-wise, but not "outer" Block-wise operations (see {{Section 4.1.3.4 of RFC8613}}). That is, the considered CoAP endpoint does not (further) split an OSCORE-protected message like an intermediary (e.g., a proxy) might do. This is the typical case for CoAP endpoints using OSCORE (see {{Section 4.1.3.4 of RFC8613}}).
-
-## Notation
-
-The rest of this section refers to the following notation:
-
-* SIZE_BODY: the size in bytes of the data to be transmitted with CoAP. When Block-wise is used, such data is referred to as the "body" to be fragmented into blocks, each of which to be transmitted in one CoAP message.
-
-  With the exception pertaining to LAKE message_3 described in the following paragraph, the considered body can in general be a LAKE message, potentially prepended by a LAKE connection identifier encoded as per {{Section 3.3 of RFC9528}}.
-
-  When specifically using the LAKE + OSCORE request, the considered body is the application data to be protected with OSCORE, (whose first block is) to be sent together with LAKE message_3 as part of the LAKE + OSCORE request.
-
-* SIZE_LAKE_M3: the size in bytes of LAKE message_3, if this is sent as part of the LAKE + OSCORE request. Otherwise, the size in bytes of LAKE message_3, plus, if included, the size in bytes of a prepended LAKE connection identifier encoded as per {{Section 3.3 of RFC9528}}.
-
-* SIZE_MTU: the maximum amount of transmittable bytes before having to use Block-wise. This is, for example, 64 KiB as maximum datagram size when using UDP, or 1280 bytes as the maximum size for an IPv6 MTU.
-
-* SIZE_OH: the size in bytes of the overall overhead due to all the communication layers underlying the application. This takes into account also the overhead introduced by the OSCORE processing.
-
-* LIMIT = (SIZE_MTU - SIZE_OH): the practical maximum size in bytes to be considered by the application before using Block-wise.
-
-* SIZE_BLOCK: the size in bytes of inner blocks.
-
-* ceil(): the ceiling function.
-
-## Pre-requirements for the LAKE + OSCORE Request # {#sec-block-wise-pre-req}
-
-Before sending a LAKE + OSCORE request, a CoAP client has to perform the following checks. Note that, while the CoAP client is able to fragment the plain application data before any OSCORE processing, it cannot fragment the LAKE + OSCORE request or the LAKE message_3 added therein.
-
-* If inner Block-wise is not used, hence SIZE_BODY <= LIMIT, the CoAP client must verify whether all the following conditions hold:
-
-  - COND1: SIZE_LAKE_M3 <= LIMIT
-
-  - COND2: (SIZE_BODY + SIZE_LAKE_M3) <= LIMIT
-
-* If inner Block-wise is used, the CoAP client must verify whether all the following conditions hold:
-
-  - COND3: SIZE_LAKE_M3 <= LIMIT
-
-  - COND4: (SIZE_BLOCK + SIZE_LAKE_M3) <= LIMIT
-
-In either case, if not all the corresponding conditions hold, the CoAP client should not send the LAKE + OSCORE request. Instead, the CoAP client can continue by switching to the purely sequential, original LAKE workflow (see {{Section A.2.1 of RFC9528}}). That is, the CoAP client first sends LAKE message_3 prepended by the LAKE Connection Identifier C_R encoded as per {{Section 3.3 of RFC9528}} and then sends the OSCORE-protected CoAP request once the LAKE execution is completed.
-
-## Effectively Using Block-Wise
-
-In order to avoid further fragmentation at lower layers when sending a LAKE + OSCORE request, the CoAP client has to use inner Block-wise if _any_ of the following conditions holds:
-
-* COND5: SIZE_BODY > LIMIT
-
-* COND6: (SIZE_BODY + SIZE_LAKE_M3) > LIMIT
-
-In particular, consistent with {{sec-block-wise-pre-req}}, the SIZE_BLOCK used has to be such that the following condition also holds:
-
-* COND7: (SIZE_BLOCK + SIZE_LAKE_M3) <= LIMIT
-
-Note that the CoAP client might still use Block-wise due to reasons different from exceeding the size indicated by LIMIT.
-
-The following shows the number of round trips for completing both the LAKE execution and the first OSCORE-protected exchange, under the assumption that the exchange of LAKE message_1 and LAKE message_2 does not result in using Block-wise.
-
-If _both_ the conditions COND5 and COND6 hold, the use of Block-wise results in the following number of round trips experienced by the CoAP client.
-
-* If the original LAKE execution workflow is used (see {{Section A.2.1 of RFC9528}}), the number of round trips RT_ORIG is equal to 1 + ceil(SIZE_LAKE_M3 / SIZE_BLOCK) + ceil(SIZE_BODY / SIZE_BLOCK).
-
-* If the optimized LAKE execution workflow is used (see {{Section 3 of RFC9668}}), the number of round trips RT_COMB is equal to 1 + ceil(SIZE_BODY / SIZE_BLOCK).
-
-It follows that RT_COMB < RT_ORIG, i.e., the optimized LAKE execution workflow always yields a lower number of round trips.
-
-Instead, the convenience of using the optimized LAKE execution workflow becomes questionable if _both_ the following conditions hold:
-
-* COND8: SIZE_BODY <= LIMIT
-
-* COND9: (SIZE_BODY + SIZE_LAKE_M3) > LIMIT
-
-That is, since SIZE_BODY <= LIMIT, using Block-wise would not be required when using the original LAKE execution workflow, provided that SIZE_LAKE_M3 <= LIMIT still holds.
-
-At the same time, using the combined workflow is in itself what actually triggers the use of Block-wise, since (SIZE_BODY + SIZE_LAKE_M3) > LIMIT.
-
-Therefore, the following round trips are experienced by the CoAP client.
-
-*  The original LAKE execution workflow run without using Block-wise results in a number of round trips RT_ORIG equal to 3.
-
-*  The optimized LAKE execution workflow run using Block-wise results in a number of round trips RT_COMB equal to 1 + ceil(SIZE_BODY / SIZE_BLOCK).
-
-It follows that RT_COMB >= RT_ORIG, i.e., the optimized LAKE execution workflow might still be not worse than the original LAKE execution workflow in terms of round trips. This is the case only if the SIZE_BLOCK used is such that ceil(SIZE_BODY / SIZE_BLOCK) is equal to 2, i.e., the plain application data is fragmented into only 2 inner blocks, and thus the LAKE + OSCORE request is followed by only one more request message transporting the last block of the body.
-
-However, even in such a case, there would be no advantage in terms of round trips compared to the original workflow, while still requiring the CoAP client and the CoAP server to perform the processing due to using the LAKE + OSCORE request and Block-wise transferring.
-
-Therefore, if both the conditions COND8 and COND9 hold, the CoAP client should not send the LAKE + OSCORE request. Instead, the CoAP client should continue by switching to the original LAKE execution workflow. That is, the CoAP client first sends LAKE message_3 prepended by the LAKE Connection Identifier C_R encoded as per {{Section 3.3 of RFC9528}} and then sends the OSCORE-protected CoAP request once the LAKE execution is completed.
-
-# Operational Considerations
-
-There are no new operations or manageability requirements introduced by this document, which provides considerations for implementers of the LAKE protocol and does not update the protocol or introduce extensions thereof.
-
-# Security Considerations # {#sec-security-considerations}
-
-This document provides considerations for implementations of the LAKE protocol. The security considerations compiled in {{Section 9 of RFC9528}} and in {{Section 7 of RFC9668}} apply. The compliance requirements for implementations that are listed in {{Section 8 of RFC9528}} also apply.
-
-It is foreseeable that the LAKE protocol will be extended (e.g., in terms of new cipher suites, new methods, and new types of authentication credentials) and that external security applications will be integrated into LAKE by embedding the transport of their data in LAKE EAD items. For implementations that support such extensions and external applications, the related security considerations and compliance requirements also apply.
-
-## Assessing the Correctness of Implementations
-
-Tools relying on fuzz testing such as EDHOC-Fuzzer {{EDHOC-Fuzzer}} can help assess the correctness of implementations of the LAKE protocol and of external security applications integrated into LAKE.
-
-Such tools help finding and amending implementation errors especially related to the following points:
-
-* Non-conformance with the protocol specification (e.g., unintended deviations in performing the protocol steps), which can be a potential source of security vulnerabilities in addition to performance deficiencies.
-
-* Presence of inappropriate states and state transitions in the modeling of the LAKE execution, e.g., states that are impossible to reach and traverse or that are not part of the protocol specification (which is a particular case of non-conformance).
-
-  These states and transitions should be amended or removed, in order to reduce the memory footprint and code complexity and to simplify the implementation, thus reducing the risks of bugs and related security vulnerabilities.
-
-# IANA Considerations
-
-This document has no actions for IANA.
-
---- back
-
-# Foreseen Advanced Processing of Incoming LAKE message\_1 # {#sec-message-side-processing-m1-advanced}
+## Foreseen Advanced Processing of Incoming LAKE message\_1 # {#sec-message-side-processing-m1-advanced}
 
 As mentioned in {{sec-message-side-processing-m1}}, future developments in LAKE and in related external security applications might rely on an EAD item in LAKE message_1 that specifies the authentication credential CRED associated with the Initiator (by value or by reference), as wrapped in a cryptographically protected "envelope".
 
@@ -1299,6 +1323,8 @@ The flowchart in {{fig-flowchart-spo-low-level-m1-advanced}} shows the different
 * Generalized handling of incoming error messages.
 
 * Exception on unauthenticated operation moved to separate subsection.
+
+* Editorial split between what the SPO provides and an example of how it can be implemented.
 
 ## Version -06 to -07 ## {#sec-06-07}
 
