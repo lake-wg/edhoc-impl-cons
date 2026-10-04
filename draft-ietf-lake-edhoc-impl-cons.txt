@@ -4,8 +4,8 @@
 
 LAKE Working Group                                             M. Tiloca
 Internet-Draft                                                   RISE AB
-Intended status: Informational                            3 October 2026
-Expires: 6 April 2027
+Intended status: Informational                            4 October 2026
+Expires: 7 April 2027
 
 
   Implementation Considerations for the Lightweight Authenticated Key
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 April 2027.
+   This Internet-Draft will expire on 7 April 2027.
 
 Copyright Notice
 
@@ -79,12 +79,9 @@ Table of Contents
        4.3.2.  In the ELA Procedure
      4.4.  Unauthenticated Operation
    5.  Side Processing of Incoming LAKE Messages
-     5.1.  LAKE message_1
-     5.2.  LAKE message_4
-     5.3.  LAKE message_2 and message_3
-       5.3.1.  Pre-Verification Side Processing
-       5.3.2.  Post-Verification Side Processing
-       5.3.3.  Flowcharts
+     5.1.  Instructing the Side-Processor Object
+     5.2.  Invoking the Side-Processor Object
+     5.3.  After a LAKE Session
      5.4.  Consistency Checks of Authentication Credentials from
            ID_CRED and EAD Items
    6.  Using LAKE over CoAP with Block-Wise
@@ -98,8 +95,14 @@ Table of Contents
    10. References
      10.1.  Normative References
      10.2.  Informative References
-   Appendix A.  Foreseen Advanced Processing of Incoming LAKE
-           message_1
+   Appendix A.  Example of Side-Processor Object
+     A.1.  LAKE message_1
+     A.2.  LAKE message_4
+     A.3.  LAKE message_2 and message_3
+       A.3.1.  Pre-Verification Side Processing
+       A.3.2.  Post-Verification Side Processing
+       A.3.3.  Flowchart
+     A.4.  Foreseen Advanced Processing of Incoming LAKE message_1
    Appendix B.  Document Updates
      B.1.  Version -07 to -08
      B.2.  Version -06 to -07
@@ -525,10 +528,10 @@ Table of Contents
       |                                                    | YES    |
       |                                                    v        |
       | YES                                                         |
-      v                                              Obtain a new   |
-                                                     access token   |
- The application keys                                to upoload at  |
- are not valid anymore                               the ACE RS     |
+      v                                               Obtain a new  |
+                                                      access token  |
+ The application keys                                 to upload at  |
+ are not valid anymore                                the ACE RS    |
                                                                     |
       |                                                    |        |
       |                                                    |        |
@@ -1062,9 +1065,9 @@ Table of Contents
 
 5.  Side Processing of Incoming LAKE Messages
 
-   This section describes an approach that LAKE peers can use upon
-   receiving LAKE messages, in order to fetch/validate authentication
-   credentials and to process EAD items.
+   This section describes a possible approach that LAKE peers can use
+   upon receiving LAKE messages, in order to fetch/validate
+   authentication credentials and to process EAD items.
 
    The transport mechanism provided by LAKE for conveying EAD items is
    defined in Section 3.8 of [RFC9528].  In particular, a LAKE message_x
@@ -1079,14 +1082,13 @@ Table of Contents
    The approach described in this section aims to help implementers
    navigate the surrounding context mentioned above, irrespective of the
    specific EAD items conveyed in the LAKE messages.  In particular, the
-   described approach takes into account the following points:
+   described approach takes into account the following two points:
 
-   *  The fetching and validation of the authentication credential
-      associated with the other peer relies on ID_CRED_I in LAKE
-      message_2, or on ID_CRED_R in LAKE message_3, or on the value of
-      an EAD item.  When this occurs upon receiving LAKE message_2 or
-      message_3, the decryption of the LAKE message has to be completed
-      first.
+   *  Fetching and validating the authentication credential associated
+      with the other peer rely on ID_CRED_I in LAKE message_2, or on
+      ID_CRED_R in LAKE message_3, or on the value of an EAD item.  When
+      this occurs upon receiving LAKE message_2 or message_3, the
+      decryption of the LAKE message has to be completed first.
 
       Validating the authentication credential or assessing whether it
       is trusted might depend on using the value of an EAD item, which
@@ -1112,7 +1114,15 @@ Table of Contents
    transfer control to the SPO at the right point in time, in order to
    perform the required side-processing of an incoming LAKE message.
 
-   Furthermore, the application has to instruct the SPO about:
+   The following subsections provide a high-level description of the SPO
+   in terms of expected features and services.  Building on that,
+   Appendix A provides a detailed example of how the SPO can be
+   implemented.
+
+5.1.  Instructing the Side-Processor Object
+
+   From a high-level perspective, the application instructs the SPO
+   about:
 
    *  How to prepare any EAD item such that: it has to be included in
       the EAD field of an outgoing LAKE message, potentially together
@@ -1134,9 +1144,29 @@ Table of Contents
       the LAKE messages that have been exchanged during the session and
       the outcome of their processing.
 
+5.2.  Invoking the Side-Processor Object
+
    At the right point in time during the processing of an incoming LAKE
-   message M at the peer P, LAKE invokes the SPO and provides it with
-   the following input:
+   message M at the peer P, LAKE invokes the SPO.  In particular:
+
+   *  If M is LAKE message_1, LAKE invokes the SPO after the Responder
+      peer has successfully decoded M and accepted the selected cipher
+      suite.
+
+   *  If M is LAKE message_2 or message_3, LAKE invokes the SPO:
+
+      -  Right after M has been decrypted and before starting its
+         verification, i.e., before verifying the Signature_or_MAC field
+         of M; and
+
+      -  Right after M has been successfully verified, i.e., after
+         having verified the Signature_or_MAC field of M.
+
+   *  If M is LAKE message_4, LAKE invokes the SPO after the Initiator
+      peer has successfully decrypted M.
+
+   When invoking the SPO for processing message M, LAKE provides the SPO
+   with the following input:
 
    *  When M is LAKE message_2 or message_3, an indication of whether
       this invocation is happening before or after the message
@@ -1155,7 +1185,7 @@ Table of Contents
 
    *  The EAD items included in M.
 
-      -  Note that LAKE might do some preliminary work on M before
+      -  Note that LAKE could do some preliminary work on M before
          invoking the SPO, in order to provide the SPO only with
          actually relevant EAD items.  This requires the application to
          additionally provide LAKE with the ead_labels of the EAD items
@@ -1166,18 +1196,18 @@ Table of Contents
          critical and not recognized by the peer P.
 
          If no such EAD items are found, LAKE can remove any padding EAD
-         item (see Section 3.8.1 of [RFC9528]), as well as any EAD item
-         which is neither critical nor recognized (since the SPO is
-         going to ignore it anyway).  This results in LAKE providing the
-         SPO only with EAD items that will be recognized and that
-         require actual processing.
+         item (see Section 3.8.1 of [RFC9528]) and any EAD item which is
+         neither critical nor recognized (since the SPO is going to
+         ignore it anyway).  This results in LAKE providing the SPO only
+         with EAD items that will be recognized and that require actual
+         processing.
 
       -  Note that, after having processed the EAD items, the SPO might
          actually need to store them throughout the whole LAKE
          execution, e.g., in order to refer to them also when processing
          later LAKE messages in the current LAKE session.
 
-   The SPO performs the following tasks on an incoming LAKE message M:
+   The SPO performs the following tasks on the incoming message M:
 
    *  The SPO checks whether M does not include an EAD item whose
       presence was expected, based on the related list maintained
@@ -1194,256 +1224,30 @@ Table of Contents
    *  The SPO fetches and/or validates the authentication credential
       CRED associated with the other peer, based on a dedicated EAD item
       of M or on the ID_CRED field of M (for LAKE message_2 or
-      message_3).
+      message_3).  Furthermore, the SPO assesses whether CRED can be
+      trusted, in accordance with the trust policy used (see Section 4).
+
+      Section 5.4 describes special handling of incoming LAKE messages,
+      as to consistency checks concerning authentication credentials in
+      particular situations.
 
    *  The SPO processes the EAD items conveyed in the EAD field of M.
 
    *  The SPO stores the results of the performed operations and makes
       such results available to the application.
 
-   *  When the SPO has completed its side processing and transfers
-      control back to LAKE, the SPO provides LAKE with the produced EAD
-      items to include in the EAD field of the next outgoing LAKE
-      message.  The production of such EAD items can be triggered, e.g.,
-      by:
+   When the SPO has completed its side processing and transfers control
+   back to LAKE, the SPO provides LAKE with the produced EAD items to
+   include in the EAD field of the next outgoing LAKE message.  The
+   production of such EAD items can be triggered, for example, by:
 
-      -  The consumption of EAD items included in M.
+   *  The completed consumption of EAD items that were included in M.
 
-      -  The execution of instructions that the SPO has received from
-         the application, concerning EAD items to produce irrespective
-         of other EAD items included in M.
+   *  The completed execution of instructions that the SPO received from
+      the application, concerning EAD items to produce irrespective of
+      other EAD items included in M.
 
-   In the following, Section 5.1 to Section 5.3 describe more in detail
-   the actions performed by the SPO on the different incoming LAKE
-   messages.  Then, Section 5.4 describes further special handling of
-   incoming LAKE messages, as to consistency checks concerning
-   authentication credentials in particular situations.
-
-   After completing the LAKE execution, control is transferred back to
-   the application.  In particular, the application is provided with the
-   overall outcome of the LAKE execution (i.e., successful completion or
-   failure), together with possible specific results produced by the SPO
-   throughout the LAKE execution (e.g., due to the processing of EAD
-   items).
-
-   After that, the application might need to perform follow-up actions,
-   depending on the outcome of the LAKE execution.  For example, the SPO
-   might have preliminarily filled application-level data structures, as
-   a result of processing EAD items.  In the case of a successful LAKE
-   execution, the application might need to finalize such data
-   structures.  Instead, in the case of an unsuccessful LAKE execution,
-   the application might need to clean-up or amend such data structures,
-   or even roll back what the SPO did, unless the SPO already performed
-   such actions before control was transferred back to the application.
-
-5.1.  LAKE message_1
-
-   During the processing of an incoming LAKE message_1, LAKE invokes the
-   SPO only once, after the Responder peer has successfully decoded the
-   message and accepted the selected cipher suite.
-
-   If the EAD_1 field is present, the SPO processes the EAD items
-   included therein.
-
-   Once all such EAD items have been processed, the SPO transfers
-   control back to LAKE.  When doing so, the SPO also provides LAKE with
-   any produced EAD items to include in the EAD field of the next
-   outgoing LAKE message.
-
-   Then, LAKE resumes its execution and advances its protocol state.
-
-   Future extensions of LAKE or external security applications
-   integrated into LAKE might require a processing of LAKE message_1
-   that is more advanced than the currently expected one.  In
-   particular, an EAD item conveyed in LAKE message_1 might specify the
-   authentication credential CRED associated with the Initiator (by
-   value or by reference), as wrapped in a cryptographically protected
-   "envelope".  In such a case, the processing of an incoming LAKE
-   message_1 shares similarities with that of an incoming LAKE message_2
-   or message_3 (see Section 5.3), as it is further elaborated in
-   Appendix A.
-
-5.2.  LAKE message_4
-
-   During the processing of an incoming LAKE message_4, LAKE invokes the
-   SPO only once, after the Initiator peer has successfully decrypted
-   the message.
-
-   If the EAD_4 field is present, the SPO processes the EAD items
-   included therein.
-
-   Once all such EAD items have been processed, the SPO transfers
-   control back to LAKE, which resumes its execution and advances its
-   protocol state.
-
-5.3.  LAKE message_2 and message_3
-
-   The following refers to "message_X" as an incoming LAKE message_2 or
-   message_3, and to "message verification" as the verification of
-   Signature_or_MAC_X in message_X.
-
-   During the processing of a message_X, LAKE invokes the SPO two times:
-
-   *  Right after message_X has been decrypted and before its
-      verification starts.  Following this invocation, the SPO performs
-      the actions described in Section 5.3.1.
-
-   *  Right after message_X has been successfully verified.  Following
-      this invocation, the SPO performs the actions described in
-      Section 5.3.2.
-
-   The flowcharts in Section 5.3.3 show the high-level interaction
-   between the core LAKE processing and the SPO, as well as the
-   different steps taken for processing an incoming message_X.
-
-5.3.1.  Pre-Verification Side Processing
-
-   The pre-verification side processing occurs in two sequential phases,
-   namely PHASE_1 (see Section 5.3.1.1) and PHASE_2 (see
-   Section 5.3.1.2).
-
-5.3.1.1.  PHASE_1
-
-   During PHASE_1, the SPO at the recipient peer P determines CRED,
-   i.e., the authentication credential associated with the other peer to
-   be used in the ongoing LAKE session.  In particular, the SPO first
-   checks whether expected EAD items are absent in message_X (see
-   Section 5), and then performs the following steps.
-
-   1.   The SPO determines CRED based on ID_CRED_X or on an EAD item
-        included in message_X.
-
-        Those may specify CRED by value or by reference, including a URI
-        or other external reference where CRED can be retrieved from.
-
-        If CRED is already stored, the SPO moves to Step 2.  Otherwise,
-        the SPO moves to Step 3.
-
-   2.   The SPO determines if the stored CRED is currently trusted and
-        valid, e.g., by verifying that CRED has not expired and has not
-        been revoked.
-
-        Performing such a validation might require the SPO to first
-        process an EAD item included in message_X.  For example, it can
-        be an EAD item in LAKE message_2 that confirms or revokes the
-        validity of CRED_R specified by ID_CRED_R, as the result of an
-        OCSP process [RFC6960].
-
-        In the case that CRED is determined to be valid, the SPO moves
-        to Step 9.  Otherwise, the SPO moves to Step 11.
-
-   3.   The SPO attempts to retrieve CRED via ID_CRED_X or an EAD item
-        considered at Step 1.  Then, the SPO moves to Step 4.
-
-   4.   If the retrieval of CRED has succeeded, the SPO moves to Step 5.
-        Otherwise, the SPO moves to Step 11.
-
-   5.   If the enforced trust policy for new authentication credentials
-        is "NO-LEARNING" and P does not admit any exceptions that are
-        acceptable to enforce for message_X (see Section 4.2), the SPO
-        moves to Step 11.  Otherwise, the SPO moves to Step 6.
-
-   6.   If this step has been reached, the peer P is not already storing
-        the retrieved CRED and, at the same time, it enforces either the
-        trust policy "LEARNING" or the trust policy "NO-LEARNING" while
-        also enforcing an exception acceptable for message_X (see
-        Section 4.2).
-
-        Consistent with that, the SPO determines if CRED is currently
-        valid, e.g., by verifying that CRED has not expired and has not
-        been revoked.
-
-        Validating CRED might require the SPO to first process an EAD
-        item included in message_X.  For example, it can be an OCSP
-        response [RFC6960] for validating CRED_R as a public key
-        certificate transported by value or reference in ID_CRED_R.
-
-        After successfully validating CRED, the peer P can typically
-        consider CRED as ultimately trusted as well.  However, there can
-        be cases where P requires to obtain additional information
-        before doing so.
-
-        If such additional information can be retrieved from message_X
-        (e.g., from an EAD item included therein), then P uses it to
-        assess if CRED is trusted.  Otherwise, if such additional
-        information is expected later on during the LAKE session, it can
-        be acceptable for P to consider CRED as provisionally trusted.
-
-        Section 4.3.2 discusses the ELA procedure defined in
-        [I-D.ietf-lake-authz], as a case in point where additional
-        information required by the peer P to trust CRED could not be
-        included in the same message that specifies CRED.
-
-        After completing the validation and trust assessment of CRED,
-        the SPO moves to Step 7.
-
-   7.   If CRED has been determined valid and (provisionally) trusted,
-        the SPO moves to Step 8.  Otherwise, the SPO moves to Step 11.
-
-   8.   The SPO stores CRED as a valid and (provisionally) trusted
-        authentication credential associated with the other peer,
-        together with corresponding authentication credential
-        identifiers (see Section 4).  Then, the SPO moves to Step 9.
-
-   9.   The SPO checks if CRED is fine to use in the context of the
-        ongoing LAKE session, also depending on the specific identity of
-        the other peer (see Sections 3.5 and D.2 of [RFC9528]).
-
-        If this is the case, the SPO moves to Step 10.  Otherwise, the
-        SPO moves to Step 11.
-
-   10.  P uses CRED as authentication credential associated with the
-        other peer in the ongoing LAKE session.
-
-        Then, PHASE_1 ends and the pre-verification side processing
-        moves to the next PHASE_2 (see Section 5.3.1.2).
-
-   11.  The SPO has not found a valid and (provisionally) trusted
-        authentication credential associated with the other peer that
-        can be used in the ongoing LAKE session.  Therefore, the LAKE
-        session with the other peer is aborted.
-
-5.3.1.2.  PHASE_2
-
-   During PHASE_2, the SPO processes any EAD item included in message_X
-   such that both the following conditions hold:
-
-   *  The EAD item has _not_ already been processed during PHASE_1.
-
-   *  The EAD item can be processed before performing the verification
-      of message_X.
-
-   Once all such EAD items have been processed, the SPO transfers
-   control back to LAKE, which either aborts the ongoing LAKE session or
-   continues the processing of message_X with its corresponding message
-   verification.
-
-5.3.2.  Post-Verification Side Processing
-
-   During the post-verification side processing, the SPO processes any
-   EAD item included in message_X such that the processing of that EAD
-   item had to wait for completing the successful message verification.
-
-   The late processing of such EAD items is typically due to the fact
-   that a pre-requirement has to be fulfilled first.
-
-   For example, the recipient peer P has to have first verified that the
-   other peer does possess the private key corresponding to the public
-   key specified by CRED, i.e., the authentication credential associated
-   with the other peer that was determined during the pre-verification
-   side processing (see Section 5.3.1).  This requirement is fulfilled
-   after a successful verification of message_X.
-
-   Once all such EAD items have been processed, the SPO transfers
-   control back to LAKE.  When doing so, the SPO also provides LAKE with
-   any produced EAD items to include in the EAD field of the next
-   outgoing LAKE message.
-
-   Then, LAKE resumes its execution and advances its protocol state.
-
-5.3.3.  Flowcharts
-
-   The flowchart in Figure 4 shows the high-level interaction between
+   The flowchart in Figure 4 shows the high-level interactions between
    the core LAKE processing and the SPO, with particular reference to an
    incoming LAKE message_2 or message_3.
 
@@ -1503,169 +1307,24 @@ Table of Contents
    and the Side- Processor Object (SPO), for Incoming LAKE message_2
                              and message_3.
 
-   The flowchart in Figure 5 shows the different steps taken for
-   processing an incoming LAKE message_2 and message_3.
+5.3.  After a LAKE Session
 
-   Incoming
-   LAKE message_X
-   (X = 2 or 3)
+   After completing the LAKE execution, control is transferred back to
+   the application.  In particular, the application is provided with the
+   overall outcome of the LAKE execution (i.e., successful completion or
+   failure), together with possible specific results produced by the SPO
+   throughout the LAKE execution (e.g., due to the processing of EAD
+   items).
 
-           |
-           |
-           v
-  +-------------------+  ---+
-  | Decode message_X  |     |
-  +-------------------+     |
-           |                |
-           |                |
-           v                |
-  +-------------------+     |
-  | Retrieve the      |     +--- (Core LAKE Processing)
-  | protocol state    |     |
-  +-------------------+     |
-           |                |
-           |                |
-           v                |
-  +-------------------+     |
-  | Decrypt message_X |     |
-  +-------------------+  ---+
-           |
-           |
-
-  Control transferred to
-  the side-processor object
-
-           |
- +---------|-----------------------------------------------------------+
- |         |             Pre-verification side processing (PHASE_1)    |
- |         |                                                           |
- | +------------------------+                                          |
- | | Check whether expected |                                          |
- | | EAD items are absent   |                                          |
- | +------------------------+                                          |
- |         |                                                           |
- |         |                                                           |
- |         v                                                           |
- | +---------------------+     +--------------+     +-------------+    |
- | | 1. Does ID_CRED_X   | NO  | 3. Retrieve  |     | 4. Is the   |    |
- | | or an EAD item      |---->| CRED via     |---->| retrieval   |    |
- | | point to an already |     | ID_CRED_X or |     | of CRED     |    |
- | | stored CRED?        |     | an EAD item  |     | successful? |    |
- | +---------------------+     +--------------+     +-------------+    |
- |         |                                          |         |      |
- |         |                                          | NO      | YES  |
- |         |                         +----------------+         |      |
- |         |                         |                          |      |
- |         | YES                     |                          |      |
- |         v                         v                          v      |
- | +-----------------+ NO      +-----------+   YES +-----------------+ |
- | | 2. Is this CRED |-------->| 11. Abort |<------| 5. Is the trust | |
- | | still valid and |         | the LAKE  |       | policy used     | |
- | | trusted?        |         | session   |       | "NO-LEARNING",  | |
- | +-----------------+         |           |       | without any     | |
- |         |                   |           |       | acceptable      | |
- |         |                   |           |       | exceptions?     | |
- |         |                   |           |       +-----------------+ |
- |         | YES               |           |                    |      |
- |         v                   |           |     Here the trust | NO   |
- | +--------------------+ NO   |           |     policy used is |      |
- | | 9. Is this CRED    |----->|           |     "LEARNING", or |      |
- | | good to use in the |      +-----------+     "NO-LEARNING"  |      |
- | | context of this    |               ^        together with  |      |
- | | LAKE session?      |<-----+        |        an overriding  |      |
- | +--------------------+      |        |        exception      |      |
- |         |                   |        |                       |      |
- |         |                   |        |                       v      |
- |         |                   |        |           +---------------+  |
- |         |                   |        |           | 6. Assess if  |  |
- |         |                   |        |           | CRED is valid |  |
- |         |                   |        |           | and trusted   |  |
- |         |                   |        |           +---------------+  |
- |         |                   |        |                       |      |
- |         | YES               |        | NO                    |      |
- |         |                   |        |                       v      |
- |         |                   |     +-------------------------------+ |
- |         |                   |     | 7. Is CRED valid and          | |
- |         |                   |     | (provisionally) trusted?      | |
- |         |                   |     +-------------------------------+ |
- |         |                   |        |                              |
- |         |                   |        | YES                          |
- |         v                   |        v                              |
- | +------------------+        |     +-------------------------------+ |
- | | 10. Continue by  |        |     | 8. Store CRED as valid and    | |
- | | considering this |        +-----| (provisionally) trusted.      | |
- | | CRED as the      |              |                               | |
- | | authentication   |              | Pair CRED with consistent     | |
- | | credential       |              | credential identifiers, for   | |
- | | associated with  |              | each supported type of        | |
- | | the other peer   |              | credential identifier.        | |
- | +------------------+              +-------------------------------+ |
- |         |                                                           |
- +---------|-----------------------------------------------------------+
-           |
-           |
- +---------|-----------------------------------------------------------+
- |         |            Pre-verification side processing (PHASE_2)     |
- |         v                                                           |
- | +--------------------------------------------------------+          |
- | | Process the EAD items that have not been processed yet |          |
- | | and that can be processed before message verification  |          |
- | +--------------------------------------------------------+          |
- |         |                                                           |
- +---------|-----------------------------------------------------------+
-           |
-           |
-           v
-
-  Control transferred back
-  to the core LAKE processing
-
-           |
-           |
-           v
-  +------------------+
-  | Verify message_X | (Core LAKE processing)
-  +------------------+
-           |
-           |
-           v
-
-  Control transferred to
-  the side-processor object
-
-           |
- +---------|----------------------------------------+
- |         |           Post-verification processing |
- |         v                                        |
- | +---------------------------------------------+  |
- | | Process the EAD items that have to be       |  |
- | | processed (also) after message verification |  |
- | +---------------------------------------------+  |
- |         |                                        |
- |         |                                        |
- |         v                                        |
- | +--------------------------------------------+   |
- | | Make all the results of the EAD processing |   |
- | | available to build the next LAKE message   |   |
- | +--------------------------------------------+   |
- |         |                                        |
- +---------|----------------------------------------+
-           |
-           |
-           v
-
-  Control transferred back
-  to the core LAKE processing
-
-           |
-           |
-           v
-  +----------------+
-  | Advance the    | (Core LAKE processing)
-  | protocol state |
-  +----------------+
-
- Figure 5: Processing Steps for Incoming LAKE message_2 and message_3.
+   After that, the application might need to perform follow-up actions,
+   depending on the outcome of the LAKE execution.  For example, the SPO
+   might have preliminarily filled application-level data structures, as
+   a result of processing EAD items.  In the case of a successful LAKE
+   execution, the application might need to finalize such data
+   structures.  Instead, in the case of an unsuccessful LAKE execution,
+   the application might need to clean-up or amend such data structures,
+   or even roll back what the SPO did, unless the SPO already performed
+   such actions before control was transferred back to the application.
 
 5.4.  Consistency Checks of Authentication Credentials from ID_CRED and
       EAD Items
@@ -2093,22 +1752,398 @@ Table of Contents
               (ACE-OAuth)", RFC 9200, DOI 10.17487/RFC9200, August 2022,
               <https://www.rfc-editor.org/rfc/rfc9200>.
 
-Appendix A.  Foreseen Advanced Processing of Incoming LAKE message_1
+Appendix A.  Example of Side-Processor Object
 
-   As mentioned in Section 5.1, future developments in LAKE and in
+   This appendix builds on Section 5 and provides a detailed example of
+   how the SPO can be implemented to perform the side processing of
+   incoming LAKE messages.
+
+A.1.  LAKE message_1
+
+   During the processing of an incoming LAKE message_1, LAKE invokes the
+   SPO only once, after the Responder peer has successfully decoded the
+   message and accepted the selected cipher suite.
+
+   If the EAD_1 field is present, the SPO processes the EAD items
+   included therein.
+
+   Once all such EAD items have been processed, the SPO transfers
+   control back to LAKE.  When doing so, the SPO also provides LAKE with
+   any produced EAD items to include in the EAD field of the next
+   outgoing LAKE message.
+
+   Then, LAKE resumes its execution and advances its protocol state.
+
+   Future extensions of LAKE or external security applications
+   integrated into LAKE might require a processing of LAKE message_1
+   that is more advanced than the currently expected one.  In
+   particular, an EAD item conveyed in LAKE message_1 might specify the
+   authentication credential CRED associated with the Initiator (by
+   value or by reference), as wrapped in a cryptographically protected
+   "envelope".  In such a case, the processing of an incoming LAKE
+   message_1 shares similarities with that of an incoming LAKE message_2
+   or message_3 (see Appendix A.3), as it is further elaborated in
+   Appendix A.4.
+
+A.2.  LAKE message_4
+
+   During the processing of an incoming LAKE message_4, LAKE invokes the
+   SPO only once, after the Initiator peer has successfully decrypted
+   the message.
+
+   If the EAD_4 field is present, the SPO processes the EAD items
+   included therein.
+
+   Once all such EAD items have been processed, the SPO transfers
+   control back to LAKE, which resumes its execution and advances its
+   protocol state.
+
+A.3.  LAKE message_2 and message_3
+
+   The following refers to "message_X" as an incoming LAKE message_2 or
+   message_3, and to "message verification" as the verification of
+   Signature_or_MAC_X in message_X.
+
+   During the processing of a message_X, LAKE invokes the SPO two times:
+
+   *  Right after message_X has been decrypted and before its
+      verification starts.  Following this invocation, the SPO performs
+      the actions described in Appendix A.3.1.
+
+   *  Right after message_X has been successfully verified.  Following
+      this invocation, the SPO performs the actions described in
+      Appendix A.3.2.
+
+   The flowchart in Appendix A.3.3 shows the different steps taken for
+   processing an incoming message_X.
+
+A.3.1.  Pre-Verification Side Processing
+
+   The pre-verification side processing occurs in two sequential phases,
+   namely PHASE_1 (see Appendix A.3.1.1) and PHASE_2 (see
+   Appendix A.3.1.2).
+
+A.3.1.1.  PHASE_1
+
+   During PHASE_1, the SPO at the recipient peer P determines CRED,
+   i.e., the authentication credential associated with the other peer to
+   be used in the ongoing LAKE session.  In particular, the SPO first
+   checks whether expected EAD items are absent in message_X (see
+   Section 5), and then performs the following steps.
+
+   1.   The SPO determines CRED based on ID_CRED_X or on an EAD item
+        included in message_X.
+
+        Those may specify CRED by value or by reference, including a URI
+        or other external reference where CRED can be retrieved from.
+
+        If CRED is already stored, the SPO moves to Step 2.  Otherwise,
+        the SPO moves to Step 3.
+
+   2.   The SPO determines if the stored CRED is currently trusted and
+        valid, e.g., by verifying that CRED has not expired and has not
+        been revoked.
+
+        Performing such a validation might require the SPO to first
+        process an EAD item included in message_X.  For example, it can
+        be an EAD item in LAKE message_2 that confirms or revokes the
+        validity of CRED_R specified by ID_CRED_R, as the result of an
+        OCSP process [RFC6960].
+
+        In the case that CRED is determined to be valid, the SPO moves
+        to Step 9.  Otherwise, the SPO moves to Step 11.
+
+   3.   The SPO attempts to retrieve CRED via ID_CRED_X or an EAD item
+        considered at Step 1.  Then, the SPO moves to Step 4.
+
+   4.   If the retrieval of CRED has succeeded, the SPO moves to Step 5.
+        Otherwise, the SPO moves to Step 11.
+
+   5.   If the enforced trust policy for new authentication credentials
+        is "NO-LEARNING" and P does not admit any exceptions that are
+        acceptable to enforce for message_X (see Section 4.2), the SPO
+        moves to Step 11.  Otherwise, the SPO moves to Step 6.
+
+   6.   If this step has been reached, the peer P is not already storing
+        the retrieved CRED and, at the same time, it enforces either the
+        trust policy "LEARNING" or the trust policy "NO-LEARNING" while
+        also enforcing an exception acceptable for message_X (see
+        Section 4.2).
+
+        Consistent with that, the SPO determines if CRED is currently
+        valid, e.g., by verifying that CRED has not expired and has not
+        been revoked.
+
+        Validating CRED might require the SPO to first process an EAD
+        item included in message_X.  For example, it can be an OCSP
+        response [RFC6960] for validating CRED_R as a public key
+        certificate transported by value or reference in ID_CRED_R.
+
+        After successfully validating CRED, the peer P can typically
+        consider CRED as ultimately trusted as well.  However, there can
+        be cases where P requires to obtain additional information
+        before doing so.
+
+        If such additional information can be retrieved from message_X
+        (e.g., from an EAD item included therein), then P uses it to
+        assess if CRED is trusted.  Otherwise, if such additional
+        information is expected later on during the LAKE session, it can
+        be acceptable for P to consider CRED as provisionally trusted.
+
+        Section 4.3.2 discusses the ELA procedure defined in
+        [I-D.ietf-lake-authz], as a case in point where additional
+        information required by the peer P to trust CRED could not be
+        included in the same message that specifies CRED.
+
+        After completing the validation and trust assessment of CRED,
+        the SPO moves to Step 7.
+
+   7.   If CRED has been determined valid and (provisionally) trusted,
+        the SPO moves to Step 8.  Otherwise, the SPO moves to Step 11.
+
+   8.   The SPO stores CRED as a valid and (provisionally) trusted
+        authentication credential associated with the other peer,
+        together with corresponding authentication credential
+        identifiers (see Section 4).  Then, the SPO moves to Step 9.
+
+   9.   The SPO checks if CRED is fine to use in the context of the
+        ongoing LAKE session, also depending on the specific identity of
+        the other peer (see Sections 3.5 and D.2 of [RFC9528]).
+
+        If this is the case, the SPO moves to Step 10.  Otherwise, the
+        SPO moves to Step 11.
+
+   10.  P uses CRED as authentication credential associated with the
+        other peer in the ongoing LAKE session.
+
+        Then, PHASE_1 ends and the pre-verification side processing
+        moves to the next PHASE_2 (see Appendix A.3.1.2).
+
+   11.  The SPO has not found a valid and (provisionally) trusted
+        authentication credential associated with the other peer that
+        can be used in the ongoing LAKE session.  Therefore, the LAKE
+        session with the other peer is aborted.
+
+A.3.1.2.  PHASE_2
+
+   During PHASE_2, the SPO processes any EAD item included in message_X
+   such that both the following conditions hold:
+
+   *  The EAD item has _not_ already been processed during PHASE_1.
+
+   *  The EAD item can be processed before performing the verification
+      of message_X.
+
+   Once all such EAD items have been processed, the SPO transfers
+   control back to LAKE, which either aborts the ongoing LAKE session or
+   continues the processing of message_X with its corresponding message
+   verification.
+
+A.3.2.  Post-Verification Side Processing
+
+   During the post-verification side processing, the SPO processes any
+   EAD item included in message_X such that the processing of that EAD
+   item had to wait for completing the successful message verification.
+
+   The late processing of such EAD items is typically due to the fact
+   that a pre-requirement has to be fulfilled first.
+
+   For example, the recipient peer P has to have first verified that the
+   other peer does possess the private key corresponding to the public
+   key specified by CRED, i.e., the authentication credential associated
+   with the other peer that was determined during the pre-verification
+   side processing (see Appendix A.3.1).  This requirement is fulfilled
+   after a successful verification of message_X.
+
+   Once all such EAD items have been processed, the SPO transfers
+   control back to LAKE.  When doing so, the SPO also provides LAKE with
+   any produced EAD items to include in the EAD field of the next
+   outgoing LAKE message.
+
+   Then, LAKE resumes its execution and advances its protocol state.
+
+A.3.3.  Flowchart
+
+   The flowchart in Figure 5 shows the different steps taken for
+   processing an incoming LAKE message_2 and message_3.
+
+   Incoming
+   LAKE message_X
+   (X = 2 or 3)
+
+           |
+           |
+           v
+  +-------------------+  ---+
+  | Decode message_X  |     |
+  +-------------------+     |
+           |                |
+           |                |
+           v                |
+  +-------------------+     |
+  | Retrieve the      |     +--- (Core LAKE Processing)
+  | protocol state    |     |
+  +-------------------+     |
+           |                |
+           |                |
+           v                |
+  +-------------------+     |
+  | Decrypt message_X |     |
+  +-------------------+  ---+
+           |
+           |
+
+  Control transferred to
+  the side-processor object
+
+           |
+ +---------|-----------------------------------------------------------+
+ |         |             Pre-verification side processing (PHASE_1)    |
+ |         |                                                           |
+ | +------------------------+                                          |
+ | | Check whether expected |                                          |
+ | | EAD items are absent   |                                          |
+ | +------------------------+                                          |
+ |         |                                                           |
+ |         |                                                           |
+ |         v                                                           |
+ | +---------------------+     +--------------+     +-------------+    |
+ | | 1. Does ID_CRED_X   | NO  | 3. Retrieve  |     | 4. Is the   |    |
+ | | or an EAD item      |---->| CRED via     |---->| retrieval   |    |
+ | | point to an already |     | ID_CRED_X or |     | of CRED     |    |
+ | | stored CRED?        |     | an EAD item  |     | successful? |    |
+ | +---------------------+     +--------------+     +-------------+    |
+ |         |                                          |         |      |
+ |         |                                          | NO      | YES  |
+ |         |                         +----------------+         |      |
+ |         |                         |                          |      |
+ |         | YES                     |                          |      |
+ |         v                         v                          v      |
+ | +-----------------+ NO      +-----------+   YES +-----------------+ |
+ | | 2. Is this CRED |-------->| 11. Abort |<------| 5. Is the trust | |
+ | | still valid and |         | the LAKE  |       | policy used     | |
+ | | trusted?        |         | session   |       | "NO-LEARNING",  | |
+ | +-----------------+         |           |       | without any     | |
+ |         |                   |           |       | acceptable      | |
+ |         |                   |           |       | exceptions?     | |
+ |         |                   |           |       +-----------------+ |
+ |         | YES               |           |                    |      |
+ |         v                   |           |     Here the trust | NO   |
+ | +--------------------+ NO   |           |     policy used is |      |
+ | | 9. Is this CRED    |----->|           |     "LEARNING", or |      |
+ | | good to use in the |      +-----------+     "NO-LEARNING"  |      |
+ | | context of this    |               ^        together with  |      |
+ | | LAKE session?      |<-----+        |        an overriding  |      |
+ | +--------------------+      |        |        exception      |      |
+ |         |                   |        |                       |      |
+ |         |                   |        |                       v      |
+ |         |                   |        |           +---------------+  |
+ |         |                   |        |           | 6. Assess if  |  |
+ |         |                   |        |           | CRED is valid |  |
+ |         |                   |        |           | and trusted   |  |
+ |         |                   |        |           +---------------+  |
+ |         |                   |        |                       |      |
+ |         | YES               |        | NO                    |      |
+ |         |                   |        |                       v      |
+ |         |                   |     +-------------------------------+ |
+ |         |                   |     | 7. Is CRED valid and          | |
+ |         |                   |     | (provisionally) trusted?      | |
+ |         |                   |     +-------------------------------+ |
+ |         |                   |        |                              |
+ |         |                   |        | YES                          |
+ |         v                   |        v                              |
+ | +------------------+        |     +-------------------------------+ |
+ | | 10. Continue by  |        |     | 8. Store CRED as valid and    | |
+ | | considering this |        +-----| (provisionally) trusted.      | |
+ | | CRED as the      |              |                               | |
+ | | authentication   |              | Pair CRED with consistent     | |
+ | | credential       |              | credential identifiers, for   | |
+ | | associated with  |              | each supported type of        | |
+ | | the other peer   |              | credential identifier.        | |
+ | +------------------+              +-------------------------------+ |
+ |         |                                                           |
+ +---------|-----------------------------------------------------------+
+           |
+           |
+ +---------|-----------------------------------------------------------+
+ |         |            Pre-verification side processing (PHASE_2)     |
+ |         v                                                           |
+ | +--------------------------------------------------------+          |
+ | | Process the EAD items that have not been processed yet |          |
+ | | and that can be processed before message verification  |          |
+ | +--------------------------------------------------------+          |
+ |         |                                                           |
+ +---------|-----------------------------------------------------------+
+           |
+           |
+           v
+
+  Control transferred back
+  to the core LAKE processing
+
+           |
+           |
+           v
+  +------------------+
+  | Verify message_X | (Core LAKE processing)
+  +------------------+
+           |
+           |
+           v
+
+  Control transferred to
+  the side-processor object
+
+           |
+ +---------|----------------------------------------+
+ |         |           Post-verification processing |
+ |         v                                        |
+ | +---------------------------------------------+  |
+ | | Process the EAD items that have to be       |  |
+ | | processed (also) after message verification |  |
+ | +---------------------------------------------+  |
+ |         |                                        |
+ |         |                                        |
+ |         v                                        |
+ | +--------------------------------------------+   |
+ | | Make all the results of the EAD processing |   |
+ | | available to build the next LAKE message   |   |
+ | +--------------------------------------------+   |
+ |         |                                        |
+ +---------|----------------------------------------+
+           |
+           |
+           v
+
+  Control transferred back
+  to the core LAKE processing
+
+           |
+           |
+           v
+  +----------------+
+  | Advance the    | (Core LAKE processing)
+  | protocol state |
+  +----------------+
+
+ Figure 5: Processing Steps for Incoming LAKE message_2 and message_3.
+
+A.4.  Foreseen Advanced Processing of Incoming LAKE message_1
+
+   As mentioned in Appendix A.1, future developments in LAKE and in
    related external security applications might rely on an EAD item in
    LAKE message_1 that specifies the authentication credential CRED
    associated with the Initiator (by value or by reference), as wrapped
    in a cryptographically protected "envelope".
 
    In order to handle such a case, the processing of an incoming LAKE
-   message_1 as described in Section 5.1 is extended with additional
+   message_1 as described in Appendix A.1 is extended with additional
    steps performed by the SPO.
 
    Such an extended side processing shares similarities with that of an
-   incoming LAKE message_2 or message_3 (see Section 5.3).  In
-   particular, similarly to what is compiled in Section 5.3.1.1 and
-   Section 5.3.1.2, the SPO first checks whether expected EAD items are
+   incoming LAKE message_2 or message_3 (see Appendix A.3).  In
+   particular, similarly to what is compiled in Appendix A.3.1.1 and
+   Appendix A.3.1.2, the SPO first checks whether expected EAD items are
    absent in message_X (see Section 5) and then performs the following
    steps.
 
@@ -2354,6 +2389,9 @@ B.1.  Version -07 to -08
 
    *  Exception on unauthenticated operation moved to separate
       subsection.
+
+   *  Editorial split between what the SPO provides and an example of
+      how it can be implemented.
 
 B.2.  Version -06 to -07
 
